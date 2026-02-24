@@ -159,20 +159,10 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-12 pb-20 px-6">
+    <section className="relative pt-20 pb-20 px-6">
       <div className="flame-bg" />
 
-      <div className="absolute left-1/2 top-10 h-10 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-
       <div className="mx-auto max-w-6xl">
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-[10px] sm:text-xs text-muted-foreground tracking-widest uppercase mb-2 font-body"
-        >
-          Clone a repo. Get an agent.
-        </motion.p>
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
           <motion.div
@@ -180,10 +170,12 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            
-            <div className="inline-flex items-center gap-2 sketch-border rounded-full px-3 py-1 text-xs text-muted-foreground mb-6">
+
+            <div className="inline-flex items-center gap-2 sketch-border rounded-full px-3 py-1 text-xs text-muted-foreground mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span className="text-primary font-medium">Open Standard</span> v0.1.0
+              <span className="text-muted-foreground/40">·</span>
+              <span className="tracking-widest uppercase text-[10px]">Clone a repo. Get an agent.</span>
             </div>
 
             <div className="flex items-center gap-1 mb-4">
