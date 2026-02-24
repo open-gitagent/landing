@@ -169,7 +169,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-sm sm:text-base text-muted-foreground tracking-widest uppercase mb-12 text-center font-body"
+          className="text-xs sm:text-sm text-muted-foreground tracking-widest uppercase mb-6 text-center font-body"
         >
           Clone a repo. Get an agent.
         </motion.p>
