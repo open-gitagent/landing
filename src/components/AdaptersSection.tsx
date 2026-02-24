@@ -27,7 +27,7 @@ export function AdaptersSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {adapters.map((a, i) => (
             <motion.div
               key={a.adapter}
@@ -35,7 +35,7 @@ export function AdaptersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.04 }}
-              className="paper-card p-4 hover:border-primary/40 transition-colors"
+              className="paper-card p-3 sm:p-4 hover:border-primary/40 transition-colors"
             >
               <div className="flex items-center justify-between mb-2 relative z-10">
                 <span className="text-sm font-heading font-semibold text-foreground">{a.name}</span>

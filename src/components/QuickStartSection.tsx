@@ -31,7 +31,7 @@ export function QuickStartSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="code-block sketch-border">
+          <div className="code-block sketch-border overflow-x-auto">
             <div className="terminal-header">
               <span className="terminal-dot bg-primary/30" />
               <span className="terminal-dot bg-primary/20" />
@@ -47,7 +47,7 @@ export function QuickStartSection() {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="text-xs text-muted-foreground leading-6 font-body"
+                  className="text-[10px] sm:text-xs text-muted-foreground leading-5 sm:leading-6 font-body"
                 >
                   <span className="text-primary">
                     {s.split("#")[0]}

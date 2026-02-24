@@ -36,7 +36,7 @@ export function SkillsSection() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ Review the code for:
                 <div key={d.priority} className="flex items-center gap-3 py-1.5 px-2 rounded hover:bg-accent/30 font-body">
                   <span className="text-[10px] text-primary font-semibold w-4">{d.priority}</span>
                   <Folder className="w-3 h-3 text-muted-foreground/50" />
-                  <code className="text-[11px] text-muted-foreground flex-1">{d.path}</code>
+                  <code className="text-[10px] sm:text-[11px] text-muted-foreground flex-1 break-all sm:break-normal">{d.path}</code>
                   <span className="text-[10px] text-muted-foreground/60">{d.source}</span>
                 </div>
               ))}
@@ -104,7 +104,7 @@ Review the code for:
             </div>
 
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-6 mb-4 font-body">Registries</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {[
                 { name: "SkillsMP", desc: "REST API marketplace" },
                 { name: "GitHub", desc: "Sparse clone from repos" },

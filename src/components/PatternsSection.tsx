@@ -23,14 +23,14 @@ export function PatternsSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {/* Pattern 1 */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <UserCheck className="w-4 h-4 text-primary" />
@@ -52,7 +52,7 @@ export function PatternsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.10 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <BrainCircuit className="w-4 h-4 text-primary" />
@@ -74,7 +74,7 @@ export function PatternsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.12 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <Share2 className="w-4 h-4 text-primary" />
@@ -96,7 +96,7 @@ export function PatternsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.12 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <GitBranch className="w-4 h-4 text-primary" />
@@ -118,7 +118,7 @@ export function PatternsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.18 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <Network className="w-4 h-4 text-primary" />
@@ -140,7 +140,7 @@ export function PatternsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.24 }}
-            className="paper-card p-6"
+            className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <Anchor className="w-4 h-4 text-primary" />

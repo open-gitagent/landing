@@ -109,7 +109,7 @@ export function HowItWorksSection() {
               <button
                 key={t.label}
                 onClick={() => setActive(i)}
-                className={`px-4 py-2.5 text-xs font-body transition-colors relative ${
+                className={`px-2.5 sm:px-4 py-2 sm:py-2.5 text-xs font-body transition-colors relative ${
                   active === i
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"

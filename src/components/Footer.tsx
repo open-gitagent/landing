@@ -2,7 +2,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-12 px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-12">
           <div>
             <span className="font-heading text-sm font-semibold text-foreground mb-3 block">
               <span className="text-primary">✦</span> gitagent

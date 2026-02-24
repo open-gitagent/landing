@@ -57,7 +57,7 @@ export function ExportSection() {
               </button>
             </div>
 
-            <div className="text-sm leading-7 font-body">
+            <div className="text-xs sm:text-sm leading-6 sm:leading-7 font-body break-all sm:break-normal">
               <span className="text-primary">$ </span>
               <span className="text-foreground font-medium">gitagent run</span>
               <span className="text-muted-foreground"> -r </span>
@@ -89,7 +89,7 @@ export function ExportSection() {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4">
             {[
               { flag: "-b develop", desc: "specific branch" },
               { flag: "--refresh", desc: "force re-clone" },
@@ -132,7 +132,7 @@ export function ExportSection() {
                 <span className="text-sm font-heading font-semibold text-foreground">{e.label}</span>
                 <p className="text-xs text-muted-foreground mt-0.5 font-body">{e.desc}</p>
               </div>
-              <code className="text-xs text-primary shrink-0 font-body relative z-10">{e.cmd}</code>
+              <code className="text-[10px] sm:text-xs text-primary shrink-0 font-body relative z-10">{e.cmd}</code>
             </motion.div>
           ))}
         </div>

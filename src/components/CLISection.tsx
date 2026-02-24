@@ -30,7 +30,7 @@ export function CLISection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {commands.map((cmd, i) => (
             <motion.div
               key={cmd.name}
@@ -38,14 +38,14 @@ export function CLISection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.04 }}
-              className="paper-card p-4 group hover:border-primary/40 transition-colors"
+              className="paper-card p-3 sm:p-4 group hover:border-primary/40 transition-colors"
             >
               <div className="flex items-center gap-2 mb-2 relative z-10">
-                <cmd.icon className="w-3.5 h-3.5 text-primary" />
+                <cmd.icon className="w-3.5 h-3.5 text-primary shrink-0" />
                 <code className="text-xs font-semibold text-foreground font-body">{cmd.name}</code>
-                <span className="text-[10px] text-muted-foreground ml-auto font-body">{cmd.desc}</span>
+                <span className="text-[10px] text-muted-foreground ml-auto font-body hidden sm:inline">{cmd.desc}</span>
               </div>
-              <code className="block text-[11px] text-primary/80 mb-1.5 font-body relative z-10">$ {cmd.usage}</code>
+              <code className="block text-[10px] sm:text-[11px] text-primary/80 mb-1.5 font-body relative z-10 break-all sm:break-normal">$ {cmd.usage}</code>
               <p className="text-[11px] text-muted-foreground/70 leading-relaxed font-body relative z-10">{cmd.detail}</p>
             </motion.div>
           ))}

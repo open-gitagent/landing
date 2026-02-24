@@ -163,7 +163,7 @@ export function HeroSection() {
       <div className="flame-bg" />
 
       <div className="mx-auto max-w-6xl">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -171,16 +171,16 @@ export function HeroSection() {
             transition={{ duration: 0.5 }}
           >
 
-            <div className="inline-flex items-center gap-2 sketch-border rounded-full px-3 py-1 text-xs text-muted-foreground mb-3">
+            <div className="inline-flex items-center gap-2 sketch-border rounded-full px-2 sm:px-3 py-1 text-xs text-muted-foreground mb-3 flex-wrap">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span className="text-primary font-medium">Open Standard</span> v0.1.0
-              <span className="text-muted-foreground/40">·</span>
-              <span className="tracking-widest uppercase text-[10px]">Clone a repo. Get an agent.</span>
+              <span className="text-muted-foreground/40 hidden sm:inline">·</span>
+              <span className="tracking-widest uppercase text-[10px] hidden sm:inline">Clone a repo. Get an agent.</span>
             </div>
 
             <div className="flex items-center gap-1 mb-4">
               <img src={gitagentLogo} alt="GitAgent" className="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-lg" />
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold leading-none tracking-tight text-foreground">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-heading font-bold leading-none tracking-tight text-foreground">
                 <span className="text-foreground">Git</span><span className="text-primary">Agent</span>
               </h1>
             </div>
@@ -192,10 +192,10 @@ export function HeroSection() {
               Maintained by team <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@Lyzr</a>
             </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <a
                 href="#quickstart"
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-medium px-4 py-2 rounded-md transition-opacity hover:opacity-90 font-body sketch-border border-primary"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-medium px-3 sm:px-4 py-2 rounded-md transition-opacity hover:opacity-90 font-body sketch-border border-primary"
               >
                 Get Started
               </a>
@@ -203,7 +203,7 @@ export function HeroSection() {
                 href="https://github.com/open-gitagent/gitagent"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 sketch-border text-xs font-medium text-foreground px-4 py-2 rounded-md transition-colors hover:bg-accent font-body"
+                className="inline-flex items-center gap-2 sketch-border text-xs font-medium text-foreground px-3 sm:px-4 py-2 rounded-md transition-colors hover:bg-accent font-body"
               >
                 View on GitHub
               </a>
@@ -211,7 +211,7 @@ export function HeroSection() {
 
             {/* Copyable command with adapter dropdown */}
             <div className="mt-6 relative">
-              <div className="code-block sketch-border border-primary/30 flex items-center gap-2 !py-2.5 !px-4 !overflow-visible">
+              <div className="code-block sketch-border border-primary/30 flex items-center gap-2 !py-2 sm:!py-2.5 !px-3 sm:!px-4 !overflow-visible">
                 <span className="text-xs text-muted-foreground font-body truncate flex-1 cursor-pointer" onClick={handleCopy}>
                   <span className="text-primary">$ </span>
                   <span className="text-foreground/90">{currentCmd}</span>
@@ -257,7 +257,7 @@ export function HeroSection() {
             </p>
 
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-5 mb-2 font-body">Supports</p>
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <a
                 href="https://github.com/HKUDS/nanobot"
                 target="_blank"
@@ -341,7 +341,7 @@ export function HeroSection() {
                 <span className="text-primary">$</span> tree my-agent-repository/
               </div>
 
-              <div className="font-body text-[13px] leading-[22px]">
+              <div className="font-body text-[11px] sm:text-[13px] leading-[18px] sm:leading-[22px] overflow-x-auto">
                 {/* Root */}
                 <motion.div
                   initial={{ opacity: 0 }}
