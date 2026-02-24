@@ -159,7 +159,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-20 pb-20 px-6">
+    <section className="relative pt-12 pb-20 px-6">
       <div className="flame-bg" />
 
       <div className="absolute left-1/2 top-10 h-10 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
