@@ -19,7 +19,7 @@ export function PatternsSection() {
         >
           <h2 className="text-2xl font-bold text-foreground mb-2">Patterns</h2>
           <p className="text-sm text-muted-foreground max-w-lg font-body">
-            Common structures that emerge when you treat agents as code.
+            Architectural patterns that emerge when you define agents as git-native file systems.
           </p>
         </motion.div>
 
