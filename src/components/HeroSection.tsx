@@ -159,17 +159,17 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-32 pb-20 px-6">
+    <section className="relative pt-20 pb-20 px-6">
       <div className="flame-bg" />
-      
-      <div className="absolute left-1/2 top-14 h-16 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+
+      <div className="absolute left-1/2 top-10 h-10 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
 
       <div className="mx-auto max-w-6xl">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-xs sm:text-sm text-muted-foreground tracking-widest uppercase mb-6 text-center font-body"
+          className="text-[10px] sm:text-xs text-muted-foreground tracking-widest uppercase mb-2 text-center font-body"
         >
           Clone a repo. Get an agent.
         </motion.p>
