@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
@@ -8,6 +8,8 @@ import agentAutomationHooksImg from "@/assets/agent-automation-hooks.png";
 import liveAgentMemoryImg from "@/assets/live-agent-memory.png";
 import agentVersioningImg from "@/assets/agent-versioning.png";
 import agentForkingImg from "@/assets/agent-forking.png";
+import ciCdAgentsImg from "@/assets/ci-cd-agents.png";
+import agentDiffAuditImg from "@/assets/agent-diff-audit.png";
 
 export function PatternsSection() {
   return (
@@ -180,7 +182,51 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 7 — Agent Automation Hooks */}
+          {/* Pattern 7 — CI/CD for Agents */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.27 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <RefreshCw className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">CI/CD for Agents</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Run <code className="text-foreground/70">gitagent validate</code> on every push via GitHub Actions. Test agent behavior in CI, block bad merges, and auto-deploy to production — treat agent quality like code quality.
+            </p>
+            <img
+              src={ciCdAgentsImg}
+              alt="CI/CD for Agents: GitHub Actions pipeline with validate, test, merge, and deploy stages"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 8 — Agent Diff & Audit Trail */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.30 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <SearchCode className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Agent Diff & Audit Trail</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              <code className="text-foreground/70">git diff</code> shows exactly what changed between agent versions. <code className="text-foreground/70">git blame</code> traces every line to who wrote it and when — full traceability out of the box.
+            </p>
+            <img
+              src={agentDiffAuditImg}
+              alt="Agent Diff & Audit Trail: git diff and git blame showing full traceability of agent changes"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 9 — Agent Automation Hooks */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
