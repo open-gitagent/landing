@@ -18,8 +18,8 @@ export function PatternsSection() {
           className="mb-12"
         >
           <h2 className="text-2xl font-bold text-foreground mb-2">Patterns</h2>
-          <p className="text-sm text-muted-foreground max-w-lg font-body">
-            Architectural patterns that emerge when you define agents as git-native file systems.
+          <p className="text-sm text-muted-foreground max-w-2xl font-body">
+            A gitagent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
           </p>
         </motion.div>
 
