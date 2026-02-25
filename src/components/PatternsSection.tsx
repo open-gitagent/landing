@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
@@ -10,6 +10,7 @@ import agentVersioningImg from "@/assets/agent-versioning.png";
 import agentForkingImg from "@/assets/agent-forking.png";
 import ciCdAgentsImg from "@/assets/ci-cd-agents.png";
 import agentDiffAuditImg from "@/assets/agent-diff-audit.png";
+import taggedReleasesImg from "@/assets/tagged-releases.png";
 
 export function PatternsSection() {
   return (
@@ -226,7 +227,29 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 9 — Agent Automation Hooks */}
+          {/* Pattern 9 — Tagged Releases */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.33 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <Tag className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Tagged Releases</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Tag stable agent versions like <code className="text-foreground/70">v1.1.0</code>. Pin production to a tag, canary new versions on staging, and roll back instantly if something breaks.
+            </p>
+            <img
+              src={taggedReleasesImg}
+              alt="Tagged Releases: git timeline with version tags, production and staging pointers, and instant rollback"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 10 — Agent Automation Hooks */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
