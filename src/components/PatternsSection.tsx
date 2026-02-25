@@ -74,7 +74,29 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 3 — Shared Context */}
+          {/* Pattern 3 — Agent Versioning */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.12 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <History className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Agent Versioning</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Every change to your agent is a <code className="text-foreground/70">git commit</code>. Roll back broken prompts, revert bad skills, and explore past versions — full undo history for your agent, powered by git.
+            </p>
+            <img
+              src={agentVersioningImg}
+              alt="Agent Versioning: git commit history showing agent changes that can be reverted"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 4 — Shared Context */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -136,28 +158,6 @@ export function PatternsSection() {
             <img 
               src={knowledgeTreeImg} 
               alt="Knowledge Tree: the knowledge/ folder stores entity relationships as a directory tree with embeddings" 
-              className="w-full rounded-md relative z-10"
-            />
-          </motion.div>
-
-          {/* Pattern 5 — Agent Versioning */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.21 }}
-            className="paper-card p-4 sm:p-6"
-          >
-            <div className="flex items-center gap-2 mb-1 relative z-10">
-              <History className="w-4 h-4 text-primary" />
-              <span className="text-sm font-heading font-semibold text-foreground">Agent Versioning</span>
-            </div>
-            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Every change to your agent is a <code className="text-foreground/70">git commit</code>. Roll back broken prompts, revert bad skills, and explore past versions — full undo history for your agent, powered by git.
-            </p>
-            <img
-              src={agentVersioningImg}
-              alt="Agent Versioning: git commit history showing agent changes that can be reverted"
               className="w-full rounded-md relative z-10"
             />
           </motion.div>
