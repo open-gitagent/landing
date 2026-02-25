@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["'Playfair Display'", "serif"],
-        body: ["'Noto Sans'", "sans-serif"],
+        heading: ["'IBM Plex Mono'", "monospace"],
+        body: ["'IBM Plex Mono'", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",

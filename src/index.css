@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,8 +6,8 @@
 
 @layer base {
   :root {
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Noto Sans', sans-serif;
+    --font-heading: 'IBM Plex Mono', monospace;
+    --font-body: 'IBM Plex Mono', monospace;
 
     --background: 33 25% 93%;
     --foreground: 4 24% 23%;
@@ -82,7 +82,7 @@
 
   .code-block {
     @apply bg-card/60 border border-border rounded-lg p-4 text-sm overflow-x-auto;
-    font-family: 'Noto Sans', monospace;
+    font-family: 'IBM Plex Mono', monospace;
     box-shadow: 2px 3px 0px hsl(var(--border));
   }
 
