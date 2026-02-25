@@ -78,10 +78,10 @@ export function PatternsSection() {
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
               <Share2 className="w-4 h-4 text-primary" />
-              <span className="text-sm font-heading font-semibold text-foreground">Shared Context</span>
+              <span className="text-sm font-heading font-semibold text-foreground">Shared Context & Skills via Monorepo</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Anything placed at the root — <code className="text-foreground/70">context.md</code>, <code className="text-foreground/70">skills/</code>, <code className="text-foreground/70">tools/</code> — is automatically shared across every agent. No duplication, one source of truth.
+              Anything placed at the root — <code className="text-foreground/70">context.md</code>, <code className="text-foreground/70">skills/</code>, <code className="text-foreground/70">tools/</code> — is automatically shared across every agent in the monorepo. No duplication, one source of truth.
             </p>
             <img 
               src={sharedContextImg} 
