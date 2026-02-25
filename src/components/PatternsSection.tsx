@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag, Lock } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
@@ -11,6 +11,7 @@ import agentForkingImg from "@/assets/agent-forking.png";
 import ciCdAgentsImg from "@/assets/ci-cd-agents.png";
 import agentDiffAuditImg from "@/assets/agent-diff-audit.png";
 import taggedReleasesImg from "@/assets/tagged-releases.png";
+import secretManagementImg from "@/assets/secret-management.png";
 
 export function PatternsSection() {
   return (
@@ -249,7 +250,29 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 10 — Agent Automation Hooks */}
+          {/* Pattern 10 — Secret Management */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.36 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <Lock className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Secret Management via .gitignore</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Agent tools that need API keys or credentials read from a local <code className="text-foreground/70">.env</code> file — kept out of version control via <code className="text-foreground/70">.gitignore</code>. Agent config is shareable, secrets stay local.
+            </p>
+            <img
+              src={secretManagementImg}
+              alt="Secret Management: version-controlled agent config separated from ignored .env and credentials"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 11 — Agent Automation Hooks */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
