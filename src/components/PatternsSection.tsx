@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
 import knowledgeTreeImg from "@/assets/knowledge-tree.png";
 import agentAutomationHooksImg from "@/assets/agent-automation-hooks.png";
 import liveAgentMemoryImg from "@/assets/live-agent-memory.png";
+import agentVersioningImg from "@/assets/agent-versioning.png";
 
 export function PatternsSection() {
   return (
@@ -134,7 +135,29 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 5 — Agent Automation Hooks */}
+          {/* Pattern 5 — Agent Versioning */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.21 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <History className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Agent Versioning</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Every change to your agent is a <code className="text-foreground/70">git commit</code>. Roll back broken prompts, revert bad skills, and explore past versions — full undo history for your agent, powered by git.
+            </p>
+            <img
+              src={agentVersioningImg}
+              alt="Agent Versioning: git commit history showing agent changes that can be reverted"
+              className="w-full rounded-md relative z-10"
+            />
+          </motion.div>
+
+          {/* Pattern 6 — Agent Automation Hooks */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
