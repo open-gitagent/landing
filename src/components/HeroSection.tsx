@@ -178,18 +178,16 @@ export function HeroSection() {
               <span className="tracking-widest uppercase text-[10px] hidden sm:inline">Clone a repo. Get an agent.</span>
             </div>
 
-            <div className="flex items-center gap-1 mb-4">
+            <div className="flex items-center gap-1 mb-1">
               <img src={gitagentLogo} alt="GitAgent" className="h-16 w-16 sm:h-20 sm:w-20 object-contain rounded-lg" />
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-heading font-bold leading-none tracking-tight text-foreground">
                 <span className="text-foreground">Git</span><span className="text-primary">Agent</span>
               </h1>
             </div>
+            <p className="text-sm text-muted-foreground/60 mb-4 font-body italic">your repository becomes your agent</p>
 
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-md mb-1 font-body">
-              A git-native, framework-agnostic, <span className="text-foreground/80">open standard for defining AI agents.</span> <span className="text-foreground font-medium">Your repository becomes your agent.</span>
-            </p>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md mb-2 font-body">
-              Version-controlled config that exports to Claude Code, OpenClaw, Lyzr Agent, Chimera, NanoBot, CrewAgent, and Agents SDK.
+              A git-native, framework-agnostic, <span className="text-foreground/80">open standard for defining AI agents.</span> Version-controlled config that exports to Claude Code, OpenClaw, Lyzr Agent, Chimera, NanoBot, CrewAgent, and Agents SDK.
             </p>
             <p className="text-[11px] text-muted-foreground/60 mb-8 font-body">
               Maintained by team <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@Lyzr</a>
