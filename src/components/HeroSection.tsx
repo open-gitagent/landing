@@ -144,7 +144,7 @@ const adapters = [
 ];
 
 const buildCmd = (flag: string) =>
-  `npx @open-gitagent/gitagent@0.1.7 run -r https://github.com/shreyas-lyzr/architect -a ${flag}${flag !== "claude" ? ' -p "hello"' : ''}`;
+  `npx @open-gitagent/gitagent@latest run -r https://github.com/shreyas-lyzr/architect -a ${flag}${flag !== "claude" ? ' -p "hello"' : ''}`;
 
 export function HeroSection() {
   const [copied, setCopied] = useState(false);
