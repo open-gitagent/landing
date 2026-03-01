@@ -1,6 +1,6 @@
 import mixpanel from 'mixpanel-browser';
 
-const MIXPANEL_TOKEN = '6bf65ff743a1abf30358d23324ec7be5';
+const MIXPANEL_TOKEN = '1c207b0bf23ecb3f8cf48d6fef67da6c';
 
 let initialized = false;
 
