@@ -34,6 +34,14 @@ export function Navbar() {
             </a>
           ))}
           <a
+            href="https://discord.gg/hVZV8Xyjdc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground font-body"
+          >
+            Discord
+          </a>
+          <a
             href="https://github.com/open-gitagent/gitagent"
             target="_blank"
             rel="noopener noreferrer"
