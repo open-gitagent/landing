@@ -10,6 +10,7 @@ import { SkillsSection } from "@/components/SkillsSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { QuickStartSection } from "@/components/QuickStartSection";
 import { Footer } from "@/components/Footer";
+import { DiscordBanner } from "@/components/DiscordBanner";
 import { useRef, useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { track } from "@/lib/analytics";
@@ -48,6 +49,7 @@ const Index = () => {
       <SkillsSection />
       <ComplianceSection />
       <QuickStartSection />
+      <DiscordBanner />
       <Footer />
     </div>
   );
