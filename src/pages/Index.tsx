@@ -12,6 +12,7 @@ import { QuickStartSection } from "@/components/QuickStartSection";
 import { Footer } from "@/components/Footer";
 import { useRef, useState } from "react";
 import { Copy, Check } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 const Index = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -23,6 +24,7 @@ const Index = () => {
       navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      track('copy_page_content');
     }
   };
 

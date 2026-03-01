@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Play, Copy } from "lucide-react";
 import { useState } from "react";
+import { track } from "@/lib/analytics";
 
 const runCommand = `gitagent run -r "https://github.com/shreyaskapale/shreyas-agent" -a claude`;
 
@@ -22,6 +23,7 @@ export function ExportSection() {
     navigator.clipboard.writeText(runCommand);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    track('run_command_copied', { command: runCommand });
   };
 
   return (

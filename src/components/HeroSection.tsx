@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Settings, FileText, BookOpen, Zap, Wrench, Database, Brain, GitFork, ShieldCheck, Folder, Cat, Sparkles, Copy, Check, Users } from "lucide-react";
+import { track } from "@/lib/analytics";
 import openclawLogo from "@/assets/openclaw-logo.png";
 import claudeCodeLogo from "@/assets/claude-code-logo.png";
 import lyzrLogo from "@/assets/lyzr-logo.png";
@@ -156,6 +157,7 @@ export function HeroSection() {
     navigator.clipboard.writeText(currentCmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    track('hero_command_copied', { adapter: selectedAdapter.flag, command: currentCmd });
   };
 
   return (
@@ -234,7 +236,7 @@ export function HeroSection() {
                       {adapters.map((a) => (
                         <button
                           key={a.flag}
-                          onClick={() => { setSelectedAdapter(a); setDropdownOpen(false); }}
+                          onClick={() => { setSelectedAdapter(a); setDropdownOpen(false); track('adapter_selected', { adapter: a.flag, label: a.label }); }}
                           className={`block w-full text-left px-3 py-1.5 text-xs font-body hover:bg-accent transition-colors ${a.flag === selectedAdapter.flag ? 'text-primary font-medium' : 'text-foreground'}`}
                         >
                           {a.label}
