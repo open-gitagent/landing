@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag, Lock } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag, Lock, Shield, Server } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
@@ -12,6 +12,8 @@ import ciCdAgentsImg from "@/assets/ci-cd-agents.png";
 import agentDiffAuditImg from "@/assets/agent-diff-audit.png";
 import taggedReleasesImg from "@/assets/tagged-releases.png";
 import secretManagementImg from "@/assets/secret-management.png";
+import segregationOfDutiesImg from "@/assets/segregation-of-duties.png";
+import statelessComputeImg from "@/assets/stateless-compute.png";
 
 export function PatternsSection() {
   return (
@@ -99,7 +101,30 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 4 — Shared Context */}
+          {/* Pattern 4 — Stateless Compute, Git as State */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.12 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <Server className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Stateless Compute, Git as State</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              The VM is stateless. Git is the state. Agents run in ephemeral compute, committing every meaningful event — <code className="text-foreground/70">bootstrap</code>, <code className="text-foreground/70">execute</code>, <code className="text-foreground/70">checkpoint</code>, <code className="text-foreground/70">teardown</code> — to a <code className="text-foreground/70">runtime/&lt;date&gt;/&lt;job-id&gt;</code> branch. Full audit trail, deterministic replay, and failure recovery — all from git history.
+            </p>
+            <img
+              src={statelessComputeImg}
+              alt="Stateless Compute: ephemeral VMs commit every event to git runtime branches for audit and recovery"
+              className="w-full rounded-md relative z-10"
+              loading="lazy"
+            />
+          </motion.div>
+
+          {/* Pattern 5 — Shared Context */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -283,7 +308,7 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 11 — Agent Automation Hooks */}
+          {/* Pattern 12 — Agent Automation Hooks */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -298,9 +323,32 @@ export function PatternsSection() {
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
               Define <code className="text-foreground/70">bootstrap.md</code> and <code className="text-foreground/70">teardown.md</code> in the <code className="text-foreground/70">hooks/</code> folder to control what an agent does when it starts up and what it should do before it stops — injecting lifecycle logic at key points.
             </p>
-            <img 
-              src={agentAutomationHooksImg} 
-              alt="Agent Automation Hooks: hooks/ folder with bootstrap.md and teardown.md for agent lifecycle events" 
+            <img
+              src={agentAutomationHooksImg}
+              alt="Agent Automation Hooks: hooks/ folder with bootstrap.md and teardown.md for agent lifecycle events"
+              className="w-full rounded-md relative z-10"
+              loading="lazy"
+            />
+          </motion.div>
+
+          {/* Pattern 13 — Segregation of Duties */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.27 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <Shield className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Segregation of Duties (SOD)</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              No single agent should control a critical process end-to-end. Define roles (maker, checker, executor, auditor) in <code className="text-foreground/70">agent.yaml</code> + <code className="text-foreground/70">DUTIES.md</code> with conflict matrices and handoff rules — <code className="text-foreground/70">gitagent validate</code> catches violations before deployment.
+            </p>
+            <img
+              src={segregationOfDutiesImg}
+              alt="Segregation of Duties: conflict matrix with maker, checker, executor, auditor roles and DUTIES.md policy"
               className="w-full rounded-md relative z-10"
               loading="lazy"
             />
