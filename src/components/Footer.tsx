@@ -1,3 +1,19 @@
+const REPO = "https://github.com/open-gitagent/gitagent";
+
+const docsLinks = [
+  { label: "Specification", href: `${REPO}/blob/main/spec/SPECIFICATION.md` },
+  { label: "Getting Started", href: `${REPO}#readme` },
+  { label: "CLI Reference", href: `${REPO}#cli-commands` },
+  { label: "Schema Reference", href: `${REPO}/blob/main/spec/SPECIFICATION.md` },
+];
+
+const examplesLinks = [
+  { label: "Minimal", href: `${REPO}/tree/main/examples/minimal` },
+  { label: "Standard", href: `${REPO}/tree/main/examples/standard` },
+  { label: "Full (Compliance)", href: `${REPO}/tree/main/examples/full` },
+  { label: "Skills", href: `${REPO}/tree/main/examples/standard/skills` },
+];
+
 export function Footer() {
   return (
     <footer className="border-t border-border py-12 px-6">
@@ -15,9 +31,9 @@ export function Footer() {
           <div>
             <span className="text-xs font-heading font-semibold text-foreground mb-3 block">Docs</span>
             <div className="space-y-2">
-              {["Specification", "Getting Started", "CLI Reference", "Schema Reference"].map((l) => (
-                <a key={l} href="#" className="block text-xs text-muted-foreground hover:text-foreground transition-colors font-body">
-                  {l}
+              {docsLinks.map((l) => (
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-foreground transition-colors font-body">
+                  {l.label}
                 </a>
               ))}
             </div>
@@ -26,9 +42,9 @@ export function Footer() {
           <div>
             <span className="text-xs font-heading font-semibold text-foreground mb-3 block">Examples</span>
             <div className="space-y-2">
-              {["Minimal", "Standard", "Full (Compliance)", "Skills"].map((l) => (
-                <a key={l} href="#" className="block text-xs text-muted-foreground hover:text-foreground transition-colors font-body">
-                  {l}
+              {examplesLinks.map((l) => (
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-foreground transition-colors font-body">
+                  {l.label}
                 </a>
               ))}
             </div>

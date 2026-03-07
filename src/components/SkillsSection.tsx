@@ -26,7 +26,7 @@ export function SkillsSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Skills System</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Skills System</h2>
           <p className="text-sm text-muted-foreground font-body">
             Reusable capability modules following the{" "}
             <a href="https://agentskills.io" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">

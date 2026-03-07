@@ -25,7 +25,7 @@ export function ComplianceSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Compliance</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Compliance & Governance</h2>
           <p className="text-sm text-muted-foreground font-body">
             First-class regulatory support baked into the manifest. Run{" "}
             <code className="text-primary text-xs">gitagent audit</code> for a full report.

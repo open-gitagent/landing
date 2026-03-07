@@ -24,7 +24,7 @@ export function CLISection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">CLI Commands</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">GitAgent CLI: Build & Run AI Agents</h2>
           <p className="text-sm text-muted-foreground font-body">
             Everything you need to build, validate, run, and ship agents.
           </p>

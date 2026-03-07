@@ -38,7 +38,7 @@ export function ExportSection() {
         >
           <div className="flex items-center gap-2 mb-3">
             <Play className="w-4 h-4 text-primary" />
-            <h2 className="text-2xl font-bold text-foreground">Run from Git</h2>
+            <h2 className="text-2xl font-bold text-foreground">Run AI Agents from Git</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-6 max-w-lg font-body">
             Clone any agent repo and run it instantly. One command — no setup, no config files to copy.
@@ -114,7 +114,7 @@ export function ExportSection() {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Export Anywhere</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Export to Any AI Framework</h2>
           <p className="text-sm text-muted-foreground font-body">
             One agent definition. Every framework.
           </p>

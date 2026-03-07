@@ -92,7 +92,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">How It Works</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">How the GitAgent Agent Framework Works</h2>
           <p className="text-sm text-muted-foreground font-body">
             Three files define your agent. Everything else is optional.
           </p>

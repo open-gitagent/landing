@@ -186,7 +186,10 @@ export function HeroSection() {
                 <span className="text-foreground">Git</span><span className="text-primary">Agent</span>
               </h1>
             </div>
-            <p className="text-sm text-muted-foreground/60 mb-4 font-body italic">your repository becomes your agent</p>
+            <p className="text-sm text-muted-foreground/60 mb-1 font-body italic">your repository becomes your agent</p>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-md mb-4 font-body">
+              The open standard for defining, versioning, and running AI agents natively in git.
+            </p>
 
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md mb-2 font-body">
               A git-native, framework-agnostic, <span className="text-foreground/80">open standard for defining AI agents.</span> Version-controlled config that exports to Claude Code, OpenClaw, Lyzr Agent, Chimera, NanoBot, CrewAgent, and Agents SDK.

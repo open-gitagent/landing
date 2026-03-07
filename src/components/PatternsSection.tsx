@@ -23,7 +23,7 @@ export function PatternsSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Patterns</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Design Patterns Built on Git</h2>
           <p className="text-sm text-muted-foreground max-w-2xl font-body">
             A gitagent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
           </p>
@@ -49,6 +49,7 @@ export function PatternsSection() {
               src={humanInTheLoopImg} 
               alt="Human-in-the-Loop for RL Agents: agents create branches and PRs for human review before updating memory or skills" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -71,6 +72,7 @@ export function PatternsSection() {
               src={liveAgentMemoryImg} 
               alt="Live Agent Memory: memory/ folder with runtime logs, key decisions, and context files" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -93,6 +95,7 @@ export function PatternsSection() {
               src={agentVersioningImg}
               alt="Agent Versioning: git commit history showing agent changes that can be reverted"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -115,6 +118,7 @@ export function PatternsSection() {
               src={sharedContextImg} 
               alt="Shared Context: root-level context.md, skills/, tools/, and knowledge/ inherited by all agents" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -137,6 +141,7 @@ export function PatternsSection() {
               src={branchDeploymentImg} 
               alt="Branch-based Deployment: dev, staging, and main branches for promoting agent changes" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -159,6 +164,7 @@ export function PatternsSection() {
               src={knowledgeTreeImg} 
               alt="Knowledge Tree: the knowledge/ folder stores entity relationships as a directory tree with embeddings" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -181,6 +187,7 @@ export function PatternsSection() {
               src={agentForkingImg}
               alt="Agent Forking & Remixing: fork an agent, customize it, and contribute back via pull request"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -203,6 +210,7 @@ export function PatternsSection() {
               src={ciCdAgentsImg}
               alt="CI/CD for Agents: GitHub Actions pipeline with validate, test, merge, and deploy stages"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -225,6 +233,7 @@ export function PatternsSection() {
               src={agentDiffAuditImg}
               alt="Agent Diff & Audit Trail: git diff and git blame showing full traceability of agent changes"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -247,6 +256,7 @@ export function PatternsSection() {
               src={taggedReleasesImg}
               alt="Tagged Releases: git timeline with version tags, production and staging pointers, and instant rollback"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -269,6 +279,7 @@ export function PatternsSection() {
               src={secretManagementImg}
               alt="Secret Management: version-controlled agent config separated from ignored .env and credentials"
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 
@@ -291,6 +302,7 @@ export function PatternsSection() {
               src={agentAutomationHooksImg} 
               alt="Agent Automation Hooks: hooks/ folder with bootstrap.md and teardown.md for agent lifecycle events" 
               className="w-full rounded-md relative z-10"
+              loading="lazy"
             />
           </motion.div>
 

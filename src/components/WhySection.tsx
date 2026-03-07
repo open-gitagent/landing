@@ -35,7 +35,7 @@ export function WhySection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Why gitagent</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Why GitAgent: The Git-Native AI Agent Standard</h2>
           <p className="text-sm text-muted-foreground max-w-lg font-body">
             Everything your agent needs, defined in files you already know how to manage.
           </p>

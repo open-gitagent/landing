@@ -20,7 +20,7 @@ export function QuickStartSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Quick Start</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Quick Start: Define Your First AI Agent</h2>
           <p className="text-sm text-muted-foreground font-body">
             Seven commands from install to deploy.
           </p>

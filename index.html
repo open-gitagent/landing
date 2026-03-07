@@ -4,23 +4,108 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/gitagent.png" />
-    <title>gitagent | your repository becomes your agent</title>
-    <meta name="description" content="A framework-agnostic, git-native standard for defining AI agents. Clone a repo, get an agent. Build, validate, export, and run agents across Claude, OpenAI, Lyzr, and more." />
+    <link rel="apple-touch-icon" href="/gitagent.png" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href="https://gitagent.sh/" />
+    <title>GitAgent — The Open Standard for Git-Native AI Agents</title>
+    <meta name="description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
     <meta name="author" content="gitagent" />
-    <meta name="keywords" content="gitagent, AI agents, git-native, framework-agnostic, Claude, OpenAI, Lyzr, CrewAI, MCP, agent framework" />
+    <meta name="keywords" content="git native ai agents, ai agent standard, open ai agent standard, ai agent framework, gitagent, AI agents, git-native, framework-agnostic, Claude, OpenAI, Lyzr, CrewAI, MCP, agent framework, ai agent definition, ai agent open standard, define ai agents in git" />
 
-    <meta property="og:title" content="gitagent | your repository becomes your agent" />
-    <meta property="og:description" content="A framework-agnostic, git-native standard for defining AI agents. Clone a repo, get an agent." />
+    <meta property="og:title" content="GitAgent — The Open Standard for Git-Native AI Agents" />
+    <meta property="og:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://gitagent.sh" />
+    <meta property="og:url" content="https://gitagent.sh/" />
     <meta property="og:image" content="https://gitagent.sh/og-banner-2.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="GitAgent" />
+    <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="gitagent | your repository becomes your agent" />
-    <meta name="twitter:description" content="A framework-agnostic, git-native standard for defining AI agents. Clone a repo, get an agent." />
+    <meta name="twitter:title" content="GitAgent — The Open Standard for Git-Native AI Agents" />
+    <meta name="twitter:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
     <meta name="twitter:image" content="https://gitagent.sh/og-banner-2.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "GitAgent",
+          "url": "https://gitagent.sh",
+          "logo": "https://gitagent.sh/gitagent.png",
+          "sameAs": [
+            "https://github.com/open-gitagent/gitagent",
+            "https://discord.gg/hVZV8Xyjdc"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "GitAgent",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Cross-platform",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "description": "Define, version, and run AI agents natively in git. The open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more.",
+          "url": "https://gitagent.sh",
+          "downloadUrl": "https://www.npmjs.com/package/gitagent",
+          "softwareVersion": "0.1.0",
+          "license": "https://opensource.org/licenses/MIT"
+        },
+        {
+          "@type": "WebSite",
+          "name": "GitAgent",
+          "url": "https://gitagent.sh"
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is GitAgent?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "GitAgent is an open standard for defining AI agents as files in a git repository. Instead of configuring agents in proprietary dashboards, you define identity (SOUL.md), skills (SKILL.md), config (agent.yaml), and more — all version-controlled, branchable, and exportable to any AI framework."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What makes GitAgent a git-native AI agent framework?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "GitAgent stores every aspect of an AI agent — identity, skills, tools, knowledge, memory, hooks, and compliance artifacts — as plain files in a git repository. This means you get version control, branching, pull requests, code review, CI/CD, and collaboration for free, using tools developers already know."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How is GitAgent different from other AI agent frameworks?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most agent frameworks lock you into a single runtime or vendor. GitAgent is framework-agnostic: define your agent once, then export to Claude Code, OpenAI Agents SDK, CrewAI, Lyzr, OpenClaw, Nanobot, or a raw system prompt. Your agent definition lives in git, not in a vendor's cloud."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is GitAgent an open standard?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. GitAgent is MIT-licensed and developed in the open at github.com/open-gitagent/gitagent. The specification, CLI, adapters, and examples are all open source. Anyone can contribute, fork, or build on the standard."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I create a git-native AI agent?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Install the CLI with npm install -g gitagent, then run gitagent init --template standard to scaffold an agent repo. Edit agent.yaml, SOUL.md, and SKILL.md to define your agent. Validate with gitagent validate, then run or export with gitagent run or gitagent export."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
 
   <body>

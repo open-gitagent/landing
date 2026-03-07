@@ -21,7 +21,7 @@ export function AdaptersSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Adapters & Runners</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Framework Adapters: One Standard, Every Runtime</h2>
           <p className="text-sm text-muted-foreground font-body">
             One agent definition. Eight runtime targets.
           </p>

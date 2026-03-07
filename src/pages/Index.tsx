@@ -8,6 +8,7 @@ import { CLISection } from "@/components/CLISection";
 import { AdaptersSection } from "@/components/AdaptersSection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
+import { FAQSection } from "@/components/FAQSection";
 import { QuickStartSection } from "@/components/QuickStartSection";
 import { Footer } from "@/components/Footer";
 import { DiscordBanner } from "@/components/DiscordBanner";
@@ -39,16 +40,19 @@ const Index = () => {
       >
         {copied ? <><Check className="w-3.5 h-3.5 text-primary" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy Page</>}
       </button>
-      <HeroSection />
-      <PatternsSection />
-      <WhySection />
-      <HowItWorksSection />
-      <ExportSection />
-      <CLISection />
-      <AdaptersSection />
-      <SkillsSection />
-      <ComplianceSection />
-      <QuickStartSection />
+      <main>
+        <HeroSection />
+        <PatternsSection />
+        <WhySection />
+        <HowItWorksSection />
+        <ExportSection />
+        <CLISection />
+        <AdaptersSection />
+        <SkillsSection />
+        <ComplianceSection />
+        <FAQSection />
+        <QuickStartSection />
+      </main>
       <DiscordBanner />
       <Footer />
     </div>
