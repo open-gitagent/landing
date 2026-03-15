@@ -12,6 +12,7 @@ import { FAQSection } from "@/components/FAQSection";
 import { QuickStartSection } from "@/components/QuickStartSection";
 import { Footer } from "@/components/Footer";
 import { DiscordBanner } from "@/components/DiscordBanner";
+import { RegistryBanner } from "@/components/RegistryBanner";
 import { useRef, useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { track } from "@/lib/analytics";
@@ -42,6 +43,7 @@ const Index = () => {
       </button>
       <main>
         <HeroSection />
+        <RegistryBanner />
         <PatternsSection />
         <WhySection />
         <HowItWorksSection />
