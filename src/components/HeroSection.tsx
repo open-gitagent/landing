@@ -112,7 +112,7 @@ const tree: TreeNode[] = [
     ],
   },
   {
-    name: "workflows/",
+    name: "skillflows/",
     icon: <Play className="w-3 h-3" />,
     color: "text-foreground",
     tag: "automation",
