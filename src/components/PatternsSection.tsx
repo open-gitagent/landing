@@ -56,7 +56,7 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 2 — SkillsFlow */}
+          {/* Pattern 2 — Agent Versioning */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -65,15 +65,15 @@ export function PatternsSection() {
             className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
-              <Zap className="w-4 h-4 text-primary" />
-              <span className="text-sm font-heading font-semibold text-foreground">SkillsFlow</span>
+              <History className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">Agent Versioning</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Deterministic, multi-step workflows defined in <code className="text-foreground/70">workflows/</code> as YAML. Chain <code className="text-foreground/70">skill:</code>, <code className="text-foreground/70">agent:</code>, and <code className="text-foreground/70">tool:</code> steps with <code className="text-foreground/70">depends_on</code> ordering, <code className="text-foreground/70">{"${{ }}"}</code> template data flow, and per-step <code className="text-foreground/70">prompt:</code> overrides.
+              Every change to your agent is a <code className="text-foreground/70">git commit</code>. Roll back broken prompts, revert bad skills, and explore past versions — full undo history for your agent, powered by git.
             </p>
             <img
-              src={skillsflowImg}
-              alt="SkillsFlow: deterministic multi-step workflows chaining skills, agents, and tools via YAML with template data flow"
+              src={agentVersioningImg}
+              alt="Agent Versioning: git commit history showing agent changes that can be reverted"
               className="w-full rounded-md relative z-10"
               loading="lazy"
             />
@@ -94,38 +94,38 @@ export function PatternsSection() {
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
               The <code className="text-foreground/70">memory/</code> folder holds a <code className="text-foreground/70">runtime/</code> subfolder where agents write live knowledge — <code className="text-foreground/70">dailylog.md</code>, <code className="text-foreground/70">key-decisions.md</code>, and <code className="text-foreground/70">context.md</code> — persisting execution state across sessions.
             </p>
-            <img 
-              src={liveAgentMemoryImg} 
-              alt="Live Agent Memory: memory/ folder with runtime logs, key decisions, and context files" 
+            <img
+              src={liveAgentMemoryImg}
+              alt="Live Agent Memory: memory/ folder with runtime logs, key decisions, and context files"
               className="w-full rounded-md relative z-10"
               loading="lazy"
             />
           </motion.div>
 
-          {/* Pattern 3 — Agent Versioning */}
+          {/* Pattern 4 — SkillsFlow */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.12 }}
+            transition={{ delay: 0.14 }}
             className="paper-card p-4 sm:p-6"
           >
             <div className="flex items-center gap-2 mb-1 relative z-10">
-              <History className="w-4 h-4 text-primary" />
-              <span className="text-sm font-heading font-semibold text-foreground">Agent Versioning</span>
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">SkillsFlow</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Every change to your agent is a <code className="text-foreground/70">git commit</code>. Roll back broken prompts, revert bad skills, and explore past versions — full undo history for your agent, powered by git.
+              Deterministic, multi-step workflows defined in <code className="text-foreground/70">workflows/</code> as YAML. Chain <code className="text-foreground/70">skill:</code>, <code className="text-foreground/70">agent:</code>, and <code className="text-foreground/70">tool:</code> steps with <code className="text-foreground/70">depends_on</code> ordering, <code className="text-foreground/70">{"${{ }}"}</code> template data flow, and per-step <code className="text-foreground/70">prompt:</code> overrides.
             </p>
             <img
-              src={agentVersioningImg}
-              alt="Agent Versioning: git commit history showing agent changes that can be reverted"
+              src={skillsflowImg}
+              alt="SkillsFlow: deterministic multi-step workflows chaining skills, agents, and tools via YAML with template data flow"
               className="w-full rounded-md relative z-10"
               loading="lazy"
             />
           </motion.div>
 
-          {/* Pattern 4 — Stateless Compute, Git as State */}
+          {/* Pattern 5 — Stateless Compute, Git as State */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
