@@ -213,6 +213,15 @@ export function HeroSection() {
               >
                 View on GitHub
               </a>
+              <a
+                href="https://registry.gitagent.sh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 sketch-border border-primary/50 text-xs font-medium text-primary px-3 sm:px-4 py-2 rounded-md transition-colors hover:bg-primary/10 font-body"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Agent Registry
+              </a>
             </div>
 
             {/* Copyable command with adapter dropdown */}
