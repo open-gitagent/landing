@@ -34,6 +34,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden" ref={contentRef}>
       <Navbar />
+      <RegistryBanner />
+      <div className="h-8" /> {/* spacer for fixed announcement strip */}
       <button
         onClick={handleCopyAll}
         className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-[60] inline-flex items-center gap-1.5 sketch-border rounded-md px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-body text-muted-foreground hover:text-foreground hover:bg-accent transition-colors bg-background/90 backdrop-blur-sm shadow-lg"
@@ -43,7 +45,6 @@ const Index = () => {
       </button>
       <main>
         <HeroSection />
-        <RegistryBanner />
         <PatternsSection />
         <WhySection />
         <HowItWorksSection />
