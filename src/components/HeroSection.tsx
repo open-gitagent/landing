@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Settings, FileText, BookOpen, Zap, Wrench, Database, Brain, GitFork, ShieldCheck, Folder, Cat, Sparkles, Copy, Check, Users } from "lucide-react";
+import { Settings, FileText, BookOpen, Zap, Wrench, Database, Brain, GitFork, ShieldCheck, Folder, Cat, Sparkles, Copy, Check, Users, Play } from "lucide-react";
 import { track } from "@/lib/analytics";
 import openclawLogo from "@/assets/openclaw-logo.png";
 import claudeCodeLogo from "@/assets/claude-code-logo.png";
@@ -109,6 +109,15 @@ const tree: TreeNode[] = [
       { name: "hooks.yaml", icon: <Settings className="w-3 h-3" />, color: "text-foreground/70" },
       { name: "bootstrap.md", icon: <FileText className="w-3 h-3" />, color: "text-foreground/70" },
       { name: "teardown.md", icon: <FileText className="w-3 h-3" />, color: "text-foreground/70" },
+    ],
+  },
+  {
+    name: "workflows/",
+    icon: <Play className="w-3 h-3" />,
+    color: "text-foreground",
+    tag: "automation",
+    children: [
+      { name: "code-review-flow.yaml", icon: <Settings className="w-3 h-3" />, color: "text-foreground/70" },
     ],
   },
   {

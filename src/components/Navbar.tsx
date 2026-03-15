@@ -8,6 +8,7 @@ const navLinks = [
   { label: "CLI", href: "#cli" },
   { label: "Adapters", href: "#adapters" },
   { label: "Skills", href: "#skills" },
+  { label: "SkillsFlow", href: "#skillsflow" },
   { label: "Compliance", href: "#compliance" },
   { label: "Quick Start", href: "#quickstart" },
 ];

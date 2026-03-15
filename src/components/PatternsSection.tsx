@@ -14,6 +14,7 @@ import taggedReleasesImg from "@/assets/tagged-releases.png";
 import secretManagementImg from "@/assets/secret-management.png";
 import segregationOfDutiesImg from "@/assets/segregation-of-duties.png";
 import statelessComputeImg from "@/assets/stateless-compute.png";
+import skillsflowImg from "@/assets/skillsflow.png";
 
 export function PatternsSection() {
   return (
@@ -55,7 +56,30 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 2 — Live Agent Memory */}
+          {/* Pattern 2 — SkillsFlow */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.08 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">SkillsFlow</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Deterministic, multi-step workflows defined in <code className="text-foreground/70">workflows/</code> as YAML. Chain <code className="text-foreground/70">skill:</code>, <code className="text-foreground/70">agent:</code>, and <code className="text-foreground/70">tool:</code> steps with <code className="text-foreground/70">depends_on</code> ordering, <code className="text-foreground/70">{"${{ }}"}</code> template data flow, and per-step <code className="text-foreground/70">prompt:</code> overrides.
+            </p>
+            <img
+              src={skillsflowImg}
+              alt="SkillsFlow: deterministic multi-step workflows chaining skills, agents, and tools via YAML with template data flow"
+              className="w-full rounded-md relative z-10"
+              loading="lazy"
+            />
+          </motion.div>
+
+          {/* Pattern 3 — Live Agent Memory */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

@@ -7,6 +7,7 @@ import { ExportSection } from "@/components/ExportSection";
 import { CLISection } from "@/components/CLISection";
 import { AdaptersSection } from "@/components/AdaptersSection";
 import { SkillsSection } from "@/components/SkillsSection";
+import { SkillsFlowSection } from "@/components/SkillsFlowSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { FAQSection } from "@/components/FAQSection";
 import { QuickStartSection } from "@/components/QuickStartSection";
@@ -52,6 +53,7 @@ const Index = () => {
         <CLISection />
         <AdaptersSection />
         <SkillsSection />
+        <SkillsFlowSection />
         <ComplianceSection />
         <FAQSection />
         <QuickStartSection />
