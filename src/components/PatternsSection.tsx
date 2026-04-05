@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag, Lock, Shield, Server } from "lucide-react";
+import { Folder, FileText, GitBranch, ArrowRight, Share2, Zap, Wrench, Database, Network, UserCheck, Anchor, BrainCircuit, History, GitFork, RefreshCw, SearchCode, Tag, Lock, Shield, Server, BookOpen } from "lucide-react";
 import humanInTheLoopImg from "@/assets/human-in-the-loop.png";
+import llmWikiImg from "@/assets/llm-wiki.png";
 import sharedContextImg from "@/assets/shared-context.png";
 import branchDeploymentImg from "@/assets/branch-deployment.png";
 import knowledgeTreeImg from "@/assets/knowledge-tree.png";
@@ -56,7 +57,30 @@ export function PatternsSection() {
             />
           </motion.div>
 
-          {/* Pattern 2 — Agent Versioning */}
+          {/* Pattern 2 — LLM Wiki */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.06 }}
+            className="paper-card p-4 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-1 relative z-10">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <span className="text-sm font-heading font-semibold text-foreground">LLM Wiki — Persistent Knowledge Base</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
+              Instead of RAG that rediscovers knowledge on every query, the LLM <strong>incrementally builds a wiki</strong> from raw sources in <code className="text-foreground/70">knowledge/</code>. Compiled pages live in <code className="text-foreground/70">memory/wiki/</code> with cross-references, an <code className="text-foreground/70">index.md</code> catalog, and a chronological <code className="text-foreground/70">log.md</code>. Three skills — <code className="text-foreground/70">ingest</code>, <code className="text-foreground/70">query</code>, <code className="text-foreground/70">lint</code> — maintain the knowledge base over time. Scaffold with <code className="text-foreground/70">gitagent init --template llm-wiki</code>.
+            </p>
+            <img
+              src={llmWikiImg}
+              alt="LLM Wiki: raw sources in knowledge/ compiled into interlinked wiki pages in memory/wiki/ via ingest, query, and lint skills"
+              className="w-full rounded-md relative z-10"
+              loading="lazy"
+            />
+          </motion.div>
+
+          {/* Pattern 3 — Agent Versioning */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
