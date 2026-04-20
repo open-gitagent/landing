@@ -3,7 +3,7 @@ const REPO = "https://github.com/open-gitagent/gitagent";
 const docsLinks = [
   { label: "Specification", href: `${REPO}/blob/main/spec/SPECIFICATION.md` },
   { label: "Getting Started", href: `${REPO}#readme` },
-  { label: "CLI Reference", href: `${REPO}#cli-commands` },
+  { label: "Protocol Reference", href: `${REPO}#cli-commands` },
   { label: "Schema Reference", href: `${REPO}/blob/main/spec/SPECIFICATION.md` },
 ];
 

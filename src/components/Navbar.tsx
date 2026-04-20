@@ -5,7 +5,7 @@ import gitagentLogo from "@/assets/gitagent-logo.png";
 const navLinks = [
   { label: "Why", href: "#why" },
   { label: "How It Works", href: "#how" },
-  { label: "CLI", href: "#cli" },
+  { label: "Protocol", href: "#cli" },
   { label: "Adapters", href: "#adapters" },
   { label: "Skills", href: "#skills" },
   { label: "SkillsFlow", href: "#skillsflow" },

@@ -277,7 +277,7 @@ export function HeroSection() {
               </div>
             </div>
             <p className="text-[11px] text-muted-foreground mt-2 font-body leading-relaxed">
-              Runs the GitAgent CLI, pulls the <a href="https://github.com/shreyas-lyzr/architect" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors font-medium">Architect</a> agent from GitHub, and launches it as a Claude Code agent.
+              Runs the Git Agent Protocol, pulls the <a href="https://github.com/shreyas-lyzr/architect" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors font-medium">Architect</a> agent from GitHub, and launches it as a Claude Code agent.
             </p>
 
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-5 mb-2 font-body">Supports</p>
