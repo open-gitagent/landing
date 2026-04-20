@@ -189,13 +189,13 @@ export function HeroSection() {
               <span className="tracking-widest uppercase text-[10px] hidden sm:inline">Clone a repo. Get an agent.</span>
             </div>
 
-            <div className="flex items-start gap-2 mb-1">
-              <img src={gitagentLogo} alt="GitAgent" className="h-12 w-12 sm:h-16 sm:w-16 object-contain rounded-lg shrink-0" />
+            <div className="flex items-start gap-3 mb-1">
+              <img src={gitagentLogo} alt="GitAgent" className="h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 object-contain rounded-lg shrink-0" />
               <div>
                 <h1 className="text-xl sm:text-3xl lg:text-4xl font-heading font-bold leading-none tracking-tight text-foreground whitespace-nowrap block">
                   <span className="text-foreground">Git</span><span className="text-primary">Agent</span><span className="text-foreground">Protocol</span>
                 </h1>
-                <div className="text-muted-foreground text-sm sm:text-base lg:text-lg font-heading font-bold tracking-wide mt-2 block">(GAP)</div>
+                <div className="text-muted-foreground text-sm sm:text-base lg:text-lg font-heading font-bold tracking-wide mt-2 block">(Open GAP)</div>
               </div>
             </div>
             <p className="text-sm text-muted-foreground/60 mb-1 font-body italic">your repository becomes your agent</p>
