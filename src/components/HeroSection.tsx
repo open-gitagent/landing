@@ -190,10 +190,13 @@ export function HeroSection() {
             </div>
 
             <div className="flex items-center gap-2 mb-1">
-              <img src={gitagentLogo} alt="GitAgent" className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-lg" />
-              <h1 className="text-lg sm:text-2xl lg:text-3xl font-heading font-bold leading-none tracking-tight text-foreground whitespace-nowrap">
-                <span className="text-foreground">Git</span><span className="text-primary">Agent</span><span className="text-foreground">Protocol</span> <span className="text-muted-foreground text-xs sm:text-sm lg:text-base align-middle">(GAP)</span>
-              </h1>
+              <img src={gitagentLogo} alt="GitAgent" className="h-12 w-12 sm:h-16 sm:w-16 object-contain rounded-lg" />
+              <div className="flex flex-col">
+                <h1 className="text-xl sm:text-3xl lg:text-4xl font-heading font-bold leading-none tracking-tight text-foreground whitespace-nowrap">
+                  <span className="text-foreground">Git</span><span className="text-primary">Agent</span><span className="text-foreground">Protocol</span>
+                </h1>
+                <span className="text-muted-foreground text-xs sm:text-sm lg:text-base font-heading font-bold tracking-wide mt-1">(GAP)</span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground/60 mb-1 font-body italic">your repository becomes your agent</p>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-md mb-4 font-body">
