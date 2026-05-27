@@ -206,8 +206,8 @@ export function HeroSection() {
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md mb-2 font-body">
               A git-native, framework-agnostic, <span className="text-foreground/80">open standard for defining AI agents.</span> Version-controlled config that exports to Claude Code, OpenClaw, Lyzr Agent, Chimera, NanoBot, CrewAgent, and Agents SDK.
             </p>
-            <p className="text-[11px] text-muted-foreground/60 mb-8 font-body">
-              Maintained by team <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@Lyzr</a>
+            <p className="text-[16px] text-muted-foreground/60 mb-8 font-body">
+              Maintained by Shreyas Kapale <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@Lyzr</a>
             </p>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
