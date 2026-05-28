@@ -1,20 +1,29 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Terminal, Play, FileCheck, Info, Download, Upload, Package, ShieldCheck, Zap, Rocket } from "lucide-react";
+import { Terminal, Play, FileCheck, Info, Download, Upload, Package, ShieldCheck, Zap, Rocket, Copy, Check } from "lucide-react";
 
 const commands = [
-  { name: "init", icon: Rocket, desc: "Scaffold a new agent repo", usage: "gitagent init --template <minimal|standard|full>", detail: "Templates: minimal (2 files), standard (skills + tools), full (compliance + hooks + memory)" },
-  { name: "validate", icon: FileCheck, desc: "Validate agent against spec", usage: "gitagent validate --compliance", detail: "JSON schema validation, skill checks, and optional regulatory compliance audit" },
-  { name: "run", icon: Play, desc: "Run agent with any adapter", usage: "gitagent run -a <adapter> -p \"prompt\"", detail: "Adapters: claude, openai, crewai, openclaw, nanobot, lyzr, github, git (auto-detect)" },
-  { name: "export", icon: Download, desc: "Export to another framework", usage: "gitagent export --format <format> -o output", detail: "Formats: system-prompt, claude-code, openai, crewai, openclaw, nanobot, lyzr, github" },
-  { name: "import", icon: Upload, desc: "Import from Claude, Cursor, CrewAI", usage: "gitagent import --from <format> <path>", detail: "Convert existing agent configs into gitagent format" },
-  { name: "install", icon: Package, desc: "Resolve git-based dependencies", usage: "gitagent install", detail: "Shallow-clones dependencies at specified versions into mount paths" },
-  { name: "skills", icon: Zap, desc: "Search, install, list, inspect skills", usage: "gitagent skills search \"code review\"", detail: "Registries: SkillsMP marketplace, GitHub repos, local filesystem" },
-  { name: "audit", icon: ShieldCheck, desc: "Generate compliance audit report", usage: "gitagent audit", detail: "FINRA 3110, SEC 17a-4, SR 11-7, CFPB checks with pass/fail/warn indicators" },
-  { name: "info", icon: Info, desc: "Display agent summary", usage: "gitagent info", detail: "Shows config, model, skills, tools, compliance, and SOUL.md preview" },
-  { name: "lyzr", icon: Terminal, desc: "Create, update, and run on Lyzr Studio", usage: "gitagent lyzr run -r <repo> -p \"Hello\"", detail: "One command: clone → create agent on Lyzr → chat. Saves agent ID for reuse" },
+  { name: "init", icon: Rocket, desc: "Scaffold a new agent repo", usage: "opengap init --template <minimal|standard|full|llm-wiki>", detail: "Templates: minimal (2 files), standard (skills + tools), full (compliance + hooks + memory), llm-wiki (knowledge base)" },
+  { name: "validate", icon: FileCheck, desc: "Validate agent against spec", usage: "opengap validate --compliance", detail: "JSON schema validation, skill checks, and optional regulatory compliance audit" },
+  { name: "run", icon: Play, desc: "Run agent with any adapter", usage: "opengap run -a <adapter> -p \"prompt\"", detail: "Adapters: claude, openai, crewai, openclaw, nanobot, lyzr, github, opencode, gemini, gitclaw, git, prompt" },
+  { name: "export", icon: Download, desc: "Export to another framework", usage: "opengap export --format <format> -o output", detail: "Formats: system-prompt, claude-code, openai, crewai, openclaw, nanobot, lyzr, github, copilot, opencode, cursor, gemini, codex, kiro, gitclaw" },
+  { name: "import", icon: Upload, desc: "Import from Claude, Cursor, CrewAI, OpenCode, Gemini, Codex", usage: "opengap import --from <format> <path>", detail: "Formats: claude, cursor, crewai, opencode, gemini, codex" },
+  { name: "install", icon: Package, desc: "Resolve git-based dependencies", usage: "opengap install", detail: "Shallow-clones dependencies at specified versions into mount paths" },
+  { name: "skills", icon: Zap, desc: "Search, install, list, info", usage: "opengap skills search \"code review\"", detail: "Registries: SkillsMP marketplace, GitHub repos, local filesystem" },
+  { name: "audit", icon: ShieldCheck, desc: "Generate compliance audit report", usage: "opengap audit", detail: "FINRA 3110, SEC 17a-4, SR 11-7, CFPB checks with pass/fail/warn indicators" },
+  { name: "info", icon: Info, desc: "Display agent summary", usage: "opengap info", detail: "Shows config, model, skills, tools, compliance, and SOUL.md preview" },
+  { name: "lyzr", icon: Terminal, desc: "Create, update, and run on Lyzr Studio", usage: "opengap lyzr run -r <repo> -p \"Hello\"", detail: "One command: clone → create agent on Lyzr → chat. Saves agent ID for reuse" },
 ];
 
 export function CLISection() {
+  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
+
+  const handleCopy = (usage: string, name: string) => {
+    navigator.clipboard.writeText(usage);
+    setCopiedCmd(name);
+    setTimeout(() => setCopiedCmd(null), 2000);
+  };
+
   return (
     <section id="cli" className="py-20 px-6 border-t border-border">
       <div className="mx-auto max-w-6xl">
@@ -24,7 +33,7 @@ export function CLISection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">Git Agent Protocol: Build & Run AI Agents</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">OpenGAP: Build & Run AI Agents</h2>
           <p className="text-sm text-muted-foreground font-body">
             Everything you need to build, validate, run, and ship agents.
           </p>
@@ -43,7 +52,14 @@ export function CLISection() {
               <div className="flex items-center gap-2 mb-2 relative z-10">
                 <cmd.icon className="w-3.5 h-3.5 text-primary shrink-0" />
                 <code className="text-xs font-semibold text-foreground font-body">{cmd.name}</code>
-                <span className="text-[10px] text-muted-foreground ml-auto font-body hidden sm:inline">{cmd.desc}</span>
+                <span className="text-[10px] text-muted-foreground font-body hidden sm:inline">{cmd.desc}</span>
+                <button
+                  onClick={() => handleCopy(cmd.usage, cmd.name)}
+                  className="ml-auto text-muted-foreground/30 hover:text-foreground transition-colors shrink-0"
+                  aria-label="Copy command"
+                >
+                  {copiedCmd === cmd.name ? <Check className="w-3 h-3 text-primary" /> : <Copy className="w-3 h-3" />}
+                </button>
               </div>
               <code className="block text-[10px] sm:text-[11px] text-primary/80 mb-1.5 font-body relative z-10 break-all sm:break-normal">$ {cmd.usage}</code>
               <p className="text-[11px] text-muted-foreground/70 leading-relaxed font-body relative z-10">{cmd.detail}</p>

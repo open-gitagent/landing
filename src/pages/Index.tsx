@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/Navbar";
+import { GitAgentNavbar } from "@/components/gitAgent/GitAgentNavbar";
 import { HeroSection } from "@/components/HeroSection";
 import { WhySection } from "@/components/WhySection";
 import { PatternsSection } from "@/components/PatternsSection";
@@ -34,7 +34,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden" ref={contentRef}>
-      <Navbar />
+      <GitAgentNavbar variant="subpage" />
       <RegistryBanner />
       <div className="h-8" /> {/* spacer for fixed announcement strip */}
       <button

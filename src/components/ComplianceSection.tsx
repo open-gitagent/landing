@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, AlertTriangle, Lock, Scale } from "lucide-react";
+import { ShieldCheck, AlertTriangle, Lock, Scale, Copy, Check } from "lucide-react";
 
 const riskTiers = [
   { tier: "low", label: "Low", desc: "Minimal — standard logging", color: "text-primary", bg: "bg-primary/10" },
@@ -15,7 +16,20 @@ const frameworks = [
   { icon: AlertTriangle, name: "CFPB", rules: "Circular 2022-03", checks: "Bias testing, fair lending analysis" },
 ];
 
+const artifactsContent = `compliance/
+├── risk-assessment.md
+├── regulatory-map.yaml
+└── validation-schedule.yaml`;
+
 export function ComplianceSection() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(artifactsContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <section id="compliance" className="py-20 px-6 border-t border-border">
       <div className="mx-auto max-w-6xl">
@@ -28,7 +42,7 @@ export function ComplianceSection() {
           <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Compliance & Governance</h2>
           <p className="text-sm text-muted-foreground font-body">
             First-class regulatory support baked into the manifest. Run{" "}
-            <code className="text-primary text-xs">gitagent audit</code> for a full report.
+            <code className="text-primary text-xs">opengap audit</code> for a full report.
           </p>
         </motion.div>
 
@@ -58,11 +72,21 @@ export function ComplianceSection() {
             </div>
 
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-6 mb-4 font-body">Compliance Artifacts</h3>
-            <div className="code-block text-xs text-muted-foreground leading-5 font-body">
-              <pre><code>{`compliance/
-├── risk-assessment.md
-├── regulatory-map.yaml
-└── validation-schedule.yaml`}</code></pre>
+            <div className="code-block sketch-border overflow-hidden">
+              <div className="terminal-header">
+                <span className="terminal-dot bg-red-400/60" />
+                <span className="terminal-dot bg-yellow-400/60" />
+                <span className="terminal-dot bg-green-400/60" />
+                <span className="ml-2 text-[10px] text-muted-foreground/50 font-body">compliance/</span>
+                <button
+                  onClick={handleCopy}
+                  className="ml-auto text-muted-foreground/50 hover:text-foreground transition-colors"
+                  aria-label="Copy structure"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <pre className="text-xs text-muted-foreground leading-5 font-body"><code>{artifactsContent}</code></pre>
             </div>
           </motion.div>
 
