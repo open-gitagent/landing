@@ -169,7 +169,41 @@ export function GitAgentCompliance() {
           </div>
         </motion.div>
 
-        {/* D. Audit Log format */}
+        {/* D. Regulatory Frameworks */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            Supported Regulatory Frameworks
+          </h3>
+          <div className="space-y-1.5">
+            {[
+              { name: "SOX", desc: "Sarbanes-Oxley financial recordkeeping" },
+              { name: "GLBA", desc: "Gramm-Leach-Bliley Act financial privacy" },
+              { name: "OCC", desc: "Office of the Comptroller of the Currency" },
+              { name: "GDPR", desc: "General Data Protection Regulation" },
+              { name: "SOC2", desc: "Service Organization Control 2" },
+              { name: "FINRA", desc: "Financial Industry Regulatory Authority" },
+            ].map((f, i) => (
+              <motion.div
+                key={f.name}
+                initial={{ opacity: 0, x: -4 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.04 }}
+                className="paper-card px-3 py-2 flex items-center gap-3"
+              >
+                <code className="text-xs font-semibold text-primary font-body w-16 shrink-0 relative z-10">{f.name}</code>
+                <span className="text-[11px] text-muted-foreground font-body relative z-10">{f.desc}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* E. Audit Log format */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}

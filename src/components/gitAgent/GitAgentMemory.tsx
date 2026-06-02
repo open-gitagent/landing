@@ -175,11 +175,53 @@ export function GitAgentMemory() {
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          className="mb-10"
         >
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
             Memory Commands
           </h3>
           <CodeBlock code={memoryCommandsCode} filename="terminal" />
+        </motion.div>
+
+        {/* F. Rolling Back Memory */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            Rolling Back Memory
+          </h3>
+          <CodeBlock
+            code={`git revert HEAD                          # undo last memory write
+git revert HEAD~3..HEAD                  # undo last 3 writes
+git checkout a3f2e91 -- memory/MEMORY.md # restore to specific point
+git commit -m "Restore memory to known good state"`}
+            filename="terminal"
+            className="mb-3"
+          />
+          <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+            Use <code className="text-primary text-[10px]">git revert</code> rather than{" "}
+            <code className="text-primary text-[10px]">git reset --hard</code> — revert preserves the audit trail while reset destroys it.
+          </p>
+        </motion.div>
+
+        {/* G. Browsing the Archive */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            Browsing the Archive
+          </h3>
+          <CodeBlock
+            code={`ls memory/archive/
+cat memory/archive/2025-07-archive.md
+git log -p memory/ | grep "search term"`}
+            filename="terminal"
+          />
         </motion.div>
       </div>
     </section>

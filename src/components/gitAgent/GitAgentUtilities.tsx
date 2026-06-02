@@ -282,6 +282,25 @@ export function GitAgentTelemetry() {
             </h3>
             <CodeBlock code={jaegerSnippet} filename="terminal" />
           </motion.div>
+
+          {/* Console Output */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+              Console Output (No Collector)
+            </h3>
+            <CodeBlock
+              code={`OTEL_TRACES_EXPORTER=console gitagent --voice --dir ~/assistant`}
+              filename="terminal"
+              className="mb-3"
+            />
+            <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+              Prints spans to stdout — no collector needed. Useful for local debugging.
+            </p>
+          </motion.div>
         </div>
       </div>
     </section>

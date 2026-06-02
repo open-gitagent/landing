@@ -226,6 +226,7 @@ export function GitAgentTools() {
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          className="mb-10"
         >
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
             Declarative Tools
@@ -234,6 +235,26 @@ export function GitAgentTools() {
           <p className="text-[11px] text-muted-foreground font-body">
             The script receives JSON args on stdin and outputs plain text on stdout.
           </p>
+        </motion.div>
+
+        {/* D. Tool Allowlists and Denylists */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            Tool Allowlists and Denylists
+          </h3>
+          <CodeBlock
+            code={`// SDK — allowlist or denylist per query
+for await (const msg of query({
+  prompt: "...",
+  allowedTools: ["read", "cli"],
+  disallowedTools: ["write"],
+})) { /* ... */ }`}
+            filename="sdk-tools.ts"
+          />
         </motion.div>
       </div>
     </section>

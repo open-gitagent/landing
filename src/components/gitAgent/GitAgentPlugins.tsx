@@ -111,7 +111,11 @@ export function GitAgentPlugins() {
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
               agent.yaml Plugin Config
             </h3>
-            <CodeBlock code={agentYamlConfig} filename="agent.yaml" />
+            <CodeBlock code={agentYamlConfig} filename="agent.yaml" className="mb-3" />
+            <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+              Config values can reference environment variables using{" "}
+              <code className="text-primary text-[10px]">{"${VAR_NAME}"}</code> syntax — API keys are never hardcoded.
+            </p>
           </motion.div>
         </div>
 

@@ -40,7 +40,34 @@ export function GitAgentSchedules() {
           </p>
         </motion.div>
 
-        {/* A. Schedule definitions */}
+        {/* A. Modes */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            Schedule Modes
+          </h3>
+          <div className="space-y-1.5">
+            {[
+              { mode: "repeat", how: "cron expression", when: "Run on a recurring schedule (daily, weekly, etc.)" },
+              { mode: "once", how: "runAt ISO datetime", when: "Run exactly one time at a specific date/time" },
+            ].map((row) => (
+              <div key={row.mode} className="paper-card px-3 py-2 flex items-center gap-3">
+                <code className="text-xs font-semibold text-primary font-body w-16 shrink-0 relative z-10">{row.mode}</code>
+                <span className="text-[11px] text-muted-foreground/60 font-body w-36 shrink-0 relative z-10">{row.how}</span>
+                <span className="text-[11px] text-muted-foreground font-body relative z-10">{row.when}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted-foreground/60 font-body mt-2">
+            Default is <code className="text-primary text-[10px]">repeat</code> if <code className="text-primary text-[10px]">mode</code> is not specified.
+          </p>
+        </motion.div>
+
+        {/* B. Schedule definitions */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -100,7 +127,7 @@ export function GitAgentSchedules() {
             </h3>
             <div className="paper-card p-4 hover:border-primary/40 transition-colors">
               <p className="text-sm text-foreground font-body leading-relaxed mb-4 relative z-10">
-                The Scheduler tab in the web UI lets you manage schedules without editing YAML files.
+                The Scheduler tab in the web UI lets you manage schedules without editing YAML files. Schedule files live in <code className="text-primary text-[10px]">schedules/</code> — version-controlled alongside everything else.
               </p>
               <div className="space-y-2 relative z-10">
                 {[

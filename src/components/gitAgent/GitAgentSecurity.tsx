@@ -123,7 +123,48 @@ export function GitAgentSecurity() {
           </motion.div>
         </div>
 
-        {/* C. E2B Sandboxing */}
+        {/* C. HTTPS Setup */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            HTTPS Setup
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-2 font-body">nginx reverse proxy</p>
+              <CodeBlock
+                code={`server {
+  listen 443 ssl;
+  server_name agent.example.com;
+
+  location / {
+    proxy_pass http://localhost:3333;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}`}
+                filename="nginx.conf"
+              />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-2 font-body">Cloudflare Tunnel (zero-config)</p>
+              <CodeBlock
+                code={`cloudflared tunnel --url http://localhost:3333`}
+                filename="terminal"
+              />
+              <p className="text-[11px] text-muted-foreground font-body mt-3 leading-relaxed">
+                Never expose port 3333 directly — always proxy via nginx, Caddy, or Cloudflare Tunnel in production.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* D. E2B Sandboxing */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}

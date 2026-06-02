@@ -234,7 +234,10 @@ export function GitAgentHooks() {
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
             Programmatic Hooks (SDK)
           </h3>
-          <CodeBlock code={sdkHooks} filename="sdk-hooks.ts" />
+          <CodeBlock code={sdkHooks} filename="sdk-hooks.ts" className="mb-4" />
+          <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+            SDK hooks run before script hooks — if an SDK hook blocks, the script hook is never called. Both can run independently when the SDK hook allows.
+          </p>
         </motion.div>
       </div>
     </section>

@@ -113,6 +113,9 @@ const queryOptions = [
   { name: "abortController", type: "AbortController", desc: "Cancellation signal" },
   { name: "constraints", type: "object", desc: "temperature, maxTokens, topP, topK" },
   { name: "hooks", type: "object", desc: "onSessionStart, preToolUse, postToolFailure, preQuery, postResponse, fileChanged, onError lifecycle hooks" },
+  { name: "repo", type: "object", desc: "Work on a remote git repo — clone, run agent, auto-commit changes to session branch" },
+  { name: "sandbox", type: "SandboxOptions | boolean", desc: "Run agent inside an E2B cloud VM (true uses defaults)" },
+  { name: "sessionId", type: "string", desc: "Tag or resume a specific session" },
 ];
 
 const messageTypes = [
