@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { GitFork, Zap, MessageSquare, Wrench, ArrowDown } from "lucide-react";
+import { GitFork, Zap, MessageSquare, Wrench, ArrowDown, Copy, Check } from "lucide-react";
 
 const features = [
   {
@@ -71,6 +72,14 @@ error_handling:
   channel: "#eng-reviews"`;
 
 export function SkillsFlowSection() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(yamlCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <section id="skillsflow" className="py-20 px-6 border-t border-border">
       <div className="mx-auto max-w-6xl">
@@ -100,6 +109,13 @@ export function SkillsFlowSection() {
                 <span className="terminal-dot bg-yellow-400/60" />
                 <span className="terminal-dot bg-green-400/60" />
                 <span className="ml-2 text-[10px] text-muted-foreground/50 font-body">workflow</span>
+                <button
+                  onClick={handleCopy}
+                  className="ml-auto text-muted-foreground/50 hover:text-foreground transition-colors"
+                  aria-label="Copy workflow YAML"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
               </div>
               <pre className="text-xs text-muted-foreground leading-5 font-body">
                 <code>{yamlCode}</code>

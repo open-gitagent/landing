@@ -20,7 +20,7 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <a href="#" className="flex items-center gap-2 font-heading text-sm font-semibold text-foreground">
-          <img src={gitagentLogo} alt="GitAgent" className="w-5 h-5 rounded-sm" style={{ filter: 'invert(1) sepia(1) saturate(2) hue-rotate(330deg) brightness(0.45)' }} /> gitagent
+          <img src={gitagentLogo} alt="GitAgent" className="w-5 h-5 rounded-sm" style={{ filter: 'invert(1) sepia(1) saturate(2) hue-rotate(330deg) brightness(0.45)' }} /> OpenGAP
         </a>
 
         {/* Desktop */}
@@ -34,6 +34,12 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
+          <a
+            href="/"
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground font-body"
+          >
+            GitAgent
+          </a>
           <a
             href="https://discord.gg/hVZV8Xyjdc"
             target="_blank"
@@ -84,6 +90,12 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
+          <a
+            href="/"
+            className="block text-xs text-muted-foreground hover:text-foreground font-body"
+          >
+            GitAgent
+          </a>
           <a
             href="https://github.com/open-gitagent/gitagent"
             target="_blank"

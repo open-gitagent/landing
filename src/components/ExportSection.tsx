@@ -1,23 +1,31 @@
 import { motion } from "framer-motion";
-import { Play, Copy } from "lucide-react";
+import { Play, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { track } from "@/lib/analytics";
 
-const runCommand = `gitagent run -r "https://github.com/shreyaskapale/shreyas-agent" -a claude`;
+const runCommand = `opengap run -r "https://github.com/shreyaskapale/shreyas-agent" -a claude`;
 
 const exports = [
-  { label: "Claude Code", desc: "Export to CLAUDE.md with skills, model hints, and compliance.", cmd: "$ gitagent export -f claude-code" },
-  { label: "OpenAI Agents SDK", desc: "Generate Python code with Agent(), Tool stubs, and type mappings.", cmd: "$ gitagent export -f openai" },
-  { label: "CrewAI", desc: "YAML crew config with role/goal extraction and sub-agent mapping.", cmd: "$ gitagent export -f crewai" },
-  { label: "OpenClaw", desc: "Workspace with config JSON, AGENTS.md, tools, and skills.", cmd: "$ gitagent export -f openclaw" },
-  { label: "Nanobot", desc: "Config JSON + system prompt for Nanobot runtime.", cmd: "$ gitagent export -f nanobot" },
-  { label: "Lyzr Studio", desc: "API payload with provider mapping and credential IDs.", cmd: "$ gitagent export -f lyzr" },
-  { label: "GitHub Models", desc: "Chat completions payload with model namespace mapping.", cmd: "$ gitagent export -f github" },
-  { label: "System Prompt", desc: "Single concatenated markdown for any LLM.", cmd: "$ gitagent export -f system-prompt" },
+  { label: "Claude Code", desc: "Export to CLAUDE.md with skills, model hints, and compliance.", cmd: "$ opengap export -f claude-code" },
+  { label: "OpenAI Agents SDK", desc: "Generate Python code with Agent(), Tool stubs, and type mappings.", cmd: "$ opengap export -f openai" },
+  { label: "CrewAI", desc: "YAML crew config with role/goal extraction and sub-agent mapping.", cmd: "$ opengap export -f crewai" },
+  { label: "OpenClaw", desc: "Workspace with config JSON, AGENTS.md, tools, and skills.", cmd: "$ opengap export -f openclaw" },
+  { label: "Nanobot", desc: "Config JSON + system prompt for Nanobot runtime.", cmd: "$ opengap export -f nanobot" },
+  { label: "Lyzr Studio", desc: "API payload with provider mapping and credential IDs.", cmd: "$ opengap export -f lyzr" },
+  { label: "GitHub Models", desc: "Chat completions payload with model namespace mapping.", cmd: "$ opengap export -f github" },
+  { label: "System Prompt", desc: "Single concatenated markdown for any LLM.", cmd: "$ opengap export -f system-prompt" },
+  { label: "GitHub Copilot", desc: "Copilot workspace instructions and agent config.", cmd: "$ opengap export -f copilot" },
+  { label: "OpenCode", desc: "OpenCode system prompt and tool configuration.", cmd: "$ opengap export -f opencode" },
+  { label: "Cursor", desc: "Cursor rules file with agent identity and skills.", cmd: "$ opengap export -f cursor" },
+  { label: "Gemini", desc: "Gemini system instruction and tool definitions.", cmd: "$ opengap export -f gemini" },
+  { label: "Codex", desc: "OpenAI Codex agent config with tool stubs.", cmd: "$ opengap export -f codex" },
+  { label: "Kiro", desc: "Kiro agent spec with steering and hook definitions.", cmd: "$ opengap export -f kiro" },
+  { label: "GitClaw", desc: "GitClaw workspace with config and skill mapping.", cmd: "$ opengap export -f gitclaw" },
 ];
 
 export function ExportSection() {
   const [copied, setCopied] = useState(false);
+  const [copiedExport, setCopiedExport] = useState<string | null>(null);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(runCommand);
@@ -61,7 +69,7 @@ export function ExportSection() {
 
             <div className="text-xs sm:text-sm leading-6 sm:leading-7 font-body break-all sm:break-normal">
               <span className="text-primary">$ </span>
-              <span className="text-foreground font-medium">gitagent run</span>
+              <span className="text-foreground font-medium">opengap run</span>
               <span className="text-muted-foreground"> -r </span>
               <span className="text-primary/70">"https://github.com/shreyaskapale/shreyas-agent"</span>
               <span className="text-muted-foreground"> -a </span>
@@ -134,7 +142,20 @@ export function ExportSection() {
                 <span className="text-sm font-heading font-semibold text-foreground">{e.label}</span>
                 <p className="text-xs text-muted-foreground mt-0.5 font-body">{e.desc}</p>
               </div>
-              <code className="text-[10px] sm:text-xs text-primary shrink-0 font-body relative z-10">{e.cmd}</code>
+              <div className="flex items-center gap-2 shrink-0 relative z-10">
+                <code className="text-[10px] sm:text-xs text-primary font-body">{e.cmd}</code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(e.cmd.replace(/^\$ /, ''));
+                    setCopiedExport(e.label);
+                    setTimeout(() => setCopiedExport(null), 2000);
+                  }}
+                  className="text-muted-foreground/30 hover:text-foreground transition-colors"
+                  aria-label="Copy command"
+                >
+                  {copiedExport === e.label ? <Check className="w-3 h-3 text-primary" /> : <Copy className="w-3 h-3" />}
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>

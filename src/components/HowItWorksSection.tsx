@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 
 const tabs = [
   {
     label: "agent.yaml",
     lang: "yaml",
-    code: `spec_version: "0.1.0"
+    code: `spec_version: "0.4.0"
 name: code-review-agent
 version: 1.0.0
 description: Automated code review agent
@@ -82,6 +83,13 @@ When reviewing code:
 
 export function HowItWorksSection() {
   const [active, setActive] = useState(0);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(tabs[active].code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <section id="how" className="py-20 px-6 border-t border-border">
@@ -92,7 +100,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">How the GitAgent Agent Framework Works</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">How the OpenGAP Framework Works</h2>
           <p className="text-sm text-muted-foreground font-body">
             Three files define your agent. Everything else is optional.
           </p>
@@ -104,7 +112,7 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
         >
           {/* Tabs */}
-          <div className="flex border-b border-border mb-0">
+          <div className="flex items-center border-b border-border mb-0">
             {tabs.map((t, i) => (
               <button
                 key={t.label}
@@ -124,6 +132,13 @@ export function HowItWorksSection() {
                 )}
               </button>
             ))}
+            <button
+              onClick={handleCopy}
+              className="ml-auto px-3 text-muted-foreground/50 hover:text-foreground transition-colors"
+              aria-label="Copy code"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
+            </button>
           </div>
 
           {/* Code */}
