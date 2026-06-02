@@ -78,8 +78,18 @@ const myTool = buildTool({
       }
       return { action: "allow" };
     },
+    postToolFailure: async (ctx) => {
+      console.error(\`Tool \${ctx.toolName} failed: \${ctx.error}\`);
+    },
+    preQuery: async (ctx) => {
+      console.log(\`Sending prompt to LLM: \${ctx.sessionId}\`);
+      return { action: "allow" };
+    },
     postResponse: async (ctx) => {
       console.log(\`Session \${ctx.sessionId} responded\`);
+    },
+    fileChanged: async (ctx) => {
+      console.log(\`File changed: \${ctx.path}\`);
     },
     onError: async (ctx) => {
       console.error(\`Error in \${ctx.sessionId}: \${ctx.error}\`);
@@ -102,7 +112,7 @@ const queryOptions = [
   { name: "maxTurns", type: "number", desc: "Max agent turns" },
   { name: "abortController", type: "AbortController", desc: "Cancellation signal" },
   { name: "constraints", type: "object", desc: "temperature, maxTokens, topP, topK" },
-  { name: "hooks", type: "object", desc: "onSessionStart, preToolUse, postResponse, onError lifecycle hooks" },
+  { name: "hooks", type: "object", desc: "onSessionStart, preToolUse, postToolFailure, preQuery, postResponse, fileChanged, onError lifecycle hooks" },
 ];
 
 const messageTypes = [

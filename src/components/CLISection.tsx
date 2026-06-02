@@ -12,7 +12,7 @@ const commands = [
   { name: "skills", icon: Zap, desc: "Search, install, list, info", usage: "opengap skills search \"code review\"", detail: "Registries: SkillsMP marketplace, GitHub repos, local filesystem" },
   { name: "audit", icon: ShieldCheck, desc: "Generate compliance audit report", usage: "opengap audit", detail: "FINRA 3110, SEC 17a-4, SR 11-7, CFPB checks with pass/fail/warn indicators" },
   { name: "info", icon: Info, desc: "Display agent summary", usage: "opengap info", detail: "Shows config, model, skills, tools, compliance, and SOUL.md preview" },
-  { name: "lyzr", icon: Terminal, desc: "Create, update, and run on Lyzr Studio", usage: "opengap lyzr run -r <repo> -p \"Hello\"", detail: "One command: clone → create agent on Lyzr → chat. Saves agent ID for reuse" },
+  { name: "lyzr", icon: Terminal, desc: "Create, update, and run on Lyzr Studio", usage: "opengap lyzr run -r <repo> -p \"Hello\"", detail: "Subcommands: run (clone → create → chat), create (register agent), update (push changes), list (show all agents). Saves agent ID for reuse" },
 ];
 
 export function CLISection() {

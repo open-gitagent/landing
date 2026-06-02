@@ -40,16 +40,6 @@ const tree: TreeNode[] = [
     color: "text-muted-foreground",
   },
   {
-    name: "INSTRUCTIONS.md",
-    icon: <FileText className="w-3 h-3" />,
-    color: "text-muted-foreground",
-  },
-  {
-    name: "scheduler.yml",
-    icon: <FileText className="w-3 h-3" />,
-    color: "text-muted-foreground",
-  },
-  {
     name: "skills/",
     icon: <Zap className="w-3 h-3" />,
     color: "text-foreground",

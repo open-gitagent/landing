@@ -25,6 +25,13 @@ const builtinTools = [
     readOnly: false,
   },
   {
+    icon: FileText,
+    name: "edit",
+    desc: "Edit existing file contents (find and replace)",
+    concurrent: false,
+    readOnly: false,
+  },
+  {
     icon: Brain,
     name: "memory",
     desc: "Load/save git-committed memory (auto-archives)",
