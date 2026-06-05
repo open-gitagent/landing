@@ -51,6 +51,9 @@ export function GitAgentInterfaces() {
           viewport={{ once: true }}
           className="mb-8"
         >
+          <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
+            03 — Interfaces
+          </span>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">
             Ways to Interact
           </h2>

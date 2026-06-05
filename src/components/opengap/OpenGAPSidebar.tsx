@@ -13,7 +13,6 @@ export const opengapSidebarGroups = [
     items: [
       { id: "why", label: "Why OpenGAP" },
       { id: "how-it-works", label: "How It Works" },
-      { id: "patterns", label: "Agent Patterns" },
     ],
   },
   {

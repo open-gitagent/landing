@@ -37,7 +37,7 @@ export function GitAgentWhySection() {
           className="mb-12"
         >
           <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
-            01 — Why GitAgent
+            02 — Why GitAgent
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
             Why GitAgent

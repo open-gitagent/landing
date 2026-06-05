@@ -126,7 +126,7 @@ export function GitAgentArchitectureSection() {
           className="mb-12"
         >
           <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
-            02 — Architecture
+            04 — Architecture
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
             Architecture

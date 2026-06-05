@@ -10,9 +10,11 @@ import { GitAgentModelsSection } from "@/components/gitAgent/GitAgentModelsSecti
 import { GitAgentMemorySection } from "@/components/gitAgent/GitAgentMemorySection";
 import { GitAgentIntegrationsSection } from "@/components/gitAgent/GitAgentIntegrationsSection";
 import { GitAgentInstallSection } from "@/components/gitAgent/GitAgentInstallSection";
+import { PatternsSection } from "@/components/PatternsSection";
 import { Footer } from "@/components/Footer";
 
 const overviewSections = [
+  { id: "patterns", label: "Patterns" },
   { id: "why-gitagent", label: "Why" },
   { id: "interfaces", label: "Interfaces" },
   { id: "architecture", label: "Architecture" },
@@ -89,6 +91,7 @@ const GitAgentPage = () => {
 
       <main>
         <GitAgentHeroSection />
+        <PatternsSection />
         <GitAgentWhySection />
         <GitAgentInterfaces />
         <GitAgentArchitectureSection />

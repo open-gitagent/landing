@@ -26,7 +26,7 @@ export function GitAgentModelsSection() {
           className="mb-8"
         >
           <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
-            04 — Models
+            06 — Models
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
             12+ Model Providers

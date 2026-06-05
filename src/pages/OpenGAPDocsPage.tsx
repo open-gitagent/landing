@@ -9,7 +9,6 @@ const HeroSectionDocs = () => <HeroSection noBackground />;
 import { QuickStartSection } from "@/components/QuickStartSection";
 import { WhySection } from "@/components/WhySection";
 import { HowItWorksSection } from "@/components/HowItWorksSection";
-import { PatternsSection } from "@/components/PatternsSection";
 import { CLISection } from "@/components/CLISection";
 import { ExportSection } from "@/components/ExportSection";
 import { AdaptersSection } from "@/components/AdaptersSection";
@@ -24,7 +23,6 @@ const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
   quickstart: QuickStartSection,
   why: WhySection,
   "how-it-works": HowItWorksSection,
-  patterns: PatternsSection,
   cli: CLISection,
   export: ExportSection,
   adapters: AdaptersSection,

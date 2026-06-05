@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Copy, Check, BookOpen, Github, ArrowRight, Folder, FileText, Brain, Settings, Zap, Wrench, Database, GitFork, ShieldCheck } from "lucide-react";
 import { track } from "@/lib/analytics";
 
-const INSTALL_CMD = `bash <(curl -fsSL "https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh?$(date +%s)")`;
+const INSTALL_CMD = `npm install -g @open-gitagent/gitagent`;
 
 type TreeItem = { name: string; indent: number; icon: React.ReactNode; tag?: string };
 
@@ -141,15 +141,15 @@ export function GitAgentHeroSection() {
               </div>
             </motion.div>
 
-            {/* Manual install */}
+            {/* curl shorthand */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.35, delay: 0.7 }}
               className="text-[11px] text-muted-foreground font-body mb-8"
             >
-              Or manually:{" "}
-              <code className="text-primary text-[11px]">npm install -g @open-gitagent/gitagent</code>
+              Or:{" "}
+              <code className="text-primary text-[11px]">curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash</code>
             </motion.p>
 
             {/* CTAs */}

@@ -46,8 +46,8 @@ export function OpenGAPNavbar({ variant = "docs" }: OpenGAPNavbarProps) {
           >
             ←
           </a>
-          <a href="/opengap" className="flex items-center">
-            <span className="font-heading font-semibold text-sm"><span className="text-primary">Open</span><span className="text-foreground">GAP</span></span>
+          <a href="/" className="flex items-center">
+            <span className="font-heading font-semibold text-sm"><span className="text-primary">Git</span><span className="text-foreground">Agent</span></span>
           </a>
         </div>
 
@@ -128,7 +128,7 @@ export function OpenGAPNavbar({ variant = "docs" }: OpenGAPNavbarProps) {
               </SheetTrigger>
               <SheetContent side="left" className="w-64 p-0 bg-background border-r border-border">
                 <div className="flex items-center gap-2 px-4 py-4 border-b border-border">
-                  <span className="font-heading font-semibold text-sm"><span className="text-primary">Open</span><span className="text-foreground">GAP</span></span>
+                  <span className="font-heading font-semibold text-sm"><span className="text-primary">Git</span><span className="text-foreground">Agent</span></span>
                 </div>
                 <nav className="overflow-y-auto h-[calc(100vh-3.5rem)] py-4 px-3">
                   {opengapSidebarGroups.map((group, groupIndex) => (

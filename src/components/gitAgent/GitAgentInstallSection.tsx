@@ -33,7 +33,7 @@ export function GitAgentInstallSection() {
           className="mb-12"
         >
           <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
-            07 — Get Started
+            09 — Get Started
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
             Launch & Install
@@ -83,13 +83,39 @@ export function GitAgentInstallSection() {
                   { label: "Node.js", value: "≥ 20" },
                   { label: "git", value: "any version" },
                   { label: "npm", value: "included with Node" },
-                  { label: "Install", value: "npm install -g @open-gitagent/gitagent" },
                 ].map((r) => (
                   <div key={r.label} className="flex items-center gap-3">
                     <span className="text-[10px] text-muted-foreground/60 font-body w-16 shrink-0">{r.label}</span>
                     <code className="text-[11px] text-foreground/80 font-body">{r.value}</code>
                   </div>
                 ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.12 }}
+              className="paper-card p-4"
+            >
+              <p className="text-xs font-heading font-semibold text-foreground mb-3 relative z-10">Install</p>
+              <div className="space-y-2 relative z-10">
+                <div>
+                  <p className="text-[10px] text-muted-foreground/50 font-body mb-1">One-liner</p>
+                  <code className="text-[11px] text-primary font-body block leading-relaxed">
+                    curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash
+                  </code>
+                  <p className="text-[10px] text-muted-foreground/50 font-body mt-1">
+                    Installs globally via npm, walks through API key setup, launches web UI at http://localhost:3333
+                  </p>
+                </div>
+                <div className="border-t border-border pt-2">
+                  <p className="text-[10px] text-muted-foreground/50 font-body mb-1">Or via npm</p>
+                  <code className="text-[11px] text-primary font-body block">
+                    npm install -g @open-gitagent/gitagent
+                  </code>
+                </div>
               </div>
             </motion.div>
 

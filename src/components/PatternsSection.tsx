@@ -27,9 +27,12 @@ export function PatternsSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
+          <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
+            01 — Patterns
+          </span>
           <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Design Patterns Built on Git</h2>
           <p className="text-sm text-muted-foreground max-w-2xl font-body">
-            An OpenGAP agent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
+            A GitAgent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
           </p>
         </motion.div>
 
@@ -70,7 +73,7 @@ export function PatternsSection() {
               <span className="text-sm font-heading font-semibold text-foreground">LLM Wiki — Persistent Knowledge Base</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Instead of RAG that rediscovers knowledge on every query, the LLM <strong>incrementally builds a wiki</strong> from raw sources in <code className="text-foreground/70">knowledge/</code>. Compiled pages live in <code className="text-foreground/70">memory/wiki/</code> with cross-references, an <code className="text-foreground/70">index.md</code> catalog, and a chronological <code className="text-foreground/70">log.md</code>. Three skills — <code className="text-foreground/70">ingest</code>, <code className="text-foreground/70">query</code>, <code className="text-foreground/70">lint</code> — maintain the knowledge base over time. Inspired by <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Karpathy's LLM Wiki pattern</a>. Scaffold with <code className="text-foreground/70">opengap init --template llm-wiki</code>.
+              Instead of RAG that rediscovers knowledge on every query, the LLM <strong>incrementally builds a wiki</strong> from raw sources in <code className="text-foreground/70">knowledge/</code>. Compiled pages live in <code className="text-foreground/70">memory/wiki/</code> with cross-references, an <code className="text-foreground/70">index.md</code> catalog, and a chronological <code className="text-foreground/70">log.md</code>. Three skills — <code className="text-foreground/70">ingest</code>, <code className="text-foreground/70">query</code>, <code className="text-foreground/70">lint</code> — maintain the knowledge base over time. Inspired by <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Karpathy's LLM Wiki pattern</a>. Scaffold with <code className="text-foreground/70">gitagent init --template llm-wiki</code>.
             </p>
             <img
               src={llmWikiImg}
@@ -277,7 +280,7 @@ export function PatternsSection() {
               <span className="text-sm font-heading font-semibold text-foreground">CI/CD for Agents</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              Run <code className="text-foreground/70">opengap validate</code> on every push via GitHub Actions. Test agent behavior in CI, block bad merges, and auto-deploy to production — treat agent quality like code quality.
+              Run <code className="text-foreground/70">gitagent validate</code> on every push via GitHub Actions. Test agent behavior in CI, block bad merges, and auto-deploy to production — treat agent quality like code quality.
             </p>
             <img
               src={ciCdAgentsImg}
@@ -392,7 +395,7 @@ export function PatternsSection() {
               <span className="text-sm font-heading font-semibold text-foreground">Segregation of Duties (SOD)</span>
             </div>
             <p className="text-xs text-muted-foreground mb-5 leading-relaxed font-body relative z-10">
-              No single agent should control a critical process end-to-end. Define roles (maker, checker, executor, auditor) in <code className="text-foreground/70">agent.yaml</code> + <code className="text-foreground/70">DUTIES.md</code> with conflict matrices and handoff rules — <code className="text-foreground/70">opengap validate</code> catches violations before deployment.
+              No single agent should control a critical process end-to-end. Define roles (maker, checker, executor, auditor) in <code className="text-foreground/70">agent.yaml</code> + <code className="text-foreground/70">DUTIES.md</code> with conflict matrices and handoff rules — <code className="text-foreground/70">gitagent validate</code> catches violations before deployment.
             </p>
             <img
               src={segregationOfDutiesImg}

@@ -39,7 +39,7 @@ export function GitAgentMemorySection() {
           className="mb-8"
         >
           <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
-            05 — Memory
+            07 — Memory
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
             Git-Native Memory
