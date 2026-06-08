@@ -63,7 +63,7 @@ export function GitAgentInstallSection() {
                 Personal Assistant
               </span>
               <h3 className="text-base font-heading font-bold text-foreground mt-1 mb-2">
-                Run a Local Agent
+                Run as Personal Agent Locally
               </h3>
               <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
                 Run a local AI agent with memory, voice, and web UI.
