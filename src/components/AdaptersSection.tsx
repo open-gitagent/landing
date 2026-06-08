@@ -9,6 +9,10 @@ const adapters = [
   { name: "Lyzr Studio", adapter: "lyzr", mode: "One-shot", requires: "LYZR_API_KEY", features: ["REST API deployment", "Agent ID persistence", "Provider auto-mapping"] },
   { name: "GitHub Models", adapter: "github", mode: "One-shot (streaming)", requires: "GITHUB_TOKEN (models:read)", features: ["Model namespace mapping", "Streaming responses", "Multi-provider support"] },
   { name: "Git (Auto-Detect)", adapter: "git", mode: "Auto", requires: "Depends on detected adapter", features: [".gitagent_adapter hint", "Model-based detection", "File-based fallback"] },
+  { name: "OpenCode", adapter: "opencode", mode: "Interactive / one-shot", requires: "OpenCode CLI", features: ["System prompt injection", "Tool mapping", "Config export"] },
+  { name: "Gemini", adapter: "gemini", mode: "Interactive / one-shot", requires: "GEMINI_API_KEY", features: ["Gemini model mapping", "Streaming responses", "Multi-provider support"] },
+  { name: "GitClaw", adapter: "gitclaw", mode: "Interactive / one-shot", requires: "ANTHROPIC_API_KEY, GitClaw CLI", features: ["Workspace generation", "Tool stubs", "Skill mapping"] },
+  { name: "Prompt", adapter: "prompt", mode: "Output only", requires: "None", features: ["Raw system prompt output", "No runtime required", "Universal fallback"] },
 ];
 
 export function AdaptersSection() {
@@ -23,7 +27,7 @@ export function AdaptersSection() {
         >
           <h2 className="text-2xl font-bold text-foreground mb-2">Framework Adapters: One Standard, Every Runtime</h2>
           <p className="text-sm text-muted-foreground font-body">
-            One agent definition. Eight runtime targets.
+            One agent definition. Twelve runtime targets.
           </p>
         </motion.div>
 

@@ -27,9 +27,12 @@ export function PatternsSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
+          <span className="text-[10px] text-muted-foreground/40 font-body tracking-widest uppercase mb-1 block">
+            01 — Patterns
+          </span>
           <h2 className="text-2xl font-bold text-foreground mb-2">AI Agent Design Patterns Built on Git</h2>
           <p className="text-sm text-muted-foreground max-w-2xl font-body">
-            A gitagent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
+            A GitAgent is your git repository as an agent — complete with version control, branching, pull requests, and collaboration built in. These are the architectural patterns that emerge when you define agents as git-native file systems.
           </p>
         </motion.div>
 

@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Zap, Search, Download, List, Folder } from "lucide-react";
+import { Zap, Search, Download, List, Folder, Copy, Check } from "lucide-react";
 
 const discoveryPaths = [
   { path: "<agent>/skills/", source: "Agent-local", priority: 1 },
@@ -10,13 +11,47 @@ const discoveryPaths = [
 ];
 
 const skillCommands = [
-  { icon: Search, cmd: "gitagent skills search \"code review\"", desc: "Search SkillsMP or GitHub" },
-  { icon: Download, cmd: "gitagent skills install code-review --global", desc: "Install to global or local" },
-  { icon: List, cmd: "gitagent skills list", desc: "List discovered skills" },
-  { icon: Zap, cmd: "gitagent skills info code-review", desc: "Inspect skill metadata" },
+  { icon: Search, cmd: "opengap skills search \"code review\"", desc: "Search SkillsMP or GitHub" },
+  { icon: Download, cmd: "opengap skills install code-review --global", desc: "Install to global or local" },
+  { icon: List, cmd: "opengap skills list", desc: "List discovered skills" },
+  { icon: Zap, cmd: "opengap skills info code-review", desc: "Inspect skill metadata" },
 ];
 
+const skillMdContent = `---
+name: code-review
+description: Thorough code reviews
+license: MIT
+compatibility: ">=0.4.0"
+allowed-tools: Read Edit Grep Glob Bash
+metadata:
+  author: "Jane Doe"
+  version: "1.0.0"
+  category: "developer-tools"
+---
+
+# Instructions
+
+Review the code for:
+1. Security vulnerabilities
+2. Performance issues
+3. Code style consistency`;
+
 export function SkillsSection() {
+  const [copiedSkill, setCopiedSkill] = useState(false);
+  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
+
+  const handleSkillCopy = () => {
+    navigator.clipboard.writeText(skillMdContent);
+    setCopiedSkill(true);
+    setTimeout(() => setCopiedSkill(false), 2000);
+  };
+
+  const handleCmdCopy = (cmd: string) => {
+    navigator.clipboard.writeText(cmd);
+    setCopiedCmd(cmd);
+    setTimeout(() => setCopiedCmd(null), 2000);
+  };
+
   return (
     <section id="skills" className="py-20 px-6 border-t border-border">
       <div className="mx-auto max-w-6xl">
@@ -43,25 +78,21 @@ export function SkillsSection() {
             viewport={{ once: true }}
           >
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">SKILL.md Format</h3>
-            <div className="code-block text-xs text-muted-foreground leading-5 font-body">
-              <pre><code>{`---
-name: code-review
-description: Thorough code reviews
-license: MIT
-compatibility: ">=0.1.0"
-allowed-tools: Read Edit Grep Glob Bash
-metadata:
-  author: "Jane Doe"
-  version: "1.0.0"
-  category: "developer-tools"
----
-
-# Instructions
-
-Review the code for:
-1. Security vulnerabilities
-2. Performance issues
-3. Code style consistency`}</code></pre>
+            <div className="code-block sketch-border overflow-hidden">
+              <div className="terminal-header">
+                <span className="terminal-dot bg-red-400/60" />
+                <span className="terminal-dot bg-yellow-400/60" />
+                <span className="terminal-dot bg-green-400/60" />
+                <span className="ml-2 text-[10px] text-muted-foreground/50 font-body">SKILL.md</span>
+                <button
+                  onClick={handleSkillCopy}
+                  className="ml-auto text-muted-foreground/50 hover:text-foreground transition-colors"
+                  aria-label="Copy SKILL.md"
+                >
+                  {copiedSkill ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <pre className="text-xs text-muted-foreground leading-5 font-body"><code>{skillMdContent}</code></pre>
             </div>
 
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mt-6 mb-4 font-body">Discovery Priority</h3>
@@ -97,6 +128,13 @@ Review the code for:
                   <div className="flex items-center gap-2 mb-1 relative z-10">
                     <s.icon className="w-3 h-3 text-primary" />
                     <span className="text-[11px] text-muted-foreground font-body">{s.desc}</span>
+                    <button
+                      onClick={() => handleCmdCopy(s.cmd)}
+                      className="ml-auto text-muted-foreground/30 hover:text-foreground transition-colors shrink-0"
+                      aria-label="Copy command"
+                    >
+                      {copiedCmd === s.cmd ? <Check className="w-3 h-3 text-primary" /> : <Copy className="w-3 h-3" />}
+                    </button>
                   </div>
                   <code className="text-xs text-primary/80 font-body relative z-10">$ {s.cmd}</code>
                 </motion.div>

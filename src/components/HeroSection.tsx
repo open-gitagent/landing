@@ -40,16 +40,6 @@ const tree: TreeNode[] = [
     color: "text-muted-foreground",
   },
   {
-    name: "INSTRUCTIONS.md",
-    icon: <FileText className="w-3 h-3" />,
-    color: "text-muted-foreground",
-  },
-  {
-    name: "scheduler.yml",
-    icon: <FileText className="w-3 h-3" />,
-    color: "text-muted-foreground",
-  },
-  {
     name: "skills/",
     icon: <Zap className="w-3 h-3" />,
     color: "text-foreground",
@@ -153,9 +143,9 @@ const adapters = [
 ];
 
 const buildCmd = (flag: string) =>
-  `npx @open-gitagent/gitagent@latest run -r https://github.com/shreyas-lyzr/architect -a ${flag}${flag !== "claude" ? ' -p "hello"' : ''}`;
+  `npx @open-gitagent/opengap@latest run -r https://github.com/shreyas-lyzr/architect -a ${flag}${flag !== "claude" ? ' -p "hello"' : ''}`;
 
-export function HeroSection() {
+export function HeroSection({ noBackground = false }: { noBackground?: boolean }) {
   const [copied, setCopied] = useState(false);
   const [selectedAdapter, setSelectedAdapter] = useState(adapters[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -170,8 +160,40 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-20 pb-20 px-6">
-      <div className="flame-bg" />
+    <section className={`relative pt-20 pb-32 px-6 ${noBackground ? "" : "hero-dark"}`}>
+      {!noBackground && (
+        <>
+          {/* Vibrant ambient orbs */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <motion.div
+              className="absolute rounded-full"
+              style={{ width: 660, height: 660, top: -220, left: -200, background: "radial-gradient(ellipse at center, hsl(258 80% 65% / 0.7) 0%, transparent 65%)", filter: "blur(90px)", opacity: 0.38 }}
+              animate={{ x: [0, 65, -30, 42, 0], y: [0, -72, 50, -20, 0], scale: [1, 1.09, 0.94, 1.05, 1] }}
+              transition={{ duration: 15, ease: "easeInOut", repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute rounded-full"
+              style={{ width: 480, height: 480, top: -120, right: -140, background: "radial-gradient(ellipse at center, hsl(215 90% 62% / 0.65) 0%, transparent 65%)", filter: "blur(85px)", opacity: 0.32 }}
+              animate={{ x: [0, -56, 36, -24, 0], y: [0, 52, -40, 30, 0], scale: [1, 0.93, 1.08, 0.97, 1] }}
+              transition={{ duration: 19, ease: "easeInOut", repeat: Infinity, delay: 2.5 }}
+            />
+            <motion.div
+              className="absolute rounded-full"
+              style={{ width: 540, height: 540, bottom: -160, left: "18%", background: "radial-gradient(ellipse at center, hsl(330 80% 62% / 0.6) 0%, transparent 65%)", filter: "blur(110px)", opacity: 0.28 }}
+              animate={{ x: [0, 44, -34, 0], y: [0, -55, 24, 0], scale: [1, 1.07, 0.96, 1] }}
+              transition={{ duration: 12, ease: "easeInOut", repeat: Infinity, delay: 1 }}
+            />
+            <motion.div
+              className="absolute rounded-full"
+              style={{ width: 340, height: 340, top: "32%", left: "40%", background: "radial-gradient(ellipse at center, hsl(280 72% 60% / 0.55) 0%, transparent 65%)", filter: "blur(75px)", opacity: 0.22 }}
+              animate={{ x: [0, -40, 50, -18, 0], y: [0, 34, -46, 24, 0], scale: [1, 1.1, 0.92, 1.05, 1] }}
+              transition={{ duration: 17, ease: "easeInOut", repeat: Infinity, delay: 4 }}
+            />
+          </div>
+          {/* Bottom fade into light page */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-[1]" style={{ background: "linear-gradient(to bottom, transparent, hsl(33 25% 93%))" }} />
+        </>
+      )}
 
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -184,7 +206,7 @@ export function HeroSection() {
 
             <div className="inline-flex items-center gap-2 sketch-border rounded-full px-2 sm:px-3 py-1 text-xs text-muted-foreground mb-3 flex-wrap">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-primary font-medium">Open Standard</span> v0.1.0
+              <span className="text-primary font-medium">Open Standard</span> v0.4.0
               <span className="text-muted-foreground/40 hidden sm:inline">·</span>
               <span className="tracking-widest uppercase text-[10px] hidden sm:inline">Clone a repo. Get an agent.</span>
             </div>
@@ -193,9 +215,9 @@ export function HeroSection() {
               <img src={gitagentLogo} alt="GitAgent" className="h-14 w-14 sm:h-16 sm:w-16 lg:h-20 lg:w-20 object-contain rounded-lg shrink-0" />
               <div className="flex flex-col justify-center leading-none">
                 <h1 className="text-xl sm:text-3xl lg:text-4xl font-heading font-bold leading-none tracking-tight text-foreground whitespace-nowrap">
-                  <span className="text-foreground">Git</span><span className="text-primary">Agent</span><span className="text-foreground">Protocol</span>
+                  <span className="text-foreground">Open</span><span className="text-primary">GAP</span>
                 </h1>
-                <div className="text-muted-foreground text-xs sm:text-sm lg:text-base font-heading font-bold tracking-wide mt-1.5 leading-none">(Open GAP)</div>
+                <div className="text-muted-foreground text-xs sm:text-sm lg:text-base font-heading font-bold tracking-wide mt-1.5 leading-none">GitAgent Protocol</div>
               </div>
             </div>
             <p className="text-sm text-muted-foreground/60 mb-1 font-body italic">your repository becomes your agent</p>
@@ -218,7 +240,7 @@ export function HeroSection() {
                 Get Started
               </a>
               <a
-                href="https://github.com/open-gitagent/gitagent"
+                href="https://github.com/open-gitagent/opengap"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 sketch-border text-xs font-medium text-foreground px-3 sm:px-4 py-2 rounded-md transition-colors hover:bg-accent font-body"
