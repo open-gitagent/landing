@@ -120,7 +120,10 @@ export function GitAgentTools() {
             Tools
           </h2>
           <p className="text-sm text-muted-foreground font-body mb-2">
-            Built-in tools ship with every GitAgent install. Declarative tools let you expose any script as a typed tool.
+            When you run an agent, it uses tools to actually do things — read a file, run a shell command, write output. You control exactly which tools are available.
+          </p>
+          <p className="text-sm text-muted-foreground font-body">
+            For example, a code reviewer only needs <code className="text-primary text-xs">read</code> and <code className="text-primary text-xs">cli</code>. A file generator needs <code className="text-primary text-xs">write</code>. You can allowlist or denylist per query.
           </p>
         </motion.div>
 
@@ -191,31 +194,25 @@ export function GitAgentTools() {
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
             Tool Details
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {toolDetails.map((tool, i) => (
+          <div className="space-y-2">
+            {[
+              { name: "cli", desc: "Runs shell commands. Timeout is 120s by default. Output is capped at ~100 KB (stdout + stderr combined)." },
+              { name: "read", desc: "Reads file contents. Use offset and limit for large files — it won't load the whole thing at once." },
+              { name: "write", desc: "Creates or overwrites files. Parent directories are created automatically." },
+              { name: "memory", desc: "Loads and saves to memory/MEMORY.md. Every save is a git commit — fully versioned." },
+            ].map((tool, i) => (
               <motion.div
                 key={tool.name}
                 initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.04 }}
-                className="paper-card p-4 hover:border-primary/40 transition-colors"
+                className="paper-card p-3 hover:border-primary/40 transition-colors"
               >
-                <code className="text-xs font-semibold text-primary font-body mb-3 block relative z-10">
-                  {tool.name}
-                </code>
-                <dl className="space-y-1.5 relative z-10">
-                  {tool.rows.map((row) => (
-                    <div key={row.key} className="flex flex-col gap-0.5">
-                      <dt className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-body">
-                        {row.key}
-                      </dt>
-                      <dd className="text-[11px] text-foreground/80 font-body leading-relaxed">
-                        {row.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+                <div className="flex items-start gap-3 relative z-10">
+                  <code className="text-[11px] text-primary font-body font-semibold shrink-0 w-16">{tool.name}</code>
+                  <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{tool.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>

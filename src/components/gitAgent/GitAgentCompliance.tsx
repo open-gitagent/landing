@@ -77,8 +77,11 @@ export function GitAgentCompliance() {
           className="mb-8"
         >
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Compliance</h2>
+          <p className="text-sm text-muted-foreground font-body mb-2">
+            If your agent handles sensitive data — financial records, PII, regulated workflows — GitAgent can enforce audit logging, human-in-the-loop approval, and regulatory recordkeeping automatically.
+          </p>
           <p className="text-sm text-muted-foreground font-body">
-            Risk levels, validation rules, compliance configuration, and immutable audit logging.
+            Set <code className="text-primary text-xs">risk_level</code> in <code className="text-primary text-xs">agent.yaml</code> and GitAgent validates your config at startup. Missing a required setting? It prints a warning before the agent runs.
           </p>
         </motion.div>
 
@@ -134,9 +137,10 @@ export function GitAgentCompliance() {
           viewport={{ once: true }}
           className="mb-10"
         >
-          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
-            Validation Rules
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1 font-body">
+            What gets validated at startup
           </h3>
+          <p className="text-[11px] text-muted-foreground font-body mb-4">GitAgent checks your compliance config when the agent loads and warns you about gaps before any session starts.</p>
           <div className="overflow-x-auto">
             <div className="space-y-1.5">
               {validationRules.map((r, i) => (

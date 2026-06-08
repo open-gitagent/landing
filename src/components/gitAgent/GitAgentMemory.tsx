@@ -84,7 +84,7 @@ export function GitAgentMemory() {
         >
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Memory</h2>
           <p className="text-sm text-muted-foreground font-body">
-            Git-native memory — all changes are committed, versioned, and auditable.
+            Every memory write is a git commit. That means you can diff what changed last session, revert a bad memory write, or audit the full history — with standard git commands.
           </p>
         </motion.div>
 
@@ -97,9 +97,7 @@ export function GitAgentMemory() {
         >
           <div className="paper-card p-4 hover:border-primary/40 transition-colors">
             <p className="text-sm text-foreground font-body leading-relaxed relative z-10">
-              GitAgent's memory is git-native — all memory changes are committed, versioned, and auditable.{" "}
-              <code className="text-primary text-xs font-body">memory/MEMORY.md</code> is the primary memory file,
-              loaded into every conversation.
+              <code className="text-primary text-xs font-body">memory/MEMORY.md</code> is the primary file. It's loaded automatically into every conversation.
             </p>
           </div>
         </motion.div>
@@ -143,9 +141,10 @@ export function GitAgentMemory() {
           viewport={{ once: true }}
           className="mb-10"
         >
-          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
-            Additional Memory Features
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1 font-body">
+            Other Memory Files
           </h3>
+          <p className="text-[11px] text-muted-foreground font-body mb-4">GitAgent also writes to a few other files automatically:</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {additionalFeatures.map((f, i) => {
               const Icon = f.icon;

@@ -8,7 +8,7 @@ const compactionCode = `import {
   needsCompaction,
   truncateToolResults,
   buildCompactPrompt
-} from "@open-gitagent/gitagent";
+} from "@open-gitagent/opengap";
 
 // Estimate tokens in a string
 const tokens = estimateTokens("Hello world");  // ~3
@@ -24,7 +24,7 @@ const trimmed = truncateToolResults(messages, 10000);
 // Build a summarization prompt for the LLM
 const prompt = buildCompactPrompt(messages);`;
 
-const costTrackingCode = `import { query } from "@open-gitagent/gitagent";
+const costTrackingCode = `import { query } from "@open-gitagent/opengap";
 
 const result = query({ prompt: "...", dir: "..." });
 

@@ -22,6 +22,8 @@ const App = () => (
           <Route path="/opengap/:section" element={<OpenGAPDocsPage />} />
           <Route path="/docs" element={<Navigate to="/docs/overview" replace />} />
           <Route path="/docs/:section" element={<GitAgentDocsPage />} />
+          <Route path="/docs/:section/:subsection" element={<GitAgentDocsPage />} />
+          <Route path="/docs/:section/:subsection/:page" element={<GitAgentDocsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

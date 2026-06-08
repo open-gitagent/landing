@@ -113,7 +113,7 @@ export function GitAgentInstallSection() {
                 <div className="border-t border-border pt-2">
                   <p className="text-[10px] text-muted-foreground/50 font-body mb-1">Or via npm</p>
                   <code className="text-[11px] text-primary font-body block">
-                    npm install -g @open-gitagent/gitagent
+                    npm install -g @open-gitagent/opengap
                   </code>
                 </div>
               </div>

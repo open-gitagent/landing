@@ -8,6 +8,14 @@ import { GitAgentArchitecture } from "@/components/gitAgent/GitAgentArchitecture
 import { GitAgentInterfaces } from "@/components/gitAgent/GitAgentInterfaces";
 import { GitAgentMessaging } from "@/components/gitAgent/GitAgentMessaging";
 import { GitAgentQuickStart } from "@/components/gitAgent/GitAgentQuickStart";
+import { GitAgentQuickStartPersonalAssistant } from "@/components/gitAgent/GitAgentQuickStartPersonalAssistant";
+import { GitAgentQuickStartSDK } from "@/components/gitAgent/GitAgentQuickStartSDK";
+import { GitAgentCookbookRefactorRepo } from "@/components/gitAgent/GitAgentCookbookRefactorRepo";
+import { GitAgentCookbookSummarizeEmails } from "@/components/gitAgent/GitAgentCookbookSummarizeEmails";
+import { GitAgentCookbookCodeReview } from "@/components/gitAgent/GitAgentCookbookCodeReview";
+import { GitAgentCookbookCustomTool } from "@/components/gitAgent/GitAgentCookbookCustomTool";
+import { GitAgentCookbookMultiAgentHandoff } from "@/components/gitAgent/GitAgentCookbookMultiAgentHandoff";
+import { GitAgentCookbookScheduledCron } from "@/components/gitAgent/GitAgentCookbookScheduledCron";
 import { GitAgentCLI } from "@/components/gitAgent/GitAgentCLI";
 import { GitAgentModels } from "@/components/gitAgent/GitAgentModels";
 import { GitAgentWebUI } from "@/components/gitAgent/GitAgentWebUI";
@@ -51,25 +59,34 @@ const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
   sdk: GitAgentSDK,
   utilities: GitAgentUtilities,
   telemetry: GitAgentTelemetry,
+  "quickstart/personal-assistant": GitAgentQuickStartPersonalAssistant,
+  "quickstart/sdk": GitAgentQuickStartSDK,
+  "sdk/cookbooks/refactor-repo": GitAgentCookbookRefactorRepo,
+  "sdk/cookbooks/summarize-emails": GitAgentCookbookSummarizeEmails,
+  "sdk/cookbooks/code-review": GitAgentCookbookCodeReview,
+  "sdk/cookbooks/custom-tool": GitAgentCookbookCustomTool,
+  "sdk/cookbooks/multi-agent-handoff": GitAgentCookbookMultiAgentHandoff,
+  "sdk/cookbooks/scheduled-cron": GitAgentCookbookScheduledCron,
 };
 
-const ALL_ITEMS = sidebarGroups.flatMap((g) => g.items);
+const ALL_ITEMS = sidebarGroups.flatMap((g) => g.items).filter((item) => !("divider" in item && item.divider));
 
 const GitAgentDocsPage = () => {
-  const { section = "overview" } = useParams<{ section: string }>();
+  const { section = "overview", subsection, page } = useParams<{ section: string; subsection?: string; page?: string }>();
+  const sectionKey = page ? `${section}/${subsection}/${page}` : subsection ? `${section}/${subsection}` : section;
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  const currentIndex = ALL_ITEMS.findIndex((item) => item.id === section);
+  const currentIndex = ALL_ITEMS.findIndex((item) => item.id === sectionKey);
   const prevItem = currentIndex > 0 ? ALL_ITEMS[currentIndex - 1] : null;
   const nextItem = currentIndex < ALL_ITEMS.length - 1 ? ALL_ITEMS[currentIndex + 1] : null;
 
-  const SectionComponent = SECTION_COMPONENTS[section] ?? GitAgentOverview;
-  const currentLabel = ALL_ITEMS.find((item) => item.id === section)?.label ?? "Docs";
+  const SectionComponent = SECTION_COMPONENTS[sectionKey] ?? GitAgentOverview;
+  const currentLabel = ALL_ITEMS.find((item) => item.id === sectionKey)?.label ?? "Docs";
 
   useEffect(() => {
     document.title = `GitAgent Docs — ${currentLabel}`;
     window.scrollTo(0, 0);
-  }, [section, currentLabel]);
+  }, [sectionKey, currentLabel]);
 
   useEffect(() => {
     const handleScroll = () => setShowBackToTop(window.scrollY > 400);
@@ -78,11 +95,11 @@ const GitAgentDocsPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-clip">
       <GitAgentNavbar />
 
       <div className="pt-14 lg:flex max-w-7xl mx-auto">
-        <GitAgentSidebar activeSection={section} />
+        <GitAgentSidebar activeSection={sectionKey} />
 
         <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 pb-24">
           <SectionComponent />

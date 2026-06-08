@@ -8,7 +8,7 @@ const tabs = ["query()", "tool()", "buildTool()", "hooks"] as const;
 type Tab = (typeof tabs)[number];
 
 const codeMap: Record<Tab, string> = {
-  "query()": `import { query } from "@open-gitagent/gitagent";
+  "query()": `import { query } from "@open-gitagent/opengap";
 
 for await (const msg of query({
   prompt: "Refactor the auth module",
@@ -28,7 +28,7 @@ for await (const msg of query({
       console.log(\`[\${msg.subtype}] \${msg.content}\`); break;
   }
 }`,
-  "tool()": `import { query, tool } from "@open-gitagent/gitagent";
+  "tool()": `import { query, tool } from "@open-gitagent/opengap";
 
 const search = tool(
   "search_docs",
@@ -49,7 +49,7 @@ const search = tool(
 for await (const msg of query({ prompt: "Find auth docs", tools: [search] })) {
   // agent can now call search_docs
 }`,
-  "buildTool()": `import { buildTool } from "@open-gitagent/gitagent";
+  "buildTool()": `import { buildTool } from "@open-gitagent/opengap";
 
 const myTool = buildTool({
   name: "search_docs",
@@ -98,8 +98,27 @@ const myTool = buildTool({
 });`,
 };
 
+const pathWithRepo = `import { query } from "@open-gitagent/opengap";
+
+for await (const msg of query({
+  repo: "https://github.com/open-gitagent/opengap",
+  prompt: "Summarise the open pull requests",
+})) {
+  if (msg.type === "assistant") console.log(msg.content);
+}`;
+
+const pathWithoutRepo = `import { query } from "@open-gitagent/opengap";
+
+for await (const msg of query({
+  prompt: "Refactor the auth module in src/auth.ts",
+  model: "anthropic:claude-sonnet-4-6",
+  dir: "./my-project",
+})) {
+  if (msg.type === "assistant") console.log(msg.content);
+}`;
+
 const queryOptions = [
-  { name: "prompt", type: "string | AsyncIterable", desc: "User prompt or multi-turn stream" },
+  { name: "prompt", type: "string | AsyncIterable", desc: "User prompt or multi-turn stream", required: true },
   { name: "dir", type: "string", desc: "Agent directory (default: cwd)" },
   { name: "model", type: "string", desc: '"provider:model-id"' },
   { name: "env", type: "string", desc: "Environment config (config/<env>.yaml)" },
@@ -116,7 +135,7 @@ const queryOptions = [
   { name: "repo", type: "object", desc: "Work on a remote git repo — clone, run agent, auto-commit changes to session branch" },
   { name: "sandbox", type: "SandboxOptions | boolean", desc: "Run agent inside an E2B cloud VM (true uses defaults)" },
   { name: "sessionId", type: "string", desc: "Tag or resume a specific session" },
-];
+] as const;
 
 const messageTypes = [
   { type: "delta", desc: "Streaming text/thinking chunk", fields: "deltaType, content" },
@@ -155,13 +174,49 @@ export function GitAgentSDK() {
           </p>
         </motion.div>
 
-        {/* A. Tabbed code display */}
+        {/* Starting points */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-10"
         >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-3 font-body">
+            Pick your starting point
+          </h3>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 leading-relaxed">
+            Two paths — both use the same <code className="text-primary text-xs">query()</code> function.
+            Full API reference below.
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="paper-card p-4 flex flex-col gap-3">
+              <p className="text-xs font-semibold text-foreground font-body">Path 1 — With an OpenGAP repo URL</p>
+              <CodeBlock code={pathWithRepo} filename="index.ts" className="flex-1" />
+              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+                GitAgent clones the repo, reads <code className="text-primary text-xs">agent.yaml</code> +{" "}
+                <code className="text-primary text-xs">SOUL.md</code> + skills. Zero config — the repo is your agent.
+              </p>
+            </div>
+            <div className="paper-card p-4 flex flex-col gap-3">
+              <p className="text-xs font-semibold text-foreground font-body">Path 2 — Without a repo</p>
+              <CodeBlock code={pathWithoutRepo} filename="index.ts" className="flex-1" />
+              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+                Pure SDK — point at an existing directory. No agent repo needed. Ideal for embedding in an app you already have.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* A. API Reference heading + Tabbed code display */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
+            API Reference
+          </h3>
           <div className="code-block sketch-border overflow-hidden">
             {/* Tab bar */}
             <div className="terminal-header flex items-center gap-1 border-b border-border">
@@ -212,74 +267,70 @@ export function GitAgentSDK() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* B. QueryOptions */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
-              QueryOptions
-            </h3>
-            <div className="space-y-1.5">
-              {queryOptions.map((opt, i) => (
-                <motion.div
-                  key={opt.name}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  className="paper-card p-3 hover:border-primary/40 transition-colors"
-                >
-                  <div className="flex items-start gap-2 relative z-10">
-                    <code className="text-[11px] text-primary font-body font-semibold shrink-0 w-36">
-                      {opt.name}
-                    </code>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] text-muted-foreground/60 font-body">{opt.type}</p>
-                      <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{opt.desc}</p>
-                    </div>
+        {/* B. QueryOptions */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10"
+        >
+          <h3 className="text-base font-semibold text-foreground mb-1 font-heading">QueryOptions</h3>
+          <p className="text-[11px] text-muted-foreground/60 font-body mb-4">Parameters accepted by <code className="text-primary text-xs">query()</code></p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {queryOptions.map((opt, i) => (
+              <motion.div
+                key={opt.name}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.02 }}
+                className="paper-card p-3 hover:border-primary/40 transition-colors h-full"
+              >
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <code className="text-[11px] text-primary font-body font-semibold">{opt.name}</code>
+                    {"required" in opt && opt.required && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/15 text-primary font-body font-medium tracking-wide">required</span>
+                    )}
+                    <span className="text-[10px] text-muted-foreground/50 font-body">{opt.type}</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{opt.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-          {/* C. Message Types */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.04 }}
-          >
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
-              Message Types
-            </h3>
-            <div className="space-y-1.5">
-              {messageTypes.map((m, i) => (
-                <motion.div
-                  key={m.type}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  className="paper-card p-3 hover:border-primary/40 transition-colors"
-                >
-                  <div className="flex items-start gap-2 relative z-10">
-                    <code className="text-[11px] text-primary font-body font-semibold shrink-0 w-24">
-                      {m.type}
-                    </code>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{m.desc}</p>
-                      <p className="text-[10px] text-muted-foreground/60 font-body mt-0.5">{m.fields}</p>
-                    </div>
+        {/* C. Message Types */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-8 pt-8 border-t border-border"
+        >
+          <h3 className="text-base font-semibold text-foreground mb-1 font-heading">Message Types</h3>
+          <p className="text-[11px] text-muted-foreground/60 font-body mb-4">Emitted by the <code className="text-primary text-xs">query()</code> async iterator</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {messageTypes.map((m, i) => (
+              <motion.div
+                key={m.type}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.04 }}
+                className="paper-card p-3 hover:border-primary/40 transition-colors h-full"
+              >
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <code className="text-[11px] text-primary font-body font-semibold">{m.type}</code>
+                    <span className="text-[10px] text-muted-foreground/50 font-body">{m.fields}</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+                  <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{m.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Cost tracking */}
         <motion.div
@@ -301,6 +352,44 @@ console.log(\`Cost: $\${costs.totalCostUsd.toFixed(4)}\`);
 console.log(\`Tokens: \${costs.totalInputTokens} in / \${costs.totalOutputTokens} out\`);`}
             filename="app.ts"
           />
+        </motion.div>
+
+        {/* SDK Cookbooks */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-10 pt-8 border-t border-border"
+        >
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1 font-body">SDK Cookbooks</h3>
+          <p className="text-[11px] text-muted-foreground font-body mb-4 leading-relaxed">
+            Production-ready examples showing <code className="text-primary text-xs">query()</code> and <code className="text-primary text-xs">buildTool()</code> in real scenarios.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {[
+              { label: "Refactor a Repo", desc: "Clone a repo and apply AI-driven refactors with auto-commit", href: "/docs/sdk/cookbooks/refactor-repo" },
+              { label: "Summarize Emails", desc: "Fetch Gmail via custom tool and produce a prioritized digest", href: "/docs/sdk/cookbooks/summarize-emails" },
+              { label: "Code Review PR", desc: "Review a git diff across security, correctness, and performance", href: "/docs/sdk/cookbooks/code-review" },
+              { label: "Custom Tool", desc: "Build Jira + Slack tools with buildTool() and wire them to an agent", href: "/docs/sdk/cookbooks/custom-tool" },
+              { label: "Multi-Agent Handoff", desc: "Chain an auditor agent into a GitHub issue writer agent", href: "/docs/sdk/cookbooks/multi-agent-handoff" },
+              { label: "Scheduled Cron", desc: "Run a standup digest agent every weekday at 9 AM via node-cron", href: "/docs/sdk/cookbooks/scheduled-cron" },
+            ].map((item, i) => (
+              <motion.a
+                key={item.href}
+                href={item.href}
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.04 }}
+                className="paper-card p-3 hover:border-primary/40 transition-colors block group"
+              >
+                <div className="relative z-10">
+                  <p className="text-[11px] font-semibold text-foreground font-body mb-1 group-hover:text-primary transition-colors">{item.label} →</p>
+                  <p className="text-[11px] text-muted-foreground font-body leading-relaxed">{item.desc}</p>
+                </div>
+              </motion.a>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

@@ -4,6 +4,20 @@ import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
 const interfaces = [
   {
+    icon: Code2,
+    label: "SDK",
+    tagline: "Embed in Node.js",
+    desc: "The production entry point. Import GitAgent directly into your Node.js application and call query() to send prompts programmatically.",
+    code: `import { query } from "@open-gitagent/opengap";\n\nfor await (const msg of query({\n  prompt: "Summarise yesterday's tasks",\n  dir: "./my-agent",\n})) {\n  if (msg.type === "assistant") console.log(msg.content);\n}`,
+    filename: "app.ts",
+    href: "/docs/sdk",
+    links: [
+      { label: "SDK Quickstart", href: "/docs/quickstart/sdk" },
+      { label: "Full API", href: "/docs/sdk" },
+      { label: "SDK Cookbooks", href: "/docs/sdk/cookbooks/refactor-repo" },
+    ],
+  },
+  {
     icon: Terminal,
     label: "CLI",
     tagline: "Terminal REPL",
@@ -30,15 +44,6 @@ const interfaces = [
     filename: ".env / terminal",
     href: "/docs/messaging",
   },
-  {
-    icon: Code2,
-    label: "SDK",
-    tagline: "Embed in Node.js",
-    desc: "Import GitAgent directly into your application. Use query() to send a prompt and get a response programmatically.",
-    code: `import { query } from "@open-gitagent/gitagent";\n\nfor await (const msg of query({\n  prompt: "Summarise yesterday's tasks",\n  dir: "./my-agent",\n})) {\n  if (msg.type === "assistant") console.log(msg.content);\n}`,
-    filename: "app.ts",
-    href: "/docs/sdk",
-  },
 ];
 
 export function GitAgentInterfaces() {
@@ -59,6 +64,22 @@ export function GitAgentInterfaces() {
           </h2>
           <p className="text-sm text-muted-foreground font-body">
             GitAgent meets you where you work — terminal, browser, chat app, or embedded in your own code.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-6 p-3 rounded-md border border-primary/30 bg-primary/5"
+        >
+          <p className="text-xs font-body text-foreground/80 leading-relaxed">
+            <span className="font-semibold text-foreground">Building an app?</span>{" "}
+            The SDK is the production entry point.{" "}
+            <a href="/docs/quickstart/sdk" className="text-primary hover:underline">
+              Start with the SDK Quickstart →
+            </a>{" "}
+            before reading anything else on this page.
           </p>
         </motion.div>
 
@@ -89,13 +110,25 @@ export function GitAgentInterfaces() {
                 <div className="relative z-10">
                   <CodeBlock code={iface.code} filename={iface.filename} />
                 </div>
-                <div className="relative z-10">
-                  <a
-                    href={iface.href}
-                    className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline font-body"
-                  >
-                    View docs →
-                  </a>
+                <div className="relative z-10 flex items-center gap-3 flex-wrap">
+                  {"links" in iface && iface.links ? (
+                    iface.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline font-body"
+                      >
+                        {link.label} →
+                      </a>
+                    ))
+                  ) : (
+                    <a
+                      href={iface.href}
+                      className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline font-body"
+                    >
+                      View docs →
+                    </a>
+                  )}
                 </div>
               </motion.div>
             );

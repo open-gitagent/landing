@@ -5,8 +5,26 @@ export const sidebarGroups = [
     items: [
       { id: "overview", label: "Overview" },
       { id: "quickstart", label: "Quick Start" },
+      { id: "quickstart/sdk", label: "SDK Quickstart", depth: 1 },
+      { id: "quickstart/personal-assistant", label: "Personal Assistant", depth: 1 },
       { id: "interfaces", label: "Ways to Interact" },
       { id: "architecture", label: "Architecture" },
+    ],
+  },
+  {
+    label: "SDK",
+    slug: "sdk",
+    items: [
+      { id: "sdk", label: "SDK Reference" },
+      { id: "utilities", label: "Utilities" },
+      { id: "telemetry", label: "Telemetry" },
+      { id: "cookbooks-divider", label: "SDK Cookbooks", divider: true },
+      { id: "sdk/cookbooks/refactor-repo", label: "Refactor a Repo", depth: 1 },
+      { id: "sdk/cookbooks/summarize-emails", label: "Summarize Emails", depth: 1 },
+      { id: "sdk/cookbooks/code-review", label: "Code Review PR", depth: 1 },
+      { id: "sdk/cookbooks/custom-tool", label: "Custom Tool", depth: 1 },
+      { id: "sdk/cookbooks/multi-agent-handoff", label: "Multi-Agent Handoff", depth: 1 },
+      { id: "sdk/cookbooks/scheduled-cron", label: "Scheduled Cron", depth: 1 },
     ],
   },
   {
@@ -16,7 +34,6 @@ export const sidebarGroups = [
       { id: "cli", label: "CLI" },
       { id: "webui", label: "Web & Voice" },
       { id: "messaging", label: "Messaging" },
-      { id: "sdk", label: "SDK" },
     ],
   },
   {
@@ -55,20 +72,12 @@ export const sidebarGroups = [
       { id: "security", label: "Security" },
     ],
   },
-  {
-    label: "SDK & Utilities",
-    slug: "sdk",
-    items: [
-      { id: "utilities", label: "Utilities" },
-      { id: "telemetry", label: "Telemetry" },
-    ],
-  },
 ];
 
 export function GitAgentSidebar({ activeSection }: { activeSection: string }) {
   return (
-    <aside className="hidden lg:block w-56 shrink-0">
-      <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-8 pr-4">
+    <aside className="hidden lg:block w-56 shrink-0 border-r border-border">
+      <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto py-8 pr-4 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-3 font-body">
           Contents
         </p>
@@ -80,12 +89,23 @@ export function GitAgentSidebar({ activeSection }: { activeSection: string }) {
               </p>
               <ul className="space-y-0.5">
                 {group.items.map((s) => {
-                  const isActive = activeSection === s.id;
+                  if ("divider" in s && s.divider) {
+                    return (
+                      <li key={s.id} className="pt-3 pb-0.5 px-2">
+                        <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 font-body">
+                          {s.label}
+                        </p>
+                      </li>
+                    );
+                  }
+                  const isActive = "href" in s && s.href
+                    ? s.href === `/docs/${activeSection}`
+                    : activeSection === s.id;
                   return (
                     <li key={s.id}>
                       <a
-                        href={`/docs/${s.id}`}
-                        className={`block text-xs font-body py-1 px-2 rounded transition-colors ${
+                        href={"href" in s && s.href ? s.href : `/docs/${s.id}`}
+                        className={`block font-body py-1 px-2 rounded transition-colors ${"depth" in s && s.depth ? "pl-5 text-[11px]" : "text-xs"} ${
                           isActive
                             ? "text-primary font-medium bg-primary/5"
                             : "text-muted-foreground hover:bg-accent/40 hover:text-foreground"
