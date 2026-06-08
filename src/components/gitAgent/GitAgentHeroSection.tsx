@@ -104,17 +104,20 @@ export function GitAgentHeroSection() {
               ))}
             </motion.div>
 
-            {/* Install command */}
+            {/* SDK — primary */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.62 }}
-              className="mb-4"
+              className="mb-3"
             >
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-1.5 font-body">
-                One-command install
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">SDK — Build with AI Agents</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground font-body mb-1.5 leading-relaxed">
+                Integrate agents into your app, automate workflows, run agents from code.
               </p>
-              <div className="code-block sketch-border border-primary/30">
+              <div className="code-block sketch-border border-primary/40">
                 <div className="terminal-header">
                   <span className="terminal-dot bg-primary/30" />
                   <span className="terminal-dot bg-primary/20" />
@@ -141,16 +144,41 @@ export function GitAgentHeroSection() {
               </div>
             </motion.div>
 
-            {/* curl shorthand */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.35, delay: 0.7 }}
-              className="text-[11px] text-muted-foreground font-body mb-8"
+            {/* Personal Assistant — secondary */}
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.72 }}
+              className="mb-8"
             >
-              Or:{" "}
-              <code className="text-primary text-[11px]">curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash</code>
-            </motion.p>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-body">Personal Assistant</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground font-body mb-1.5 leading-relaxed">
+                Run a local AI agent with memory, voice, and web UI.
+              </p>
+              <div className="code-block sketch-border">
+                <div className="terminal-header">
+                  <span className="terminal-dot bg-primary/30" />
+                  <span className="terminal-dot bg-primary/20" />
+                  <span className="terminal-dot bg-primary/10" />
+                  <span className="ml-auto text-[10px] text-muted-foreground font-body">bash</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-muted-foreground/80 font-body flex-1 break-all leading-relaxed">
+                    <span className="text-primary mr-1.5">$</span>
+                    curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash
+                  </span>
+                  <button
+                    onClick={() => { navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash"); }}
+                    className="text-muted-foreground/50 hover:text-foreground transition-colors shrink-0 ml-2"
+                    aria-label="Copy curl command"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
 
             {/* CTAs */}
             <motion.div

@@ -1,26 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
-
-const installModes = [
-  {
-    mode: "Voice + Text",
-    command: "gitagent --voice",
-    desc: "Starts with voice mode and the web UI. Requires OPENAI_API_KEY or GEMINI_API_KEY.",
-    tag: "full",
-  },
-  {
-    mode: "Text Only",
-    command: "gitagent",
-    desc: "Text-only REPL, no voice or web UI. Works with any LLM provider key.",
-    tag: "lightweight",
-  },
-  {
-    mode: "Advanced / Custom",
-    command: "gitagent --dir ./my-agent",
-    desc: "Point to a custom agent.yaml for full control over model, tools, compliance, and identity.",
-    tag: "advanced",
-  },
-];
+import { ArrowRight } from "lucide-react";
 
 export function GitAgentInstallSection() {
   return (
@@ -36,149 +15,65 @@ export function GitAgentInstallSection() {
             09 — Get Started
           </span>
           <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
-            Launch & Install
+            Choose your path
           </h2>
           <p className="text-sm text-muted-foreground font-body">
-            Install once, then pick the launch mode that fits your workflow.
+            Pick the mode that fits how you want to use GitAgent.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          {/* Left: OpenGAP callout + requirements */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="paper-card p-5"
-            >
-              <div className="flex items-center gap-2 mb-2 relative z-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="text-xs font-heading font-semibold text-foreground">Built on OpenGAP</span>
-              </div>
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3 relative z-10">
-                GitAgent implements the{" "}
-                <span className="text-foreground/80 font-medium">OpenGAP open standard</span> — your agent definition
-                is portable, versionable, and exportable to any framework that speaks the protocol.
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* SDK — primary */}
+          <motion.a
+            href="/docs/quickstart/sdk"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.05 }}
+            className="paper-card p-6 flex flex-col gap-4 hover:border-primary/60 transition-colors group"
+          >
+            <div className="relative z-10">
+              <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">
+                SDK
+              </span>
+              <h3 className="text-base font-heading font-bold text-foreground mt-1 mb-2">
+                Build with AI Agents
+              </h3>
+              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+                Integrate agents into your app, automate workflows, and run agents from code.
               </p>
-              <a
-                href="/opengap"
-                className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline font-body relative z-10"
-              >
-                <ExternalLink className="w-3 h-3" />
-                Learn about OpenGAP →
-              </a>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.08 }}
-              className="paper-card p-4"
-            >
-              <p className="text-xs font-heading font-semibold text-foreground mb-3 relative z-10">Requirements</p>
-              <div className="space-y-1.5 relative z-10">
-                {[
-                  { label: "Node.js", value: "≥ 20" },
-                  { label: "git", value: "any version" },
-                  { label: "npm", value: "included with Node" },
-                ].map((r) => (
-                  <div key={r.label} className="flex items-center gap-3">
-                    <span className="text-[10px] text-muted-foreground/60 font-body w-16 shrink-0">{r.label}</span>
-                    <code className="text-[11px] text-foreground/80 font-body">{r.value}</code>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.12 }}
-              className="paper-card p-4"
-            >
-              <p className="text-xs font-heading font-semibold text-foreground mb-3 relative z-10">Install</p>
-              <div className="space-y-2 relative z-10">
-                <div>
-                  <p className="text-[10px] text-muted-foreground/50 font-body mb-1">One-liner</p>
-                  <code className="text-[11px] text-primary font-body block leading-relaxed">
-                    curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash
-                  </code>
-                  <p className="text-[10px] text-muted-foreground/50 font-body mt-1">
-                    Installs globally via npm, walks through API key setup, launches web UI at http://localhost:3333
-                  </p>
-                </div>
-                <div className="border-t border-border pt-2">
-                  <p className="text-[10px] text-muted-foreground/50 font-body mb-1">Or via npm</p>
-                  <code className="text-[11px] text-primary font-body block">
-                    npm install -g @open-gitagent/opengap
-                  </code>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.15 }}
-              className="flex items-center gap-3 flex-wrap"
-            >
-              <a
-                href="/docs"
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground text-xs font-medium px-4 py-2 rounded-md hover:opacity-90 transition-opacity font-body sketch-border border-primary"
-              >
-                Read the Docs
-              </a>
-              <a
-                href="https://github.com/open-gitagent/gitagent"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors font-body"
-              >
-                View on GitHub →
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Right: launch modes */}
-          <div>
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-4 font-body">
-              Launch Modes
-            </h3>
-            <div className="space-y-3">
-              {installModes.map((m, i) => (
-                <motion.div
-                  key={m.mode}
-                  initial={{ opacity: 0, x: 4 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.07 }}
-                  className="paper-card p-4"
-                >
-                  <div className="flex items-center gap-2 mb-2 relative z-10">
-                    <span className="text-xs font-heading font-semibold text-foreground">{m.mode}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-body ml-auto ${
-                      m.tag === "recommended"
-                        ? "bg-primary/10 text-primary"
-                        : "bg-accent text-muted-foreground"
-                    }`}>
-                      {m.tag}
-                    </span>
-                  </div>
-                  <code className="text-[11px] text-primary font-body block mb-2 relative z-10">
-                    $ {m.command}
-                  </code>
-                  <p className="text-[11px] text-muted-foreground font-body leading-relaxed relative z-10">
-                    {m.desc}
-                  </p>
-                </motion.div>
-              ))}
             </div>
-          </div>
+            <div className="mt-auto flex items-center gap-1.5 text-xs text-primary font-body font-medium relative z-10">
+              SDK Quick Start
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </motion.a>
+
+          {/* Personal Assistant */}
+          <motion.a
+            href="/docs/quickstart/personal-assistant"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="paper-card p-6 flex flex-col gap-4 hover:border-primary/40 transition-colors group"
+          >
+            <div className="relative z-10">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-body">
+                Personal Assistant
+              </span>
+              <h3 className="text-base font-heading font-bold text-foreground mt-1 mb-2">
+                Run a Local Agent
+              </h3>
+              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
+                Run a local AI agent with memory, voice, and web UI.
+              </p>
+            </div>
+            <div className="mt-auto flex items-center gap-1.5 text-xs text-muted-foreground font-body group-hover:text-foreground transition-colors relative z-10">
+              Personal Assistant Quick Start
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </motion.a>
         </div>
       </div>
     </section>

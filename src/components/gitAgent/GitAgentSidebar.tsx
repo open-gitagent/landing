@@ -4,9 +4,6 @@ export const sidebarGroups = [
     slug: "getting-started",
     items: [
       { id: "overview", label: "Overview" },
-      { id: "quickstart", label: "Quick Start" },
-      { id: "quickstart/sdk", label: "SDK Quickstart", depth: 1 },
-      { id: "quickstart/personal-assistant", label: "Personal Assistant", depth: 1 },
       { id: "interfaces", label: "Ways to Interact" },
       { id: "architecture", label: "Architecture" },
     ],
@@ -15,6 +12,7 @@ export const sidebarGroups = [
     label: "SDK",
     slug: "sdk",
     items: [
+      { id: "quickstart/sdk", label: "Quick Start" },
       { id: "sdk", label: "SDK Reference" },
       { id: "utilities", label: "Utilities" },
       { id: "telemetry", label: "Telemetry" },
@@ -28,9 +26,10 @@ export const sidebarGroups = [
     ],
   },
   {
-    label: "Interfaces",
-    slug: "interfaces",
+    label: "Personal Assistant",
+    slug: "personal-assistant",
     items: [
+      { id: "quickstart/personal-assistant", label: "Quick Start" },
       { id: "cli", label: "CLI" },
       { id: "webui", label: "Web & Voice" },
       { id: "messaging", label: "Messaging" },
