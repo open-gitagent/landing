@@ -145,21 +145,18 @@ while response.stop_reason == "tool_use":
 const toRulesMd = `# RULES.md
 
 ## Must Always
-- Include source citations when providing research
-  findings; format as markdown links
-- Diagnose root cause before making any
-  infrastructure changes
-- Use parallel tool calls when performing multiple
-  independent operations
-- Write all final research reports directly —
-  never delegate report generation to a subagent
+- Be polite and helpful in every response
+- Call tools to look up accurate information
+  before responding to the user
+- Use the most specific tool available for each
+  customer request
 
 ## Must Never
-- Read or edit files outside the designated safe
-  directories (config/ for SRE tasks)
-- Run shell commands that do not start with
-  docker-compose or docker
-- Echo or log API keys or tokens`;
+- Respond with information that has not been
+  verified via a tool call
+- Reveal internal tool names or raw API errors
+  to the customer
+- Echo or log customer account details`;
 
 const fromToolsLoop = `# customer_service_agent.ipynb
 # The tool loop — run tool, append result, re-invoke
@@ -206,7 +203,7 @@ spec_version: "0.1.0"
 name: anthropic-cookbook
 version: 1.0.0
 model:
-  preferred: claude-opus-4-8
+  preferred: anthropic:claude-opus-4-8
   fallback:
     - claude-sonnet-4-6
 runtime:
@@ -322,7 +319,7 @@ version: 1.0.0
 description: A collection of Claude-powered agents demonstrating research, observability, site-reliability, and chief-of-staff patterns using the Claude Agent SDK.
 
 model:
-  preferred: claude-opus-4-8
+  preferred: anthropic:claude-opus-4-8
   fallback:
     - claude-sonnet-4-6
 
@@ -461,7 +458,7 @@ version: 1.0.0
 description: A research agent specialized in AI topics that uses web search and multimodal capabilities to gather and synthesize information with source citations.
 
 model:
-  preferred: claude-opus-4-8
+  preferred: anthropic:claude-opus-4-8
   fallback:
     - claude-sonnet-4-6
 
@@ -492,7 +489,7 @@ version: 1.0.0
 description: Chief of Staff for TechStart Inc managing financial modeling, talent scoring, strategic decisions, and executive reporting with subagent delegation and custom analysis scripts.
 
 model:
-  preferred: claude-opus-4-8
+  preferred: anthropic:claude-opus-4-8
 
 runtime:
   max_turns: 30

@@ -250,17 +250,14 @@ runtime:
   max_turns: 50
   timeout: 300
 skills:
-  - research-planning
-  - web-search-summarize
-  - report-writing
+  - triage-routing
+  - faq-lookup
+  - seat-booking
   - input-guardrail-check
   - output-guardrail-check
-  - tool-execution
 tools:
-  - web-search
   - faq-lookup
-  - update-seat
-  - get-weather`;
+  - update-seat`;
 
 /* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
 
@@ -269,19 +266,16 @@ const outputTree = `openai-agents-python/        (OpenGAP)
 ├── SOUL.md                  ← orchestrator identity
 ├── RULES.md                 ← guardrails & constraints
 ├── skills/
-│   ├── research-planning/SKILL.md
-│   ├── web-search-summarize/SKILL.md
-│   ├── report-writing/SKILL.md
+│   ├── triage-routing/SKILL.md
+│   ├── faq-lookup/SKILL.md
+│   ├── seat-booking/SKILL.md
 │   ├── input-guardrail-check/SKILL.md
-│   ├── output-guardrail-check/SKILL.md
-│   └── tool-execution/SKILL.md
+│   └── output-guardrail-check/SKILL.md
 ├── tools/
 │   ├── faq-lookup.yaml      ← tool schema
 │   ├── faq-lookup.py        ← tool impl
 │   ├── update-seat.yaml
-│   ├── update-seat.py
-│   ├── web-search.yaml
-│   └── get-weather.yaml
+│   └── update-seat.py
 └── agents/
     ├── triage-agent/
     │   ├── agent.yaml       ← delegation.mode: router
@@ -308,18 +302,15 @@ runtime:
   timeout: 300
 
 skills:
-  - research-planning
-  - web-search-summarize
-  - report-writing
+  - triage-routing
+  - faq-lookup
+  - seat-booking
   - input-guardrail-check
   - output-guardrail-check
-  - tool-execution
 
 tools:
-  - web-search
   - faq-lookup
   - update-seat
-  - get-weather
 
 agents:
   triage-agent:

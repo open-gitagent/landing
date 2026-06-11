@@ -387,7 +387,7 @@ export function CookbookOpenCode() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same four mappings, in detail — OpenCode source on the left, the OpenGAP file it becomes on the right.</p>
+          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same three mappings, in detail — OpenCode source on the left, the OpenGAP file it becomes on the right.</p>
         </motion.div>
 
         <ConversionStep
