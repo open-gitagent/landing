@@ -5,7 +5,7 @@ import { useState } from "react";
 interface AgentEntry {
   label: string;
   desc: string;
-  cmd: string;
+  cmd?: string;
   cookbookId?: string;
   before: string;
   after: string;
@@ -90,7 +90,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "LangGraph",
     desc: "Translates StateGraph nodes, edges, and tools into OpenGAP agents and tool YAMLs.",
-    cmd: "$ opengap import -f langgraph",
     cookbookId: "cookbook-langgraph",
     before: `langgraph-project/
 ├── graph.py
@@ -114,7 +113,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "CrewAI",
     desc: "Maps Crew, Agent roles/goals, and Task definitions to agents/ and workflows/.",
-    cmd: "$ opengap import -f crewai",
     cookbookId: "cookbook-crewai",
     before: `crewai-project/
 ├── crew.py
@@ -140,7 +138,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "AutoGen",
     desc: "Converts ConversableAgent teams, tools, and group chats into OpenGAP agents.",
-    cmd: "$ opengap import -f autogen",
     cookbookId: "cookbook-autogen",
     before: `autogen-project/
 ├── team.py
@@ -165,7 +162,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "OpenAI Agents SDK",
     desc: "Maps Agent, handoffs, and @function_tool to agent.yaml, agents/, and tools/.",
-    cmd: "$ opengap import -f openai-agents",
     cookbookId: "cookbook-openai-agents",
     before: `openai-agents-project/
 ├── main.py
@@ -185,7 +181,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "Claude SDK",
     desc: "Converts Anthropic SDK agents — tools[], SYSTEM_PROMPT, and multi-turn loops into OpenGAP format.",
-    cmd: "$ opengap import -f claude-sdk",
     cookbookId: "cookbook-claude-sdk",
     before: `anthropic-project/
 ├── agent.py
@@ -204,7 +199,6 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "Google ADK",
     desc: "Converts Agent, sub_agents, and AgentTool hierarchies into nested OpenGAP dirs.",
-    cmd: "$ opengap import -f google-adk",
     cookbookId: "cookbook-google-adk",
     before: `adk-project/
 ├── agent.py
@@ -261,8 +255,14 @@ function AgentCard({ entry, index }: { entry: AgentEntry; index: number }) {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <code className="hidden sm:block text-[10px] text-primary font-body">{entry.cmd}</code>
-          <CopyButton text={entry.cmd.replace(/^\$ /, '')} />
+          {entry.cmd ? (
+            <>
+              <code className="hidden sm:block text-[10px] text-primary font-body">{entry.cmd}</code>
+              <CopyButton text={entry.cmd.replace(/^\$ /, '')} />
+            </>
+          ) : (
+            <span className="hidden sm:block text-[10px] text-muted-foreground/50 font-body">Manual mapping</span>
+          )}
           <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
       </button>
@@ -294,9 +294,11 @@ function AgentCard({ entry, index }: { entry: AgentEntry; index: number }) {
                 )}
               </div>
             </div>
-            <div className="px-4 pb-3">
-              <code className="sm:hidden text-[10px] text-primary font-body">{entry.cmd}</code>
-            </div>
+            {entry.cmd && (
+              <div className="px-4 pb-3">
+                <code className="sm:hidden text-[10px] text-primary font-body">{entry.cmd}</code>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -4,7 +4,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { opengapSidebarGroups } from "@/components/opengap/OpenGAPSidebar";
 
 const allItems = opengapSidebarGroups.flatMap((g) =>
-  g.items.map((item) => ({ ...item, group: g.label, slug: g.slug }))
+  g.items.flatMap((item) => [
+    { id: item.id, label: item.label, group: g.label, slug: g.slug },
+    ...(item.childGroups ?? []).flatMap((cg) =>
+      cg.items.map((c) => ({ id: c.id, label: c.label, group: cg.label, slug: g.slug }))
+    ),
+  ])
 );
 
 interface OpenGAPNavbarProps {
@@ -146,6 +151,30 @@ export function OpenGAPNavbar({ variant = "docs" }: OpenGAPNavbarProps) {
                             >
                               {s.label}
                             </a>
+                            {s.childGroups && (
+                              <div className="ml-3 mt-1 border-l border-border pl-2 space-y-2">
+                                {s.childGroups.map((cg) => (
+                                  <div key={cg.label}>
+                                    <p className="text-[9px] uppercase tracking-[0.1em] text-muted-foreground/40 font-body pb-0.5 px-2">
+                                      {cg.label}
+                                    </p>
+                                    <ul className="space-y-0.5">
+                                      {cg.items.map((c) => (
+                                        <li key={c.id}>
+                                          <a
+                                            href={`/opengap/${c.id}`}
+                                            onClick={() => setSheetOpen(false)}
+                                            className="block text-xs font-body py-1.5 px-2 rounded text-muted-foreground hover:bg-accent/40 hover:text-foreground transition-colors"
+                                          >
+                                            {c.label}
+                                          </a>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </li>
                         ))}
                       </ul>

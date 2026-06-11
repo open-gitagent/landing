@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { OpenGAPNavbar } from "@/components/opengap/OpenGAPNavbar";
-import { OpenGAPSidebar, opengapSidebarGroups } from "@/components/opengap/OpenGAPSidebar";
+import { OpenGAPSidebar, opengapAllItems } from "@/components/opengap/OpenGAPSidebar";
 import { HeroSection } from "@/components/HeroSection";
 
 const HeroSectionDocs = () => <HeroSection noBackground />;
@@ -56,7 +56,7 @@ const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
   "cookbook-opencode": CookbookOpenCode,
 };
 
-const ALL_ITEMS = opengapSidebarGroups.flatMap((g) => g.items);
+const ALL_ITEMS = opengapAllItems;
 
 const OpenGAPDocsPage = () => {
   const { section = "overview" } = useParams<{ section: string }>();
@@ -88,6 +88,15 @@ const OpenGAPDocsPage = () => {
         <OpenGAPSidebar activeSection={section} />
 
         <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 pb-24">
+          {section.startsWith("cookbook-") && (
+            <a
+              href="/opengap/import"
+              className="inline-flex items-center gap-1.5 mt-14 text-xs text-muted-foreground hover:text-foreground transition-colors font-body group"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              Back to Import
+            </a>
+          )}
           <SectionComponent />
 
           <div className="flex items-center justify-between mt-16 pt-8 border-t border-border">
