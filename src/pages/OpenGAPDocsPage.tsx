@@ -10,12 +10,24 @@ import { QuickStartSection } from "@/components/QuickStartSection";
 import { WhySection } from "@/components/WhySection";
 import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { CLISection } from "@/components/CLISection";
+import { ImportSection } from "@/components/ImportSection";
 import { ExportSection } from "@/components/ExportSection";
 import { AdaptersSection } from "@/components/AdaptersSection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { SkillsFlowSection } from "@/components/SkillsFlowSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { FAQSection } from "@/components/FAQSection";
+import { CookbookLangGraph } from "@/components/opengap/cookbook/CookbookLangGraph";
+import { CookbookCrewAI } from "@/components/opengap/cookbook/CookbookCrewAI";
+import { CookbookAutoGen } from "@/components/opengap/cookbook/CookbookAutoGen";
+import { CookbookOpenAIAgents } from "@/components/opengap/cookbook/CookbookOpenAIAgents";
+import { CookbookClaudeSDK } from "@/components/opengap/cookbook/CookbookClaudeSDK";
+import { CookbookGoogleADK } from "@/components/opengap/cookbook/CookbookGoogleADK";
+import { CookbookClaudeCode } from "@/components/opengap/cookbook/CookbookClaudeCode";
+import { CookbookCursor } from "@/components/opengap/cookbook/CookbookCursor";
+import { CookbookGeminiCLI } from "@/components/opengap/cookbook/CookbookGeminiCLI";
+import { CookbookCodex } from "@/components/opengap/cookbook/CookbookCodex";
+import { CookbookOpenCode } from "@/components/opengap/cookbook/CookbookOpenCode";
 import { Footer } from "@/components/Footer";
 
 const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
@@ -24,12 +36,24 @@ const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
   why: WhySection,
   "how-it-works": HowItWorksSection,
   cli: CLISection,
+  import: ImportSection,
   export: ExportSection,
   adapters: AdaptersSection,
   skills: SkillsSection,
   skillflow: SkillsFlowSection,
   compliance: ComplianceSection,
   faq: FAQSection,
+  "cookbook-langgraph": CookbookLangGraph,
+  "cookbook-crewai": CookbookCrewAI,
+  "cookbook-autogen": CookbookAutoGen,
+  "cookbook-openai-agents": CookbookOpenAIAgents,
+  "cookbook-claude-sdk": CookbookClaudeSDK,
+  "cookbook-google-adk": CookbookGoogleADK,
+  "cookbook-claude-code": CookbookClaudeCode,
+  "cookbook-cursor": CookbookCursor,
+  "cookbook-gemini-cli": CookbookGeminiCLI,
+  "cookbook-codex": CookbookCodex,
+  "cookbook-opencode": CookbookOpenCode,
 };
 
 const ALL_ITEMS = opengapSidebarGroups.flatMap((g) => g.items);

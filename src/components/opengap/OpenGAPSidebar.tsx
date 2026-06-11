@@ -20,6 +20,7 @@ export const opengapSidebarGroups = [
     slug: "features",
     items: [
       { id: "cli", label: "CLI" },
+      { id: "import", label: "Import" },
       { id: "export", label: "Export" },
       { id: "adapters", label: "Adapters" },
     ],
