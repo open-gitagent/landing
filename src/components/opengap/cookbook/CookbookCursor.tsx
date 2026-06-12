@@ -1,339 +1,130 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, BookOpen, Target, Package } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronDown, Terminal, Lightbulb, Split, Play, Archive } from "lucide-react";
 import { useState } from "react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-/* ═══════════════════  PART 1 — full Cursor source  ═══════════════════ */
+/* ═══════════════════  PART 1 — the Cursor source  ═══════════════════ */
 
-const sourceTree = `my-project/                  (Cursor)
-├── .cursorrules             ← identity + rules (single flat file)
+const sourceTree = `code-buddy/                          (Cursor)
 └── .cursor/
-    └── settings.json        ← model and editor config`;
+    └── rules/
+        ├── code-buddy.mdc           ← global rule (alwaysApply: true)
+        └── review-diff.mdc          ← scoped rule (alwaysApply: false)`;
 
-const srcCursorRules = `# .cursorrules
-
-You are an expert React and TypeScript developer. Your role is to
-help build modern, accessible, and maintainable web applications.
-
-Always use functional components and React hooks — never class components.
-Prefer Tailwind CSS for styling; avoid custom CSS files unless unavoidable.
-Always define TypeScript interfaces for component props.
-Keep components small and focused on a single responsibility.
-Co-locate tests with components: Button.tsx → Button.test.tsx.
-Use React Query for server state; Zustand for client state.
-Never use \`any\` — always type explicitly or use \`unknown\`.
-Prefer named exports over default exports for components.`;
-
-const srcSettings = `{
-  "cursor.general.enableShadowWorkspace": true,
-  "cursor.chat.model": "claude-sonnet-4-6",
-  "cursor.chat.customApiKey": "",
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
-}`;
-
-/* ═══════════════════  PART 2 — paired mapping excerpts  ═══════════════════ */
-
-const fromCursorIdentity = `# .cursorrules  (opening — identity)
-You are an expert React and TypeScript developer.
-Your role is to help build modern, accessible, and
-maintainable web applications.`;
-
-const toSoul = `# Soul
-
-## Core Identity
-You are an expert React and TypeScript developer.
-
-I specialise in building modern, accessible, and
-maintainable web applications with React, TypeScript,
-and Tailwind CSS.
-
-## Purpose
-Help the user design and implement React components and
-application features that are well-typed, accessible,
-and easy to maintain.
-
-## Communication Style
-Direct. I show code over prose. When suggesting component
-changes I prefer showing the updated JSX rather than
-describing what to change. I flag accessibility issues
-as they arise, not as a separate audit step.
-
-## Values & Principles
-- **Type safety** — explicit types everywhere; no \`any\`
-- **Accessibility** — ARIA roles and semantic HTML by default
-- **Simplicity** — small, focused components over large ones`;
-
-const fromCursorRules = `# .cursorrules  (rule lines)
-Always use functional components and React hooks —
-  never class components.
-Prefer Tailwind CSS for styling.
-Always define TypeScript interfaces for component props.
-Keep components small and focused on a single responsibility.
-Co-locate tests with components: Button.tsx → Button.test.tsx.
-Use React Query for server state; Zustand for client state.
-Never use \`any\` — always type explicitly or use \`unknown\`.
-Prefer named exports over default exports.`;
-
-const toRules = `# Rules
-
-## Must Always
-- Use functional components and React hooks — never class components
-- Define a TypeScript interface for every component's props
-- Co-locate test files with components: \`Button.tsx\` → \`Button.test.tsx\`
-- Use named exports for components (not default exports)
-- Add ARIA roles and labels to interactive elements
-- Use React Query for server state and Zustand for client state
-
-## Must Never
-- Write class components
-- Use the \`any\` type — use explicit types or \`unknown\` instead
-- Add custom CSS files when Tailwind classes cover the same need
-- Place tests in a separate \`__tests__\` directory away from the source
-
-## Output Constraints
-- Show updated JSX/TSX directly rather than describing changes in prose
-- Flag accessibility issues inline, not as a separate pass
-- Responses are in the same language the user writes in`;
-
-const fromCursorSkillHint = `# .cursorrules  (implicit component workflow)
-Keep components small and focused on a single responsibility.
-Co-locate tests with components: Button.tsx → Button.test.tsx.
-Prefer named exports over default exports for components.`;
-
-const toSkill = `# skills/react-component/SKILL.md
----
-name: react-component
-description: "Scaffold a React + TypeScript component following
-  project conventions: typed props interface, Tailwind styling,
-  co-located test, named export. Triggers on: create component,
-  add component, new component, build UI, make a button/card/modal."
-allowed-tools: Read, Write
+const srcGlobalRule = `---
+description: A small coding assistant for everyday changes.
+alwaysApply: true
 ---
 
-## Step 1: Define the props interface
-Create a \`<Name>Props\` TypeScript interface. Every prop must
-have an explicit type — no \`any\`, no optional props without
-a clear default.
+## Identity & Soul
 
-## Step 2: Write the component
-Use a functional component with the props interface. Style
-with Tailwind classes. Add ARIA roles and labels for any
-interactive element.
+You are a careful coding assistant. You make the smallest change that
+solves the problem, and you explain your reasoning before you edit.
 
-## Step 3: Add the named export
-Export the component by name at the bottom of the file:
-\`export { <Name> };\`
+## Rules & Constraints
 
-## Step 4: Create the co-located test
-Create \`<Name>.test.tsx\` in the same directory. Write at
-least one test that renders the component and asserts its
-visible output.`;
+- Read the surrounding code before editing it.
+- Never introduce a dependency without flagging it first.
+- Always run the tests you can see before declaring a fix done.`;
 
-const fromSettings = `# .cursor/settings.json
-{
-  "cursor.chat.model": "claude-sonnet-4-6",
-  "editor.formatOnSave": true
-}`;
+const srcScopedRule = `---
+description: Review a unified diff for correctness bugs.
+globs: src/**/*.ts *.tsx
+alwaysApply: false
+---
 
-const toAgentYaml = `# agent.yaml
-spec_version: "0.1.0"
-name: react-ts-developer
-version: 1.0.0
-description: Expert React and TypeScript developer that builds
-  modern, accessible, and maintainable web applications.
-model:
-  preferred: anthropic:claude-sonnet-4-6
-  fallback:
-    - openai:gpt-4o
-runtime:
-  max_turns: 50
-  timeout: 300
-skills:
-  - react-component`;
+# Review a diff
 
-/* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
+1. Read every changed hunk and its surrounding context.
+2. For each hunk, ask: does this introduce a bug, a regression, or
+   an unsafe assumption?
+3. Report findings as \`severity — file:line — description\`.`;
 
-const outputTree = `react-ts-developer/          (OpenGAP)
-├── agent.yaml               ← manifest: model, runtime, refs
-├── SOUL.md                  ← identity
-├── RULES.md                 ← guardrails
+/* ═══════════════════  PART 2 — run the import  ═══════════════════ */
+
+const importCmd = `opengap import --from cursor ./code-buddy`;
+
+const importOutput = `Importing agent
+  Format: cursor
+  Source: ./code-buddy
+  Found 2 rule(s) in .cursor/rules/
+✓ Created SOUL.md (from 1 alwaysApply rule(s))
+✓ Created skill: review-diff
+✓ Created agent.yaml
+
+Import complete`;
+
+const readsWrites: { from: string; to: string; how: string }[] = [
+  {
+    from: ".cursor/rules/*.mdc with alwaysApply: true",
+    to: "SOUL.md",
+    how: "Bodies of all global rules concatenated under a single Soul heading",
+  },
+  {
+    from: ".cursor/rules/*.mdc with alwaysApply: false (or unset)",
+    to: "skills/<name>/SKILL.md",
+    how: "One skill per rule; description and globs carried into frontmatter",
+  },
+  {
+    from: "(directory name)",
+    to: "agent.yaml",
+    how: "Generated manifest (name, skill list)",
+  },
+];
+
+const routingRules: { flag: string; dest: string }[] = [
+  { flag: "alwaysApply: true", dest: "SOUL.md" },
+  { flag: "alwaysApply: false (or absent)", dest: "skills/<name>/SKILL.md" },
+];
+
+/* ═══════════════════  PART 3 — the result  ═══════════════════ */
+
+const outputTree = `code-buddy/                      (OpenGAP)
+├── agent.yaml                   ← generated manifest
+├── SOUL.md                      ← from the alwaysApply rule
 └── skills/
-    └── react-component/
-        └── SKILL.md         ← component scaffolding workflow`;
+    └── review-diff/
+        └── SKILL.md             ← from review-diff.mdc`;
 
-const fullAgentYaml = `spec_version: "0.1.0"
-name: react-ts-developer
-version: 1.0.0
-description: Expert React and TypeScript developer that builds modern, accessible, and maintainable web applications.
-
-model:
-  preferred: anthropic:claude-sonnet-4-6
-  fallback:
-    - openai:gpt-4o
-
-runtime:
-  max_turns: 50
-  timeout: 300
-
+const fullAgentYaml = `spec_version: 0.1.0
+name: code-buddy
+version: 0.1.0
+description: 'Imported from Cursor project: code-buddy'
 skills:
-  - react-component`;
+  - review-diff`;
 
-const fullSoul = `# Soul
+const fullSoul = `# Soul — imported from Cursor rules
 
-## Core Identity
-You are an expert React and TypeScript developer.
+## Identity & Soul
 
-I specialise in building modern, accessible, and maintainable web applications with React, TypeScript, and Tailwind CSS.
+You are a careful coding assistant. You make the smallest change that
+solves the problem, and you explain your reasoning before you edit.
 
-## Purpose
-Help the user design and implement React components and application features that are well-typed, accessible, and easy to maintain long-term.
+## Rules & Constraints
 
-My process:
-1. Understand what the component or feature needs to do
-2. Define the props interface and data shape first
-3. Implement the component with Tailwind styling and proper ARIA attributes
-4. Write a co-located test that asserts visible behaviour
-5. Suggest refactors when existing components can absorb new requirements
-
-## Communication Style
-Direct. I show code over prose. When suggesting component changes I prefer showing the updated JSX/TSX rather than describing what to change. I flag accessibility issues as they arise, not as a separate audit step at the end.
-
-## Values & Principles
-- **Type safety** — explicit types everywhere; \`any\` is never acceptable; use \`unknown\` and narrow when needed
-- **Accessibility** — ARIA roles and semantic HTML are not optional extras; they are part of the component
-- **Simplicity** — small, focused components over large multi-concern ones
-- **Colocation** — tests, styles, and stories live next to the component they cover
-
-## Domain Expertise
-- React (functional components, hooks, Suspense, Error Boundaries)
-- TypeScript (strict mode, discriminated unions, generics, utility types)
-- Tailwind CSS (utility-first styling, responsive design, dark mode)
-- React Query for server state management
-- Zustand for client state management
-- Testing with Vitest and React Testing Library
-
-## Collaboration Style
-I work turn by turn with the user. I do not rewrite unrelated parts of the codebase. I surface potential improvements (missing ARIA, implicit \`any\`, large component) as inline comments rather than blocking the current request.`;
-
-const fullRules = `# Rules
-
-## Must Always
-- Use functional components and React hooks — never class components
-- Define a TypeScript interface for every component's props (no inline object types for props)
-- Co-locate test files with components: \`Button.tsx\` → \`Button.test.tsx\` in the same directory
-- Use named exports for components — not default exports
-- Add ARIA roles, labels, and keyboard handling to all interactive elements
-- Use React Query for server state (fetching, caching, mutations)
-- Use Zustand for client-side UI state that must survive re-renders
-
-## Must Never
-- Write class components or use \`React.Component\`
-- Use the \`any\` type — use explicit types, generics, or \`unknown\` with narrowing instead
-- Add custom CSS files when the same result is achievable with Tailwind utility classes
-- Place test files in a separate \`__tests__\` directory away from the source file they cover
-- Use default exports for React components
-
-## Output Constraints
-- Show updated JSX/TSX directly rather than describing what to change in prose
-- Flag accessibility issues inline as the component is written
-- When reviewing existing code, show a diff rather than the full rewritten file
-- Responses are in the same natural language the user writes in
-
-## Interaction Boundaries
-- Tool use is limited to Read and Write (scoped to src/)
-- Do not modify configuration files (vite.config.ts, tsconfig.json, tailwind.config.ts) unless explicitly asked`;
+- Read the surrounding code before editing it.
+- Never introduce a dependency without flagging it first.
+- Always run the tests you can see before declaring a fix done.`;
 
 const fullSkill = `---
-name: react-component
-description: "Scaffold a React + TypeScript component following project conventions: typed
-  props interface, Tailwind styling, co-located test file, named export. Use for any new
-  UI element. Triggers on: create component, add component, new component, build UI,
-  make a button/card/modal/form/table."
-allowed-tools: Read, Write
+name: review-diff
+description: Review a unified diff for correctness bugs.
 metadata:
-  version: "1.0.0"
-  category: ui
+  globs: src/**/*.ts *.tsx
 ---
 
-# React Component (scaffold)
+# Review a diff
 
-Creates a React functional component with a typed props interface, Tailwind styling, ARIA attributes, and a co-located test file.
+1. Read every changed hunk and its surrounding context.
+2. For each hunk, ask: does this introduce a bug, a regression, or
+   an unsafe assumption?
+3. Report findings as \`severity — file:line — description\`.`;
 
-## Step 1: Understand the requirement
-Read the user's request. Identify:
-- What does the component render?
-- What data does it receive (props)?
-- What events or interactions does it handle?
-- Are there existing components nearby that should be referenced for style conventions?
+const validateCmd = `opengap validate`;
 
-## Step 2: Define the props interface
-Write a \`<Name>Props\` TypeScript interface. Rules:
-- Every prop must have an explicit type (no \`any\`)
-- Mark truly optional props with \`?\` and document the default
-- Use discriminated unions for mutually exclusive prop combinations
-
-## Step 3: Write the component
-Implement as a named functional component:
-\`\`\`tsx
-function Button({ label, onClick, disabled = false }: ButtonProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className="px-4 py-2 rounded bg-primary text-white disabled:opacity-50"
-      aria-disabled={disabled}
-    >
-      {label}
-    </button>
-  );
-}
-\`\`\`
-Use Tailwind classes for all styling. Add ARIA attributes to interactive elements.
-
-## Step 4: Export by name
-At the bottom of the file:
-\`\`\`ts
-export { Button };
-export type { ButtonProps };
-\`\`\`
-
-## Step 5: Create the co-located test
-Create \`<Name>.test.tsx\` in the same directory:
-\`\`\`tsx
-import { render, screen } from "@testing-library/react";
-import { Button } from "./Button";
-
-it("renders the label", () => {
-  render(<Button label="Save" onClick={() => {}} />);
-  expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-});
-\`\`\`
-At minimum: one render test asserting the visible output.`;
-
-const validateCmd = `$ opengap validate
-✓ agent.yaml                          valid (spec 0.1.0)
-✓ SOUL.md                             present
-✓ RULES.md                            present
-✓ skills/react-component/SKILL.md     valid frontmatter
-  react-ts-developer is ready.`;
+const runCmd = `opengap run . --adapter cursor`;
 
 /* ─────────────────────────  Building blocks  ───────────────────────── */
-
-const buckets = [
-  { icon: FileText, title: "Identity", file: "SOUL.md", desc: "Who the agent is" },
-  { icon: Shield, title: "Rules", file: "RULES.md", desc: "Hard guardrails" },
-  { icon: Workflow, title: "Orchestration", file: "skills/", desc: "How it works" },
-  { icon: Settings, title: "Config & Tools", file: "agent.yaml", desc: "Model & runtime" },
-];
-
-const mapAtAGlance: [string, string][] = [
-  [".cursorrules — opening paragraph", "SOUL.md"],
-  [".cursorrules — rule lines", "RULES.md"],
-  [".cursorrules — implicit workflow", "skills/react-component/SKILL.md"],
-  [".cursor/settings.json → model", "agent.yaml → model.preferred"],
-];
 
 function PartHeader({ num, label, title, subtitle }: { num: string; label: string; title: string; subtitle: string }) {
   return (
@@ -387,39 +178,6 @@ function CollapsibleCode({ filename, caption, code, reveal = false }: { filename
   );
 }
 
-interface StepProps {
-  index: number;
-  title: string;
-  why: string;
-  fromLabel: string;
-  fromCode: string;
-  toLabel: string;
-  toCode: string;
-}
-
-function ConversionStep({ index, title, why, fromLabel, fromCode, toLabel, toCode }: StepProps) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-      <div className="flex items-baseline gap-2 mb-3">
-        <code className="text-xs text-primary font-body font-semibold shrink-0">{index}</code>
-        <h3 className="text-base font-semibold text-foreground font-heading">{title}</h3>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 items-start relative">
-        <CodeBlock code={fromCode} filename={fromLabel} />
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border">
-          <ArrowRight className="w-3 h-3 text-primary" />
-        </div>
-        <CodeBlock code={toCode} filename={toLabel} />
-      </div>
-
-      <p className="text-[11px] text-muted-foreground font-body mt-2 leading-relaxed">
-        <span className="text-primary/70">Why → </span>{why}
-      </p>
-    </motion.div>
-  );
-}
-
 /* ─────────────────────────────  Page  ───────────────────────────── */
 
 export function CookbookCursor() {
@@ -430,38 +188,26 @@ export function CookbookCursor() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
-          <div className="inline-flex items-center gap-1.5 mb-3 px-2 py-1 rounded-md bg-primary/5 border border-primary/20">
-            <BookOpen className="w-3 h-3 text-primary" />
-            <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">Manual conversion guide</span>
-          </div>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Cursor → OpenGAP</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            A step-by-step guide to converting a Cursor workspace into OpenGAP format by hand. We work through one real
-            project end to end — every file, the exact mapping, and the finished result — so you can follow the same
-            steps for your own agent.
+            Cursor agents live as files already — a <code className="text-primary text-[12px]">.cursor/rules/</code>{" "}
+            directory of <code className="text-primary text-[12px]">.mdc</code> rule files (each with YAML frontmatter),
+            with <code className="text-primary text-[12px]">.cursorrules</code> and{" "}
+            <code className="text-primary text-[12px]">AGENTS.md</code> as older fallbacks. OpenGAP imports them directly.
+            Instead of rewriting each file by hand (as you would for a code framework like LangGraph), you run one command
+            and <code className="text-primary text-[12px]">opengap import</code> scaffolds the agent for you. This page
+            shows exactly what it reads and what it writes.
           </p>
         </motion.div>
 
-        {/* Example + its use case */}
+        {/* One command callout */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
-          <div className="paper-card p-4 max-w-2xl">
+          <div className="paper-card p-4 max-w-2xl border-l-2 border-l-primary/40">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground font-heading">The example</span>
+              <Terminal className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground font-heading">One command</span>
             </div>
-            <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3">
-              A typical Cursor workspace for a <code className="text-primary text-[10px]">React / TypeScript developer</code> agent.
-              A single <code className="text-primary text-[10px]">.cursorrules</code> file mixes the agent's identity (first
-              paragraph) and behavioural rules (the rest) with no structural separation between them.
-            </p>
-            <div className="flex items-start gap-2 pt-3 border-t border-border">
-              <Target className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
-                <span className="text-foreground font-medium">Use case:</span> pair-programming assistant for React applications
-                — scaffolds well-typed, accessible components with co-located tests, enforcing a consistent code style across
-                the codebase (<span className="text-foreground">Props interface → Component → Export → Test</span>).
-              </p>
-            </div>
+            <code className="block text-[12px] text-primary font-body">opengap import --from cursor &lt;path&gt;</code>
           </div>
         </motion.div>
 
@@ -469,120 +215,128 @@ export function CookbookCursor() {
         <PartHeader
           num="1"
           label="The source"
-          title="The Cursor workspace"
-          subtitle="A typical setup: one .cursorrules file that carries identity and rules together as a flat list, plus a settings file. Here is every file, in full."
+          title="The Cursor project"
+          subtitle="The importer prefers .cursor/rules/*.mdc. Each .mdc file carries a YAML frontmatter block (description, globs, alwaysApply) followed by a markdown body. Rules with alwaysApply: true are global; the rest are scoped, glob-targeted rules."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
           <CodeBlock code={sourceTree} filename="project structure" />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Expand any file to read it in full — reference only, the mapping in Part 2 is what matters.</p>
-        </motion.div>
-
         <div className="space-y-2">
-          <CollapsibleCode filename=".cursorrules" caption="identity + rules (single flat file)" code={srcCursorRules} />
-          <CollapsibleCode filename=".cursor/settings.json" caption="model + editor config" code={srcSettings} />
+          <CollapsibleCode filename=".cursor/rules/code-buddy.mdc" caption="global rule (alwaysApply: true)" code={srcGlobalRule} />
+          <CollapsibleCode filename=".cursor/rules/review-diff.mdc" caption="scoped rule (alwaysApply: false)" code={srcScopedRule} />
         </div>
 
         {/* ══════════════ PART 2 ══════════════ */}
         <PartHeader
           num="2"
-          label="The mapping"
-          title="How it maps to OpenGAP"
-          subtitle=".cursorrules is a flat file — identity and rules live together with no separation. OpenGAP splits that single file into four declarative pieces based on what each line is actually doing."
+          label="Run the import"
+          title="One command scaffolds the agent"
+          subtitle="Point the importer at the project. It reads every .mdc rule and writes the OpenGAP equivalents for you."
         />
 
-        {/* Mental model */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {buckets.map((b) => (
-              <div key={b.title} className="paper-card p-3">
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <b.icon className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-xs font-semibold text-foreground font-heading">{b.title}</span>
-                </div>
-                <code className="block text-[10px] text-primary font-body mb-1">{b.file}</code>
-                <p className="text-[10px] text-muted-foreground font-body leading-relaxed">{b.desc}</p>
-              </div>
-            ))}
-          </div>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-4">
+          <CodeBlock code={importCmd} filename="terminal" />
         </motion.div>
 
-        {/* Map at a glance */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">The whole map at a glance</p>
-          <div className="rounded-md border border-border overflow-hidden text-[11px] font-mono">
-            <div className="grid grid-cols-2 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
-              <span>Cursor</span>
-              <span>OpenGAP</span>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <CodeBlock code={importOutput} filename="output" />
+        </motion.div>
+
+        {/* What it reads → what it writes */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">What it reads → what it writes</p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px]">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body">
+              <span className="col-span-4">Cursor source</span>
+              <span className="col-span-3">OpenGAP output</span>
+              <span className="col-span-5">How</span>
             </div>
-            {mapAtAGlance.map(([from, to], i) => (
-              <div key={from} className={`grid grid-cols-2 px-3 py-2 gap-4 border-b border-border last:border-0 ${i % 2 ? "bg-muted/20" : ""}`}>
-                <span className="text-muted-foreground">{from}</span>
-                <span className="text-primary flex items-center gap-1.5 min-w-0">
-                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
-                  <span className="truncate">{to}</span>
-                </span>
+            {readsWrites.map((r, i) => (
+              <div key={r.from} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-start ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-4 text-muted-foreground font-body break-words">{r.from}</code>
+                <code className="col-span-3 text-primary font-body flex items-start gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-0.5" />
+                  <span className="break-words">{r.to}</span>
+                </code>
+                <span className="col-span-5 text-muted-foreground/80 font-body leading-relaxed">{r.how}</span>
               </div>
             ))}
           </div>
         </motion.div>
 
+        {/* How the .mdc rules are routed */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same four mappings, in detail — Cursor source on the left, the OpenGAP file it becomes on the right.</p>
+          <div className="flex items-center gap-2 mb-2">
+            <Split className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How the <code className="text-primary text-[12px]">.mdc</code> rules are routed</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            The importer reads every <code className="text-primary text-[11px]">.mdc</code> file in{" "}
+            <code className="text-primary text-[11px]">.cursor/rules/</code> and splits them by the{" "}
+            <span className="text-foreground font-medium">{"`alwaysApply`"}</span> flag in their frontmatter — not by
+            heading keywords:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-7">Frontmatter flag</span>
+              <span className="col-span-5">Routes to</span>
+            </div>
+            {routingRules.map((r, i) => (
+              <div key={r.flag} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-7 text-muted-foreground">{r.flag}</code>
+                <code className="col-span-5 text-primary flex items-center gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
+                  <span className="break-words">{r.dest}</span>
+                </code>
+              </div>
+            ))}
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            For a global rule, the body is appended to <code className="text-primary text-[11px]">SOUL.md</code> (multiple
+            global rules are concatenated in directory order). For a scoped rule, each becomes{" "}
+            <code className="text-primary text-[11px]">skills/&lt;filename&gt;/SKILL.md</code> — the rule's{" "}
+            <code className="text-primary text-[11px]">description</code> is copied into the skill's frontmatter, and any{" "}
+            <code className="text-primary text-[11px]">globs</code> are preserved under{" "}
+            <code className="text-primary text-[11px]">metadata.globs</code> for round-trip fidelity. So in our example:{" "}
+            <code className="text-primary text-[11px]">code-buddy.mdc</code> becomes{" "}
+            <code className="text-primary text-[11px]">SOUL.md</code>, and{" "}
+            <code className="text-primary text-[11px]">review-diff.mdc</code> becomes{" "}
+            <code className="text-primary text-[11px]">skills/review-diff/SKILL.md</code>.
+          </p>
         </motion.div>
 
-        <ConversionStep
-          index={1}
-          title="Identity — .cursorrules opening → SOUL.md"
-          fromLabel=".cursorrules"
-          fromCode={fromCursorIdentity}
-          toLabel="SOUL.md"
-          toCode={toSoul}
-          why="The opening paragraph of .cursorrules — who the agent is and what it builds — becomes prose identity in SOUL.md. Purpose, communication style, and values are made explicit rather than left implicit in a single sentence."
-        />
-        <ConversionStep
-          index={2}
-          title="Guardrails — .cursorrules rule lines → RULES.md"
-          fromLabel=".cursorrules"
-          fromCode={fromCursorRules}
-          toLabel="RULES.md"
-          toCode={toRules}
-          why="The always/never/prefer lines in .cursorrules become explicit Must Always / Must Never guardrails. Output constraints and tool boundaries are also captured here so the runtime can enforce them independently of identity."
-        />
-        <ConversionStep
-          index={3}
-          title="Orchestration — implicit workflow → skills/react-component/SKILL.md"
-          fromLabel=".cursorrules"
-          fromCode={fromCursorSkillHint}
-          toLabel="SKILL.md"
-          toCode={toSkill}
-          why="Rules about component structure (small, co-located tests, named exports) imply a repeated scaffolding workflow. OpenGAP makes that workflow a first-class SKILL.md with explicit steps and frontmatter the runtime can discover and invoke."
-        />
-        <ConversionStep
-          index={4}
-          title="Config — .cursor/settings.json → agent.yaml"
-          fromLabel=".cursor/settings.json"
-          fromCode={fromSettings}
-          toLabel="agent.yaml"
-          toCode={toAgentYaml}
-          why="The model name in settings.json becomes agent.yaml's model.preferred field. Editor-specific settings (formatOnSave, formatter) are Cursor UI config — they do not map to agent behaviour and are left behind."
-        />
-
-        {/* What doesn't convert */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
+        {/* Tip */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
           <div className="paper-card p-4 border-l-2 border-l-primary/40">
-            <h3 className="text-sm font-semibold text-foreground font-heading mb-2">What does <span className="text-primary">not</span> convert</h3>
-            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
-              <code className="text-primary text-[11px]">.cursor/settings.json</code> editor keys —{" "}
-              <code className="text-[11px]">editor.formatOnSave</code>,{" "}
-              <code className="text-[11px]">editor.defaultFormatter</code>, keybindings, and UI preferences — have no
-              OpenGAP equivalent. They configure the Cursor IDE, not the agent's behaviour. Similarly,
-              workspace-specific Cursor settings that control how the editor panel or diff view renders are IDE concerns
-              that belong in the repository's <code className="text-[11px]">.vscode/settings.json</code> or similar, not
-              in an agent definition.
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+                <span className="text-foreground font-medium">Tip:</span> Routing is driven by{" "}
+                <code className="text-primary text-[11px]">alwaysApply</code>. To send a rule to{" "}
+                <code className="text-primary text-[11px]">SOUL.md</code> instead of{" "}
+                <code className="text-primary text-[11px]">skills/</code>, set{" "}
+                <code className="text-primary text-[11px]">alwaysApply: true</code> in its{" "}
+                <code className="text-primary text-[11px]">.mdc</code> frontmatter before importing.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Legacy fallback */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
+          <div className="paper-card p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Archive className="w-3.5 h-3.5 text-primary" />
+              <h3 className="text-sm font-semibold text-foreground font-heading">Legacy fallback</h3>
+            </div>
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl">
+              No <code className="text-primary text-[11px]">.cursor/rules/</code>? The importer falls back to{" "}
+              <code className="text-primary text-[11px]">.cursorrules</code>, then{" "}
+              <code className="text-primary text-[11px]">AGENTS.md</code> — the file's contents become{" "}
+              <code className="text-primary text-[11px]">SOUL.md</code> (and are preserved as{" "}
+              <code className="text-primary text-[11px]">AGENTS.md</code>).
             </p>
           </div>
         </motion.div>
@@ -591,8 +345,8 @@ export function CookbookCursor() {
         <PartHeader
           num="3"
           label="The result"
-          title="After conversion — the OpenGAP agent"
-          subtitle="The finished agent directory. Every file below is the complete, copy-pasteable output of the mapping above."
+          title="The imported OpenGAP agent"
+          subtitle="The finished agent directory the importer wrote. Every file below is the complete output of the command above."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
@@ -603,24 +357,46 @@ export function CookbookCursor() {
           <p className="text-[11px] text-muted-foreground/70 font-body">Reveal any file to copy its full contents.</p>
         </motion.div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2 mb-4">
           <CollapsibleCode filename="agent.yaml" code={fullAgentYaml} reveal />
-          <CollapsibleCode filename="SOUL.md" code={fullSoul} reveal />
-          <CollapsibleCode filename="RULES.md" code={fullRules} reveal />
-          <CollapsibleCode filename="skills/react-component/SKILL.md" code={fullSkill} reveal />
+          <CollapsibleCode filename="SOUL.md" caption="the body of every alwaysApply: true rule" code={fullSoul} reveal />
+          <CollapsibleCode filename="skills/review-diff/SKILL.md" caption="the scoped rule, globs preserved" code={fullSkill} reveal />
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="paper-card p-4 border-l-2 border-l-primary/40">
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+              <code className="text-primary text-[11px]">skills/review-diff/SKILL.md</code> — built from{" "}
+              <code className="text-primary text-[11px]">review-diff.mdc</code>: the body is copied as-is, the{" "}
+              <code className="text-primary text-[11px]">description</code> carries into the skill frontmatter, and{" "}
+              <code className="text-primary text-[11px]">globs</code> are preserved under{" "}
+              <code className="text-primary text-[11px]">metadata</code>.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Validate */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             <h3 className="text-base font-semibold text-foreground font-heading">Validate</h3>
           </div>
           <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
-            From the agent directory, run <code className="text-primary text-[11px]">opengap validate</code> to confirm the
-            manifest, skill frontmatter, and tool schemas all resolve before you run the agent.
+            From the imported directory, confirm the manifest and skill frontmatter resolve before you run it.
           </p>
           <CodeBlock code={validateCmd} filename="terminal" />
+        </motion.div>
+
+        {/* Run */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Play className="w-4 h-4 text-primary" />
+            <h3 className="text-base font-semibold text-foreground font-heading">Run it</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
+            Then run it on any supported runtime:
+          </p>
+          <CodeBlock code={runCmd} filename="terminal" />
         </motion.div>
 
       </div>

@@ -1,334 +1,118 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, BookOpen, Target, Package } from "lucide-react";
+import { ArrowRight, FileText, Shield, Settings, CheckCircle2, ChevronDown, Terminal, Lightbulb, Split, Play } from "lucide-react";
 import { useState } from "react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-/* ═══════════════════  PART 1 — full Codex source  ═══════════════════ */
+/* ═══════════════════  PART 1 — the Codex source  ═══════════════════ */
 
-const sourceTree = `my-project/                  (Codex)
-└── AGENTS.md                ← identity, rules, and tool declarations`;
+const sourceTree = `sql-explainer/                 (Codex CLI)
+├── AGENTS.md                  ← identity + rules
+└── codex.json                 ← model config`;
 
-const srcAgentsMd = `# AGENTS.md
-You are a backend API developer specializing in Node.js and Express.
-Help users build production-ready REST APIs with proper validation
-and error handling.
+const srcAgentsMd = `# SQL Explainer
 
-Always validate inputs using Zod schemas.
-Always return consistent JSON error responses.
-Never expose stack traces in production error responses.
-Never return 200 for an error — use the correct HTTP status code.
-Log errors with context (route, method, status) before responding.
-
-## Tools
-- run_tests: Run the test suite
-- lint_code: Lint the codebase with ESLint`;
-
-/* ═══════════════════  PART 2 — paired mapping excerpts  ═══════════════════ */
-
-const fromIdentity = `# AGENTS.md  (identity paragraph)
-You are a backend API developer specializing
-in Node.js and Express.
-Help users build production-ready REST APIs
-with proper validation and error handling.`;
-
-const toSoul = `# Soul
-
-## Core Identity
-You are a backend API developer specializing
-in Node.js and Express.
-
-## Purpose
-Help users build production-ready REST APIs
-with proper validation and error handling.
+## Identity
+You are a database expert who explains SQL queries in plain English.
+You translate dense queries into a step-by-step walkthrough.
 
 ## Communication Style
-Direct and precise. I explain trade-offs
-before writing code and flag anything that
-would be unsafe in production.
+Calm and precise. Explain joins and subqueries before aggregates.
 
-## Domain Expertise
-- Express.js REST API design
-- Input validation with Zod
-- Error handling and HTTP status codes
-- ESLint-clean, testable Node.js code`;
+## Rules
+- Explain the query exactly as written; do not rewrite it.
+- Name every table and column the query touches.
 
-const fromRules = `# AGENTS.md  (rules section)
-Always validate inputs using Zod schemas.
-Always return consistent JSON error responses.
-Never expose stack traces in production
-  error responses.
-Never return 200 for an error — use the
-  correct HTTP status code.
-Log errors with context (route, method,
-  status) before responding.`;
+## Always
+- Always state which rows the query returns at the end.`;
 
-const toRules = `# RULES.md
+const srcCodexJson = `{
+  "model": "o3"
+}`;
 
-## Must Always
-- Validate all request inputs with Zod
-  schemas before processing
-- Return a consistent JSON error shape:
-  { error: { code, message } }
-- Use the correct HTTP status code for
-  every error response
-- Log errors with route, method, and status
-  before sending the response
+/* ═══════════════════  PART 2 — run the import  ═══════════════════ */
 
-## Must Never
-- Expose raw stack traces or internal paths
-  in production error responses
-- Return HTTP 200 for an error condition`;
+const importCmd = `opengap import --from codex ./sql-explainer`;
 
-const fromTools = `# AGENTS.md  (## Tools section)
-## Tools
-- run_tests: Run the test suite
-- lint_code: Lint the codebase with ESLint`;
+const importOutput = `Importing agent
+  Format: codex
+  Source: ./sql-explainer
+  Found AGENTS.md
+  Found codex.json
+✓ Created agent.yaml
+✓ Created SOUL.md
+✓ Created RULES.md
 
-const toToolFiles = `# agent.yaml  (tools[] list)
-tools:
-  - run-tests
-  - lint-code
+Import complete`;
 
-# tools/run-tests.yaml  (the contract)
-name: run-tests
-description: Run the project test suite.
-input_schema:
-  type: object
-  properties: {}
-implementation:
-  type: script
-  path: run_tests.sh
-  runtime: bash
-  timeout: 60
+const readsWrites: { from: string; to: string; how: string }[] = [
+  {
+    from: "AGENTS.md",
+    to: "SOUL.md + RULES.md",
+    how: "Split by heading, each section routed by its title (see below)",
+  },
+  {
+    from: "codex.json",
+    to: "agent.yaml model.preferred",
+    how: "The model string is copied verbatim (no provider/ prefix)",
+  },
+  {
+    from: "(directory name)",
+    to: "agent.yaml",
+    how: "Generated manifest (name, version, description)",
+  },
+];
 
-# tools/lint-code.yaml
-name: lint-code
-description: Lint the codebase with ESLint.
-input_schema:
-  type: object
-  properties: {}
-implementation:
-  type: script
-  path: lint_code.sh
-  runtime: bash
-  timeout: 30`;
+const routingRules: { keywords: string; dest: string }[] = [
+  { keywords: "rule · constraint · never · always · must · compliance", dest: "RULES.md" },
+  { keywords: "anything else (the default)", dest: "SOUL.md" },
+  { keywords: "no headings at all → whole file", dest: "SOUL.md" },
+];
 
-const fromModel = `# Codex — model is set via environment or
-# API call; AGENTS.md has no model field.
-# e.g. OPENAI_MODEL=gpt-4o codex run`;
+/* ═══════════════════  PART 3 — the result  ═══════════════════ */
 
-const toAgentYaml = `# agent.yaml
-spec_version: "0.1.0"
-name: backend-api-agent
-version: 1.0.0
-description: Backend API developer for
-  production-ready Node.js / Express REST APIs.
-model:
-  preferred: openai:gpt-4o
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-runtime:
-  max_turns: 40
-  timeout: 180
-tools:
-  - run-tests
-  - lint-code`;
-
-/* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
-
-const outputTree = `my-project/                  (OpenGAP)
-├── agent.yaml               ← manifest: model, runtime, tool refs
-├── SOUL.md                  ← identity
-├── RULES.md                 ← guardrails
-└── tools/
-    ├── run-tests.yaml       ← tool schema
-    ├── run_tests.sh         ← tool implementation
-    ├── lint-code.yaml       ← tool schema
-    └── lint_code.sh         ← tool implementation`;
+const outputTree = `sql-explainer/                 (OpenGAP)
+├── agent.yaml                 ← generated manifest
+├── SOUL.md                    ← identity sections
+└── RULES.md                   ← rule sections`;
 
 const fullAgentYaml = `spec_version: "0.1.0"
-name: backend-api-agent
-version: 1.0.0
-description: Backend API developer specializing in Node.js and Express — production-ready REST APIs with proper validation, error handling, and clean code.
-
+name: sql-explainer
+version: "0.1.0"
+description: "Imported from Codex CLI project: sql-explainer"
 model:
-  preferred: openai:gpt-4o
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-
-runtime:
-  max_turns: 40
-  timeout: 180
-
-tools:
-  - run-tests
-  - lint-code`;
+  preferred: o3`;
 
 const fullSoul = `# Soul
 
-## Core Identity
-You are a backend API developer specializing in Node.js and Express.
+## SQL Explainer
 
-## Purpose
-Help users build production-ready REST APIs with proper validation and error handling. I am designed for backend engineering conversations — designing routes, writing middleware, wiring validation, and producing clean, testable code.
+
+## Identity
+You are a database expert who explains SQL queries in plain English.
+You translate dense queries into a step-by-step walkthrough.
 
 ## Communication Style
-Direct and precise. I explain design trade-offs before writing code and always flag anything that would be unsafe or incorrect in a production environment. Code blocks are complete and runnable, not pseudocode.
-
-## Values & Principles
-- **Safety** — inputs are always validated; stack traces are never leaked
-- **Consistency** — error shapes and status codes follow a predictable contract
-- **Correctness** — HTTP semantics are respected (4xx for client errors, 5xx for server errors)
-- **Maintainability** — ESLint-clean code with clear separation of concerns
-
-## Domain Expertise
-- Express.js REST API design: routes, middleware, routers
-- Input validation with Zod: schema definition, parsing, error formatting
-- Error handling patterns: centralised error middleware, structured JSON error responses
-- HTTP status codes: 400, 401, 403, 404, 409, 422, 500 and when to use each
-- Testing Node.js APIs: Jest, Supertest, test isolation
-- ESLint configuration and lint-clean code
-
-## Collaboration Style
-I work interactively. I ask clarifying questions when requirements are ambiguous (which framework version? monorepo or single service?). For larger tasks I narrate the approach before writing code so the user can redirect early.`;
+Calm and precise. Explain joins and subqueries before aggregates.`;
 
 const fullRules = `# Rules
 
-## Must Always
-- Validate all request inputs with Zod schemas before any processing logic runs
-- Return a consistent JSON error shape on every error: \`{ "error": { "code": "...", "message": "..." } }\`
-- Use the semantically correct HTTP status code for every response (400 Bad Request, 404 Not Found, 422 Unprocessable Entity, 500 Internal Server Error, etc.)
-- Log errors with context — at minimum: route, HTTP method, and response status — before sending the error response
-- Run \`lint-code\` on generated code before presenting it to the user when lint tooling is available
+## Rules
+- Explain the query exactly as written; do not rewrite it.
+- Name every table and column the query touches.
 
-## Must Never
-- Expose raw stack traces, file paths, or internal error messages in production error responses
-- Return HTTP 200 for an error condition — always use an appropriate 4xx or 5xx status
-- Skip input validation and trust caller-supplied data directly
+## Always
+- Always state which rows the query returns at the end.`;
 
-## Output Constraints
-- Code is Node.js / TypeScript, formatted for readability, with comments on non-obvious lines
-- Error middleware is always placed after all route definitions in Express
+const validateCmd = `opengap validate`;
 
-## Interaction Boundaries
-- \`run-tests\` executes the project test suite; results are returned as stdout/stderr
-- \`lint-code\` runs ESLint on the codebase; lint errors are returned as structured output`;
-
-const fullRunTestsYaml = `name: run-tests
-description: Run the project test suite and return the results. Use after generating or modifying code to verify correctness.
-version: 1.0.0
-
-input_schema:
-  type: object
-  properties: {}
-  required: []
-
-output_schema:
-  type: object
-  properties:
-    stdout:
-      type: string
-      description: Test runner output (pass/fail summary)
-    stderr:
-      type: string
-      description: Error output from the test runner
-    exit_code:
-      type: integer
-      description: 0 = all tests passed, non-zero = failures
-
-implementation:
-  type: script
-  path: run_tests.sh
-  runtime: bash
-  timeout: 60
-
-annotations:
-  read_only: false
-  idempotent: true
-  cost: medium`;
-
-const fullRunTestsSh = `#!/usr/bin/env bash
-# run_tests.sh — execute the project test suite
-# Output: test runner stdout/stderr as JSON on stdout
-
-set -euo pipefail
-
-# Detect test runner (npm test, yarn test, or jest directly)
-if [ -f package.json ]; then
-  if command -v yarn &>/dev/null && [ -f yarn.lock ]; then
-    yarn test --ci 2>&1
-  else
-    npm test -- --ci 2>&1
-  fi
-else
-  echo '{"error": "No package.json found in working directory"}' >&2
-  exit 1
-fi`;
-
-const fullLintCodeYaml = `name: lint-code
-description: Lint the codebase with ESLint and report any issues. Use to verify generated code is lint-clean before presenting it.
-version: 1.0.0
-
-input_schema:
-  type: object
-  properties: {}
-  required: []
-
-output_schema:
-  type: object
-  properties:
-    stdout:
-      type: string
-      description: ESLint output (file paths and rule violations)
-    exit_code:
-      type: integer
-      description: 0 = no lint errors, 1 = lint errors found
-
-implementation:
-  type: script
-  path: lint_code.sh
-  runtime: bash
-  timeout: 30
-
-annotations:
-  read_only: true
-  idempotent: true
-  cost: low`;
-
-const fullLintCodeSh = `#!/usr/bin/env bash
-# lint_code.sh — run ESLint on the codebase
-
-set -euo pipefail
-
-if ! command -v npx &>/dev/null; then
-  echo '{"error": "npx not found — is Node.js installed?"}' >&2
-  exit 1
-fi
-
-npx eslint . --ext .js,.ts,.jsx,.tsx 2>&1`;
-
-const validateCmd = `$ opengap validate
-✓ agent.yaml               valid (spec 0.1.0)
-✓ SOUL.md                  present
-✓ RULES.md                 present
-✓ tools/run-tests.yaml     schema ok → run_tests.sh
-✓ tools/lint-code.yaml     schema ok → lint_code.sh
-  backend-api-agent is ready.`;
+const runCmd = `opengap run . --adapter codex`;
 
 /* ─────────────────────────  Building blocks  ───────────────────────── */
 
 const buckets = [
   { icon: FileText, title: "Identity", file: "SOUL.md", desc: "Who the agent is" },
   { icon: Shield, title: "Rules", file: "RULES.md", desc: "Hard guardrails" },
-  { icon: Workflow, title: "Orchestration", file: "skills/", desc: "How it reasons (none here)" },
-  { icon: Settings, title: "Config & Tools", file: "agent.yaml · tools/", desc: "Model & capabilities" },
-];
-
-const mapAtAGlance: [string, string][] = [
-  ["AGENTS.md — identity paragraph", "SOUL.md"],
-  ["AGENTS.md — behavioral rules", "RULES.md"],
-  ["AGENTS.md — ## Tools list", "agent.yaml tools[] + tools/<name>.yaml"],
-  ["Codex model (env / API)", "agent.yaml → model.preferred"],
+  { icon: Settings, title: "Manifest", file: "agent.yaml", desc: "Name, version, model" },
 ];
 
 function PartHeader({ num, label, title, subtitle }: { num: string; label: string; title: string; subtitle: string }) {
@@ -383,39 +167,6 @@ function CollapsibleCode({ filename, caption, code, reveal = false }: { filename
   );
 }
 
-interface StepProps {
-  index: number;
-  title: string;
-  why: string;
-  fromLabel: string;
-  fromCode: string;
-  toLabel: string;
-  toCode: string;
-}
-
-function ConversionStep({ index, title, why, fromLabel, fromCode, toLabel, toCode }: StepProps) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-      <div className="flex items-baseline gap-2 mb-3">
-        <code className="text-xs text-primary font-body font-semibold shrink-0">{index}</code>
-        <h3 className="text-base font-semibold text-foreground font-heading">{title}</h3>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 items-start relative">
-        <CodeBlock code={fromCode} filename={fromLabel} />
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border">
-          <ArrowRight className="w-3 h-3 text-primary" />
-        </div>
-        <CodeBlock code={toCode} filename={toLabel} />
-      </div>
-
-      <p className="text-[11px] text-muted-foreground font-body mt-2 leading-relaxed">
-        <span className="text-primary/70">Why → </span>{why}
-      </p>
-    </motion.div>
-  );
-}
-
 /* ─────────────────────────────  Page  ───────────────────────────── */
 
 export function CookbookCodex() {
@@ -426,40 +177,24 @@ export function CookbookCodex() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
-          <div className="inline-flex items-center gap-1.5 mb-3 px-2 py-1 rounded-md bg-primary/5 border border-primary/20">
-            <BookOpen className="w-3 h-3 text-primary" />
-            <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">Manual conversion guide</span>
-          </div>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Codex → OpenGAP</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            A step-by-step guide to converting a Codex agent into OpenGAP format by hand. Codex stores identity,
-            rules, and tool declarations together in a single <code className="text-primary text-xs">AGENTS.md</code> file.
-            We walk through one real project end to end — every file, the exact mapping, and the finished result.
+            A Codex CLI agent lives as files already — an <code className="text-primary text-[12px]">AGENTS.md</code> plus an
+            optional <code className="text-primary text-[12px]">codex.json</code> config. OpenGAP imports them directly.
+            Instead of rewriting each file by hand (as you would for a code framework like LangGraph), you run one command
+            and <code className="text-primary text-[12px]">opengap import</code> scaffolds the agent for you. This page shows
+            exactly what it reads and what it writes.
           </p>
         </motion.div>
 
-        {/* Example + its use case */}
+        {/* One command callout */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
-          <div className="paper-card p-4 max-w-2xl">
+          <div className="paper-card p-4 max-w-2xl border-l-2 border-l-primary/40">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground font-heading">The example</span>
+              <Terminal className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground font-heading">One command</span>
             </div>
-            <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3">
-              An <code className="text-primary text-[10px]">AGENTS.md</code>-based backend API developer — a single markdown
-              file with an identity paragraph, behavioral rules, and a{" "}
-              <code className="text-primary text-[10px]">## Tools</code> section listing{" "}
-              <code className="text-primary text-[10px]">run_tests</code> and{" "}
-              <code className="text-primary text-[10px]">lint_code</code>.
-            </p>
-            <div className="flex items-start gap-2 pt-3 border-t border-border">
-              <Target className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
-                <span className="text-foreground font-medium">Use case:</span> help users build production-ready
-                REST APIs in Node.js and Express — validating inputs with Zod, returning consistent JSON errors,
-                running the test suite, and linting generated code before handing it back.
-              </p>
-            </div>
+            <code className="block text-[12px] text-primary font-body">opengap import --from codex &lt;path&gt;</code>
           </div>
         </motion.div>
 
@@ -467,33 +202,70 @@ export function CookbookCodex() {
         <PartHeader
           num="1"
           label="The source"
-          title="The Codex project"
-          subtitle="A single AGENTS.md file that packs identity, rules, and tool declarations into one document. Here it is in full."
+          title="The Codex CLI project"
+          subtitle="The importer reads AGENTS.md (the agent's instructions, required) and codex.json (its model config, optional). Here is every file it touches."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
           <CodeBlock code={sourceTree} filename="project structure" />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Expand the file to read it in full — the mapping in Part 2 is what matters.</p>
-        </motion.div>
-
         <div className="space-y-2">
-          <CollapsibleCode filename="AGENTS.md" caption="identity + rules + tool declarations" code={srcAgentsMd} />
+          <CollapsibleCode filename="AGENTS.md" caption="identity + rules" code={srcAgentsMd} />
+          <CollapsibleCode filename="codex.json" caption="model config" code={srcCodexJson} />
         </div>
 
         {/* ══════════════ PART 2 ══════════════ */}
         <PartHeader
           num="2"
-          label="The mapping"
-          title="How it maps to OpenGAP"
-          subtitle="Codex keeps identity, rules, and tools unseparated in one file. OpenGAP splits that into four declarative pieces — each section of AGENTS.md maps to one of them."
+          label="Run the import"
+          title="One command scaffolds the agent"
+          subtitle="Point the importer at the project. It reads each source file and writes the OpenGAP equivalents for you."
         />
 
-        {/* Mental model */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-4">
+          <CodeBlock code={importCmd} filename="terminal" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <CodeBlock code={importOutput} filename="output" />
+        </motion.div>
+
+        {/* What it reads → what it writes */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">What it reads → what it writes</p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px]">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body">
+              <span className="col-span-3">Codex source</span>
+              <span className="col-span-4">OpenGAP output</span>
+              <span className="col-span-5">How</span>
+            </div>
+            {readsWrites.map((r, i) => (
+              <div key={r.from} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-start ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-3 text-muted-foreground font-body break-words">{r.from}</code>
+                <code className="col-span-4 text-primary font-body flex items-start gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-0.5" />
+                  <span className="break-words">{r.to}</span>
+                </code>
+                <span className="col-span-5 text-muted-foreground/80 font-body leading-relaxed">{r.how}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Required / optional note */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl">
+            <code className="text-primary text-[11px]">AGENTS.md</code> is required — if it is missing the import aborts with{" "}
+            <code className="text-primary text-[11px]">No AGENTS.md found in source directory</code>.{" "}
+            <code className="text-primary text-[11px]">codex.json</code> is optional; if it is absent or malformed it is
+            silently skipped and no <code className="text-primary text-[11px]">model</code> is written.
+          </p>
+        </motion.div>
+
+        {/* Mental model — the output buckets */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {buckets.map((b) => (
               <div key={b.title} className="paper-card p-3">
                 <div className="flex items-center gap-1.5 mb-1.5">
@@ -507,81 +279,59 @@ export function CookbookCodex() {
           </div>
         </motion.div>
 
-        {/* Map at a glance */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">The whole map at a glance</p>
-          <div className="rounded-md border border-border overflow-hidden text-[11px] font-mono">
-            <div className="grid grid-cols-2 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
-              <span>Codex</span>
-              <span>OpenGAP</span>
+        {/* How AGENTS.md is split */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Split className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How AGENTS.md is split</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            The importer breaks <code className="text-primary text-[11px]">AGENTS.md</code> into sections at every{" "}
+            <code className="text-primary text-[11px]">#</code>, <code className="text-primary text-[11px]">##</code>, or{" "}
+            <code className="text-primary text-[11px]">###</code> heading, then routes each section by{" "}
+            <span className="text-foreground font-medium">keywords in its title</span>:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-8">Title contains</span>
+              <span className="col-span-4">Routes to</span>
             </div>
-            {mapAtAGlance.map(([from, to], i) => (
-              <div key={from} className={`grid grid-cols-2 px-3 py-2 gap-4 border-b border-border last:border-0 ${i % 2 ? "bg-muted/20" : ""}`}>
-                <span className="text-muted-foreground">{from}</span>
-                <span className="text-primary flex items-center gap-1.5 min-w-0">
+            {routingRules.map((r, i) => (
+              <div key={r.keywords} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <span className="col-span-8 text-muted-foreground">{r.keywords}</span>
+                <code className="col-span-4 text-primary flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
-                  <span className="truncate">{to}</span>
-                </span>
+                  {r.dest}
+                </code>
               </div>
             ))}
           </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            So in our example: <code className="text-primary text-[11px]">SQL Explainer</code>,{" "}
+            <code className="text-primary text-[11px]">Identity</code>, and{" "}
+            <code className="text-primary text-[11px]">Communication Style</code> land in{" "}
+            <code className="text-primary text-[11px]">SOUL.md</code>;{" "}
+            <code className="text-primary text-[11px]">Rules</code> and{" "}
+            <code className="text-primary text-[11px]">Always</code> land in{" "}
+            <code className="text-primary text-[11px]">RULES.md</code>.{" "}
+            <code className="text-primary text-[11px]">RULES.md</code> is only written when at least one section matches a
+            rule keyword.
+          </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same four mappings, in detail — Codex source on the left, the OpenGAP file it becomes on the right.</p>
-        </motion.div>
-
-        <ConversionStep
-          index={1}
-          title="Identity — AGENTS.md paragraph → SOUL.md"
-          fromLabel="AGENTS.md"
-          fromCode={fromIdentity}
-          toLabel="SOUL.md"
-          toCode={toSoul}
-          why="The opening identity and purpose sentences of AGENTS.md become prose identity in SOUL.md — who the agent is, its expertise, and how it communicates."
-        />
-        <ConversionStep
-          index={2}
-          title="Guardrails — AGENTS.md rules → RULES.md"
-          fromLabel="AGENTS.md"
-          fromCode={fromRules}
-          toLabel="RULES.md"
-          toCode={toRules}
-          why="Every behavioral directive (always, never) becomes an explicit Must Always / Must Never rule. Grouping them makes each constraint auditable and independently overridable."
-        />
-        <ConversionStep
-          index={3}
-          title="Tools — AGENTS.md ## Tools → tools/*.yaml"
-          fromLabel="AGENTS.md"
-          fromCode={fromTools}
-          toLabel="agent.yaml · tools/*.yaml"
-          toCode={toToolFiles}
-          why="Each tool name in the ## Tools list becomes a kebab-case entry in agent.yaml's tools[] and a matching tools/<name>.yaml schema file. The name and description in AGENTS.md seed the schema's description field."
-        />
-        <ConversionStep
-          index={4}
-          title="Config — Codex model → agent.yaml"
-          fromLabel="Codex (env / API)"
-          fromCode={fromModel}
-          toLabel="agent.yaml"
-          toCode={toAgentYaml}
-          why="The model that was selected via environment variable or API parameter becomes a declared preference in agent.yaml. A fallback is added so the agent can run on other runtimes without manual edits."
-        />
-
-        {/* What doesn't convert */}
+        {/* Tip */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
           <div className="paper-card p-4 border-l-2 border-l-primary/40">
-            <h3 className="text-sm font-semibold text-foreground font-heading mb-2">What does <span className="text-primary">not</span> convert</h3>
-            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
-              <strong className="text-foreground">Codex-specific shell execution context</strong> — Codex's built-in
-              sandboxed shell environment (network isolation, allowed-commands list, working-directory scope) has no
-              direct OpenGAP equivalent. The tools above call shell scripts, but sandbox policy must be configured at
-              the runtime / deployment level, not in the agent files. Any{" "}
-              <code className="text-primary text-[11px]">allowedDomains</code> or{" "}
-              <code className="text-primary text-[11px]">disallowedCommands</code> settings from Codex config
-              should be noted as comments in <code className="text-primary text-[11px]">RULES.md</code> for the
-              operator to enforce separately.
-            </p>
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+                <span className="text-foreground font-medium">Tip:</span> Routing is keyword-based. To steer a section,
+                give its heading a matching keyword in <code className="text-primary text-[11px]">AGENTS.md</code> before
+                importing — e.g. rename <code className="text-primary text-[11px]">## Guidelines</code> to{" "}
+                <code className="text-primary text-[11px]">## Rules</code> so it lands in{" "}
+                <code className="text-primary text-[11px]">RULES.md</code>.
+              </p>
+            </div>
           </div>
         </motion.div>
 
@@ -589,8 +339,8 @@ export function CookbookCodex() {
         <PartHeader
           num="3"
           label="The result"
-          title="After conversion — the OpenGAP agent"
-          subtitle="The finished agent directory. Every file below is the complete, copy-pasteable output of the mapping above."
+          title="The imported OpenGAP agent"
+          subtitle="The finished agent directory the importer wrote. Every file below is the complete output of the command above."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
@@ -601,27 +351,46 @@ export function CookbookCodex() {
           <p className="text-[11px] text-muted-foreground/70 font-body">Reveal any file to copy its full contents.</p>
         </motion.div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2 mb-4">
           <CollapsibleCode filename="agent.yaml" code={fullAgentYaml} reveal />
           <CollapsibleCode filename="SOUL.md" code={fullSoul} reveal />
           <CollapsibleCode filename="RULES.md" code={fullRules} reveal />
-          <CollapsibleCode filename="tools/run-tests.yaml" code={fullRunTestsYaml} reveal />
-          <CollapsibleCode filename="tools/run_tests.sh" code={fullRunTestsSh} reveal />
-          <CollapsibleCode filename="tools/lint-code.yaml" code={fullLintCodeYaml} reveal />
-          <CollapsibleCode filename="tools/lint_code.sh" code={fullLintCodeSh} reveal />
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="paper-card p-4 border-l-2 border-l-primary/40">
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+              The <code className="text-primary text-[11px]">model</code> block appears only when{" "}
+              <code className="text-primary text-[11px]">codex.json</code> supplies a model. With no{" "}
+              <code className="text-primary text-[11px]">codex.json</code>, the manifest stops at the{" "}
+              <code className="text-primary text-[11px]">description</code> line. Codex imports do not generate{" "}
+              <code className="text-primary text-[11px]">skills</code> or <code className="text-primary text-[11px]">tools</code> keys.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Validate */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             <h3 className="text-base font-semibold text-foreground font-heading">Validate</h3>
           </div>
           <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
-            From the agent directory, run <code className="text-primary text-[11px]">opengap validate</code> to confirm the
-            manifest, tool schemas, and script paths all resolve before you run the agent.
+            From the imported directory, confirm the manifest and the split instruction files resolve before you run it.
           </p>
           <CodeBlock code={validateCmd} filename="terminal" />
+        </motion.div>
+
+        {/* Run */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Play className="w-4 h-4 text-primary" />
+            <h3 className="text-base font-semibold text-foreground font-heading">Run it</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
+            Then run it on any supported runtime:
+          </p>
+          <CodeBlock code={runCmd} filename="terminal" />
         </motion.div>
 
       </div>

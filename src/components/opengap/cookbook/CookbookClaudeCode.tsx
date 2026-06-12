@@ -1,332 +1,143 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, BookOpen, Target, Package } from "lucide-react";
+import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, Terminal, Package, Lightbulb, Split, Play } from "lucide-react";
 import { useState } from "react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-/* ═══════════════════  PART 1 — full Claude Code source  ═══════════════════ */
+/* ═══════════════════  PART 1 — the Claude Code source  ═══════════════════ */
 
-const sourceTree = `my-project/                  (Claude Code)
-├── CLAUDE.md                ← identity + rules + workflow (all in one)
-├── memory/
-│   └── preferences.md       ← runtime preferences & persistent notes
+const sourceTree = `my-code-reviewer/              (Claude Code)
+├── CLAUDE.md                  ← identity + rules
 └── .claude/
-    └── settings.json        ← model, permissions, tool config`;
+    └── skills/
+        └── review-diff/
+            └── review-diff.md ← a skill`;
 
-const srcClaudeMd = `# CLAUDE.md
+const srcClaudeMd = `# Code Reviewer
 
-You are a senior TypeScript engineer. Your role is to help the user
-write clean, maintainable, and well-tested code.
-
-## Stack
-- TypeScript (strict mode)
-- Vitest for unit and integration tests
-- pnpm for package management
-- ESLint + Prettier for code style
-
-## Workflow
-When implementing a feature, always follow TDD:
-1. Write a failing test that describes the desired behaviour
-2. Write the minimum implementation to make it pass
-3. Refactor without breaking tests
-
-## Rules
-- Always write tests before implementation (TDD)
-- Never push directly to main — always open a feature branch
-- Prefer composition over inheritance
-- Keep functions small and single-purpose
-- Add JSDoc comments to all exported functions`;
-
-const srcPreferences = `# preferences.md
-
-Preferred response style: concise with inline code examples.
-Avoid long prose explanations unless asked.
-Always show diffs when suggesting file edits.`;
-
-const srcSettings = `{
-  "model": "claude-sonnet-4-6",
-  "permissions": {
-    "allow": [
-      "Bash(pnpm *)",
-      "Bash(git *)",
-      "Read(*)",
-      "Write(src/**)"
-    ]
-  }
-}`;
-
-/* ═══════════════════  PART 2 — paired mapping excerpts  ═══════════════════ */
-
-const fromClaudeIdentity = `# CLAUDE.md  (identity section)
-You are a senior TypeScript engineer. Your role is to
-help the user write clean, maintainable, and well-tested
-code.
-
-## Stack
-- TypeScript (strict mode)
-- Vitest for unit and integration tests
-- pnpm for package management
-- ESLint + Prettier for code style`;
-
-const toSoul = `# Soul
-
-## Core Identity
-You are a senior TypeScript engineer.
-
-I specialise in clean, maintainable, and well-tested
-TypeScript code. I work within modern stacks (Vitest,
-pnpm, ESLint, Prettier) and guide engineers through
-implementation decisions with precision.
-
-## Purpose
-Help the user write production-quality TypeScript code —
-well-structured, thoroughly tested, and consistent with
-the project's conventions.
+## Identity
+You are a senior code reviewer. You read diffs and surface real
+correctness bugs, not style nits.
 
 ## Communication Style
-Concise. I favour inline code examples over long prose.
-When suggesting file changes I show diffs. I ask for
-clarification only when the intent is genuinely ambiguous.
+Terse and direct. Lead with the most severe issue. Cite file:line.
 
-## Values & Principles
-- **Correctness** — tests prove behaviour, not just coverage
-- **Clarity** — code is read more than written; names matter
-- **Consistency** — follow the project's existing style`;
-
-const fromClaudeRules = `# CLAUDE.md  (rules section)
 ## Rules
-- Always write tests before implementation (TDD)
-- Never push directly to main — always open a feature branch
-- Prefer composition over inheritance
-- Keep functions small and single-purpose
-- Add JSDoc comments to all exported functions`;
-
-const toRules = `# Rules
-
-## Must Always
-- Follow TDD: write a failing test before any implementation
-- Open a feature branch for every change — never commit to main
-- Add JSDoc comments to all exported functions and types
-- Prefer composition over class inheritance
-- Keep functions small and focused on a single responsibility
+- Review only the changed lines and their immediate context.
+- Group findings by severity: blocker, warning, nit.
 
 ## Must Never
-- Push commits directly to the main branch
-- Write implementation code before a corresponding test exists
-- Leave exported symbols without documentation
+- Never approve a change you could not fully read.
+- Never invent line numbers or file paths.
 
-## Output Constraints
-- Show diffs when suggesting file edits
-- Keep explanations concise — use inline code examples
-- Responses are in the same language the user writes in`;
-
-const fromClaudeWorkflow = `# CLAUDE.md  (workflow section)
 ## Workflow
-When implementing a feature, always follow TDD:
-1. Write a failing test that describes the desired behaviour
-2. Write the minimum implementation to make it pass
-3. Refactor without breaking tests`;
+Read the diff, reason about each hunk, then report findings grouped
+by severity with a one-line summary at the top.`;
 
-const toSkill = `# skills/tdd/SKILL.md
----
-name: tdd
-description: "Test-driven development workflow: write a failing
-  test first, implement the minimum code to pass it, then
-  refactor. Triggers on: implement, add feature, write code,
-  create function, build component."
-allowed-tools: Read, Write, Bash
+const srcSkill = `---
+name: review-diff
+description: Review a unified diff for correctness bugs.
 ---
 
-## Step 1: Write the failing test
-Read the requirement. Create a test file (or add to an
-existing one) with an assertion that describes the desired
-behaviour. Run the suite — the new test must fail.
+# Review a diff
 
-## Step 2: Implement the minimum code
-Write only enough code to make the failing test pass.
-Avoid gold-plating at this stage.
+1. Read every changed hunk and its surrounding context.
+2. For each hunk, ask: does this introduce a bug, a regression, or
+   an unsafe assumption?
+3. Report findings as \`severity — file:line — description\`.`;
 
-## Step 3: Run the full suite
-Execute \`pnpm test\` to confirm all tests pass — both old
-and new.
+/* ═══════════════════  PART 2 — run the import  ═══════════════════ */
 
-## Step 4: Refactor
-Clean up duplication, naming, and structure. Re-run the
-suite after each change. Only commit when tests are green.`;
+const importCmd = `opengap import --from claude ./my-code-reviewer`;
 
-const fromSettings = `# .claude/settings.json
-{
-  "model": "claude-sonnet-4-6",
-  "permissions": {
-    "allow": [
-      "Bash(pnpm *)",
-      "Bash(git *)"
-    ]
-  }
-}`;
+const importOutput = `Importing agent
+  Format: claude
+  Source: ./my-code-reviewer
+✓ Imported skill: review-diff
+✓ Created agent.yaml
+✓ Created SOUL.md
+✓ Created RULES.md
 
-const toAgentYaml = `# agent.yaml
-spec_version: "0.1.0"
-name: ts-engineer
-version: 1.0.0
-description: Senior TypeScript engineer that writes clean,
-  well-tested code using TDD with Vitest and pnpm.
-model:
-  preferred: anthropic:claude-sonnet-4-6
-  fallback:
-    - openai:gpt-4o
-runtime:
-  max_turns: 50
-  timeout: 300
-skills:
-  - tdd`;
+Import complete`;
 
-/* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
+const readsWrites: { from: string; to: string; how: string }[] = [
+  {
+    from: "CLAUDE.md",
+    to: "SOUL.md + RULES.md",
+    how: "Split by heading, each section routed by its title (see below)",
+  },
+  {
+    from: ".claude/skills/<name>/",
+    to: "skills/<name>/SKILL.md (+ other files)",
+    how: "Copied as-is; <name>.md is renamed to SKILL.md",
+  },
+  {
+    from: "(directory name)",
+    to: "agent.yaml",
+    how: "Generated manifest (name, model, skill list)",
+  },
+];
 
-const outputTree = `ts-engineer/                 (OpenGAP)
-├── agent.yaml               ← manifest: model, runtime, refs
-├── SOUL.md                  ← identity
-├── RULES.md                 ← guardrails
+const routingRules: { keywords: string; dest: string }[] = [
+  { keywords: "identity · personality · style · about", dest: "SOUL.md" },
+  { keywords: "rule · constraint · never · always · must", dest: "RULES.md" },
+  { keywords: "anything else (the default)", dest: "SOUL.md" },
+  { keywords: "no headings at all → whole file", dest: "SOUL.md" },
+];
+
+/* ═══════════════════  PART 3 — the result  ═══════════════════ */
+
+const outputTree = `my-code-reviewer/              (OpenGAP)
+├── agent.yaml                 ← generated manifest
+├── SOUL.md                    ← identity sections
+├── RULES.md                   ← rule sections
 └── skills/
-    └── tdd/
-        └── SKILL.md         ← TDD workflow`;
+    └── review-diff/
+        └── SKILL.md           ← copied + renamed from review-diff.md`;
 
 const fullAgentYaml = `spec_version: "0.1.0"
-name: ts-engineer
-version: 1.0.0
-description: Senior TypeScript engineer that writes clean, well-tested code using TDD with Vitest and pnpm.
-
+name: my-code-reviewer
+version: "0.1.0"
+description: "Imported from Claude Code project: my-code-reviewer"
 model:
-  preferred: anthropic:claude-sonnet-4-6
-  fallback:
-    - openai:gpt-4o
-
-runtime:
-  max_turns: 50
-  timeout: 300
-
+  preferred: claude-sonnet-4-5-20250929
 skills:
-  - tdd`;
+  - review-diff
+tools: []`;
 
 const fullSoul = `# Soul
 
-## Core Identity
-You are a senior TypeScript engineer.
-
-I specialise in clean, maintainable, and well-tested TypeScript code. I work within modern stacks (Vitest, pnpm, ESLint, Prettier) and guide engineers through implementation decisions with precision.
-
-## Purpose
-Help the user write production-quality TypeScript code — well-structured, thoroughly tested, and consistent with the project's existing conventions.
-
-My process:
-1. Understand the requirement (feature, bug, refactor)
-2. Identify the right entry point (test first, or review existing tests)
-3. Work through the TDD cycle: Red → Green → Refactor
-4. Surface improvements in naming, structure, and coverage without being asked
+## Identity
+You are a senior code reviewer. You read diffs and surface real
+correctness bugs, not style nits.
 
 ## Communication Style
-Concise. I favour inline code examples over long prose explanations. When suggesting file changes I show diffs. I ask for clarification only when the intent is genuinely ambiguous — not as a reflex.
+Terse and direct. Lead with the most severe issue. Cite file:line.
 
-## Values & Principles
-- **Correctness** — tests prove behaviour, not just coverage numbers
-- **Clarity** — code is read far more than it is written; names and structure matter
-- **Consistency** — follow the project's existing conventions rather than imposing personal style
-- **Honesty** — if a design has a flaw, I say so directly with a concrete alternative
-
-## Domain Expertise
-- TypeScript (strict mode, type-level programming, generics)
-- Test-driven development with Vitest
-- pnpm workspaces and monorepo tooling
-- ESLint + Prettier configuration and enforcement
-- Refactoring and code review
-
-## Collaboration Style
-I work alongside the user turn by turn. I do not make unrequested edits outside the scope of the current task. I surface potential issues (missing tests, naming concerns) as inline suggestions, not blocking objections.`;
+## Workflow
+Read the diff, reason about each hunk, then report findings grouped
+by severity with a one-line summary at the top.`;
 
 const fullRules = `# Rules
 
-## Must Always
-- Follow TDD: write a failing test before any implementation code
-- Open a feature branch for every change — never commit directly to main
-- Add JSDoc comments to all exported functions and types
-- Prefer composition over class inheritance
-- Keep functions small and focused on a single responsibility
-- Show diffs when suggesting file edits rather than pasting the full file
+## Rules
+- Review only the changed lines and their immediate context.
+- Group findings by severity: blocker, warning, nit.
 
 ## Must Never
-- Push commits directly to the main branch
-- Write implementation code before a corresponding failing test exists
-- Leave exported symbols without documentation (JSDoc or TypeScript type annotation)
-- Introduce a dependency without checking whether an existing utility already covers the need
+- Never approve a change you could not fully read.
+- Never invent line numbers or file paths.`;
 
-## Output Constraints
-- Keep explanations concise — use inline code examples rather than prose paragraphs
-- When referencing test output, include the relevant assertion line, not the entire stack trace
-- Responses are in the same natural language the user writes in
+const validateCmd = `opengap validate`;
 
-## Interaction Boundaries
-- Tool use is limited to Read, Write, and Bash (scoped to pnpm and git commands)
-- File writes are restricted to the src/ directory unless the user explicitly asks otherwise`;
-
-const fullSkill = `---
-name: tdd
-description: "Test-driven development workflow: write a failing test first, implement
-  the minimum code to pass it, then refactor cleanly. Use for any feature implementation,
-  bug fix, or refactor task. Triggers on: implement, add feature, write code,
-  create function, build component, fix bug."
-allowed-tools: Read, Write, Bash
-metadata:
-  version: "1.0.0"
-  category: engineering
----
-
-# TDD (Test-Driven Development)
-
-Implements the Red → Green → Refactor cycle for TypeScript projects using Vitest and pnpm.
-
-## Step 1: Understand the requirement
-Read the user's request. Identify:
-- What behaviour should exist after this change?
-- Which module or file is the right home for it?
-- Are there existing tests to reference for style and structure?
-
-## Step 2: Write the failing test (Red)
-Create or update a \`.test.ts\` file with an assertion that describes the desired behaviour. The test must be specific — test one thing per \`it()\` block. Run the suite with \`pnpm test\` and confirm the new test fails for the right reason (not a syntax error, but a genuine assertion failure).
-
-## Step 3: Write the minimum implementation (Green)
-Write only enough code to make the failing test pass. Do not add logic that is not yet tested. Run \`pnpm test\` again — all tests must be green.
-
-## Step 4: Refactor
-With tests green, improve the code:
-- Extract repeated logic into helper functions
-- Rename variables and functions for clarity
-- Remove dead code
-Re-run \`pnpm test\` after each change. Only proceed when tests remain green.
-
-## Step 5: Commit
-Stage both the test file and the implementation file together. Write a commit message in the imperative mood that describes what the code now does, not what you changed.`;
-
-const validateCmd = `$ opengap validate
-✓ agent.yaml          valid (spec 0.1.0)
-✓ SOUL.md             present
-✓ RULES.md            present
-✓ skills/tdd/SKILL.md valid frontmatter
-  ts-engineer is ready.`;
+const runCmd = `opengap run . --adapter claude`;
 
 /* ─────────────────────────  Building blocks  ───────────────────────── */
 
 const buckets = [
   { icon: FileText, title: "Identity", file: "SOUL.md", desc: "Who the agent is" },
   { icon: Shield, title: "Rules", file: "RULES.md", desc: "Hard guardrails" },
-  { icon: Workflow, title: "Orchestration", file: "skills/", desc: "How it works" },
-  { icon: Settings, title: "Config & Tools", file: "agent.yaml", desc: "Model & runtime" },
-];
-
-const mapAtAGlance: [string, string][] = [
-  ["CLAUDE.md — identity paragraph", "SOUL.md"],
-  ["CLAUDE.md — rules section", "RULES.md"],
-  ["CLAUDE.md — recurring workflow", "skills/tdd/SKILL.md"],
-  [".claude/settings.json → model", "agent.yaml → model.preferred"],
-  ["memory/preferences.md", "(not imported — runtime state)"],
+  { icon: Workflow, title: "Skills", file: "skills/", desc: "Copied as-is" },
+  { icon: Settings, title: "Manifest", file: "agent.yaml", desc: "Generated for you" },
 ];
 
 function PartHeader({ num, label, title, subtitle }: { num: string; label: string; title: string; subtitle: string }) {
@@ -381,39 +192,6 @@ function CollapsibleCode({ filename, caption, code, reveal = false }: { filename
   );
 }
 
-interface StepProps {
-  index: number;
-  title: string;
-  why: string;
-  fromLabel: string;
-  fromCode: string;
-  toLabel: string;
-  toCode: string;
-}
-
-function ConversionStep({ index, title, why, fromLabel, fromCode, toLabel, toCode }: StepProps) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-      <div className="flex items-baseline gap-2 mb-3">
-        <code className="text-xs text-primary font-body font-semibold shrink-0">{index}</code>
-        <h3 className="text-base font-semibold text-foreground font-heading">{title}</h3>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 items-start relative">
-        <CodeBlock code={fromCode} filename={fromLabel} />
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border">
-          <ArrowRight className="w-3 h-3 text-primary" />
-        </div>
-        <CodeBlock code={toCode} filename={toLabel} />
-      </div>
-
-      <p className="text-[11px] text-muted-foreground font-body mt-2 leading-relaxed">
-        <span className="text-primary/70">Why → </span>{why}
-      </p>
-    </motion.div>
-  );
-}
-
 /* ─────────────────────────────  Page  ───────────────────────────── */
 
 export function CookbookClaudeCode() {
@@ -424,38 +202,24 @@ export function CookbookClaudeCode() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
-          <div className="inline-flex items-center gap-1.5 mb-3 px-2 py-1 rounded-md bg-primary/5 border border-primary/20">
-            <BookOpen className="w-3 h-3 text-primary" />
-            <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">Manual conversion guide</span>
-          </div>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Claude Code → OpenGAP</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            A step-by-step guide to converting a Claude Code workspace into OpenGAP format by hand. We work through one
-            real project end to end — every file, the exact mapping, and the finished result — so you can follow the
-            same steps for your own agent.
+            Claude Code agents live as files already — a <code className="text-primary text-[12px]">CLAUDE.md</code> plus a{" "}
+            <code className="text-primary text-[12px]">.claude/</code> directory. OpenGAP imports them directly. Instead of
+            rewriting each file by hand (as you would for a code framework like LangGraph), you run one command and{" "}
+            <code className="text-primary text-[12px]">opengap import</code> scaffolds the agent for you. This page shows
+            exactly what it reads and what it writes.
           </p>
         </motion.div>
 
-        {/* Example + its use case */}
+        {/* One command callout */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
-          <div className="paper-card p-4 max-w-2xl">
+          <div className="paper-card p-4 max-w-2xl border-l-2 border-l-primary/40">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground font-heading">The example</span>
+              <Terminal className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground font-heading">One command</span>
             </div>
-            <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3">
-              A typical Claude Code workspace for a <code className="text-primary text-[10px]">senior TypeScript engineer</code> agent.
-              A single <code className="text-primary text-[10px]">CLAUDE.md</code> mixes identity, stack preferences, a TDD workflow,
-              and hard rules — all in one flat file. Runtime notes live in <code className="text-primary text-[10px]">memory/preferences.md</code>.
-            </p>
-            <div className="flex items-start gap-2 pt-3 border-t border-border">
-              <Target className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
-                <span className="text-foreground font-medium">Use case:</span> pair-programming assistant that enforces test-driven
-                development — write the failing test first, implement the minimum code to pass it, then refactor
-                (<span className="text-foreground">Red → Green → Refactor</span>).
-              </p>
-            </div>
+            <code className="block text-[12px] text-primary font-body">opengap import --from claude &lt;path&gt;</code>
           </div>
         </motion.div>
 
@@ -463,34 +227,59 @@ export function CookbookClaudeCode() {
         <PartHeader
           num="1"
           label="The source"
-          title="The Claude Code workspace"
-          subtitle="A typical setup: one CLAUDE.md that carries identity, rules, and a workflow all at once, plus a memory file and settings. Here is every file, in full."
+          title="The Claude Code project"
+          subtitle="The importer reads CLAUDE.md (the agent's instructions) and .claude/skills/ (its skills). Here is every file it touches."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
           <CodeBlock code={sourceTree} filename="project structure" />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Expand any file to read it in full — reference only, the mapping in Part 2 is what matters.</p>
-        </motion.div>
-
         <div className="space-y-2">
-          <CollapsibleCode filename="CLAUDE.md" caption="identity + rules + workflow (all in one)" code={srcClaudeMd} />
-          <CollapsibleCode filename="memory/preferences.md" caption="runtime notes — not imported into OpenGAP" code={srcPreferences} />
-          <CollapsibleCode filename=".claude/settings.json" caption="model + permissions" code={srcSettings} />
+          <CollapsibleCode filename="CLAUDE.md" caption="identity + rules" code={srcClaudeMd} />
+          <CollapsibleCode filename=".claude/skills/review-diff/review-diff.md" caption="a skill" code={srcSkill} />
         </div>
 
         {/* ══════════════ PART 2 ══════════════ */}
         <PartHeader
           num="2"
-          label="The mapping"
-          title="How it maps to OpenGAP"
-          subtitle="Claude Code packs everything into one CLAUDE.md. OpenGAP splits that file into four declarative pieces — each section of CLAUDE.md maps to one of them."
+          label="Run the import"
+          title="One command scaffolds the agent"
+          subtitle="Point the importer at the project. It reads each source file and writes the OpenGAP equivalents for you."
         />
 
-        {/* Mental model */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-4">
+          <CodeBlock code={importCmd} filename="terminal" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <CodeBlock code={importOutput} filename="output" />
+        </motion.div>
+
+        {/* What it reads → what it writes */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">What it reads → what it writes</p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px]">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body">
+              <span className="col-span-3">Claude Code source</span>
+              <span className="col-span-4">OpenGAP output</span>
+              <span className="col-span-5">How</span>
+            </div>
+            {readsWrites.map((r, i) => (
+              <div key={r.from} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-start ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-3 text-muted-foreground font-body break-words">{r.from}</code>
+                <code className="col-span-4 text-primary font-body flex items-start gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-0.5" />
+                  <span className="break-words">{r.to}</span>
+                </code>
+                <span className="col-span-5 text-muted-foreground/80 font-body leading-relaxed">{r.how}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Mental model — the four output buckets */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {buckets.map((b) => (
               <div key={b.title} className="paper-card p-3">
@@ -505,78 +294,57 @@ export function CookbookClaudeCode() {
           </div>
         </motion.div>
 
-        {/* Map at a glance */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">The whole map at a glance</p>
-          <div className="rounded-md border border-border overflow-hidden text-[11px] font-mono">
-            <div className="grid grid-cols-2 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
-              <span>Claude Code</span>
-              <span>OpenGAP</span>
+        {/* How CLAUDE.md is split */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Split className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How CLAUDE.md is split</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            The importer breaks <code className="text-primary text-[11px]">CLAUDE.md</code> into sections at every{" "}
+            <code className="text-primary text-[11px]">#</code>, <code className="text-primary text-[11px]">##</code>, or{" "}
+            <code className="text-primary text-[11px]">###</code> heading, then routes each section by{" "}
+            <span className="text-foreground font-medium">keywords in its title</span>:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-8">Title contains</span>
+              <span className="col-span-4">Routes to</span>
             </div>
-            {mapAtAGlance.map(([from, to], i) => (
-              <div key={from} className={`grid grid-cols-2 px-3 py-2 gap-4 border-b border-border last:border-0 ${i % 2 ? "bg-muted/20" : ""}`}>
-                <span className="text-muted-foreground">{from}</span>
-                <span className="text-primary flex items-center gap-1.5 min-w-0">
+            {routingRules.map((r, i) => (
+              <div key={r.keywords} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <span className="col-span-8 text-muted-foreground">{r.keywords}</span>
+                <code className="col-span-4 text-primary flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
-                  <span className="truncate">{to}</span>
-                </span>
+                  {r.dest}
+                </code>
               </div>
             ))}
           </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            So in our example: <code className="text-primary text-[11px]">Identity</code>,{" "}
+            <code className="text-primary text-[11px]">Communication Style</code>, and{" "}
+            <code className="text-primary text-[11px]">Workflow</code> land in{" "}
+            <code className="text-primary text-[11px]">SOUL.md</code>;{" "}
+            <code className="text-primary text-[11px]">Rules</code> and{" "}
+            <code className="text-primary text-[11px]">Must Never</code> land in{" "}
+            <code className="text-primary text-[11px]">RULES.md</code>.
+          </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same four mappings, in detail — Claude Code source on the left, the OpenGAP file it becomes on the right.</p>
-        </motion.div>
-
-        <ConversionStep
-          index={1}
-          title="Identity — CLAUDE.md identity → SOUL.md"
-          fromLabel="CLAUDE.md"
-          fromCode={fromClaudeIdentity}
-          toLabel="SOUL.md"
-          toCode={toSoul}
-          why="The opening paragraph of CLAUDE.md — who the agent is and what stack it uses — becomes prose identity in SOUL.md. Purpose, communication style, and values are made explicit rather than implied."
-        />
-        <ConversionStep
-          index={2}
-          title="Guardrails — CLAUDE.md rules → RULES.md"
-          fromLabel="CLAUDE.md"
-          fromCode={fromClaudeRules}
-          toLabel="RULES.md"
-          toCode={toRules}
-          why="The rules section of CLAUDE.md — the always/never/prefer lines — becomes explicit Must Always / Must Never guardrails. Output constraints and tool boundaries are also captured here."
-        />
-        <ConversionStep
-          index={3}
-          title="Orchestration — CLAUDE.md workflow → skills/tdd/SKILL.md"
-          fromLabel="CLAUDE.md"
-          fromCode={fromClaudeWorkflow}
-          toLabel="SKILL.md"
-          toCode={toSkill}
-          why="A recurring numbered workflow in CLAUDE.md is a skill. OpenGAP makes it a first-class declarative SKILL.md with frontmatter so the runtime can discover, invoke, and compose it."
-        />
-        <ConversionStep
-          index={4}
-          title="Config — .claude/settings.json → agent.yaml"
-          fromLabel=".claude/settings.json"
-          fromCode={fromSettings}
-          toLabel="agent.yaml"
-          toCode={toAgentYaml}
-          why="The model name in settings.json becomes agent.yaml's model.preferred field. agent.yaml also wires the skills[] the agent uses, replacing the implicit single-file structure."
-        />
-
-        {/* What doesn't convert */}
+        {/* Tip */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
           <div className="paper-card p-4 border-l-2 border-l-primary/40">
-            <h3 className="text-sm font-semibold text-foreground font-heading mb-2">What does <span className="text-primary">not</span> convert</h3>
-            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
-              <code className="text-primary text-[11px]">memory/preferences.md</code> — and any other file under{" "}
-              <code className="text-[11px]">memory/</code> — has no OpenGAP equivalent. Memory files capture runtime state:
-              the user's preferred response style, session notes, conversation history. That is not agent identity. OpenGAP
-              describes <em>what</em> the agent is (SOUL.md, RULES.md, skills); the runtime owns <em>how</em> context and
-              memory are persisted across turns.
-            </p>
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+                <span className="text-foreground font-medium">Tip:</span> Routing is keyword-based. To steer a section,
+                give its heading a matching keyword in <code className="text-primary text-[11px]">CLAUDE.md</code> before
+                importing — e.g. rename <code className="text-primary text-[11px]">## Guidelines</code> to{" "}
+                <code className="text-primary text-[11px]">## Rules</code> so it lands in{" "}
+                <code className="text-primary text-[11px]">RULES.md</code>.
+              </p>
+            </div>
           </div>
         </motion.div>
 
@@ -584,8 +352,8 @@ export function CookbookClaudeCode() {
         <PartHeader
           num="3"
           label="The result"
-          title="After conversion — the OpenGAP agent"
-          subtitle="The finished agent directory. Every file below is the complete, copy-pasteable output of the mapping above."
+          title="The imported OpenGAP agent"
+          subtitle="The finished agent directory the importer wrote. Every file below is the complete output of the command above."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
@@ -596,24 +364,43 @@ export function CookbookClaudeCode() {
           <p className="text-[11px] text-muted-foreground/70 font-body">Reveal any file to copy its full contents.</p>
         </motion.div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2 mb-4">
           <CollapsibleCode filename="agent.yaml" code={fullAgentYaml} reveal />
           <CollapsibleCode filename="SOUL.md" code={fullSoul} reveal />
           <CollapsibleCode filename="RULES.md" code={fullRules} reveal />
-          <CollapsibleCode filename="skills/tdd/SKILL.md" code={fullSkill} reveal />
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="paper-card p-4 border-l-2 border-l-primary/40">
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+              <code className="text-primary text-[11px]">skills/review-diff/SKILL.md</code> — copied verbatim from{" "}
+              <code className="text-primary text-[11px]">review-diff.md</code>, only the filename changes.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Validate */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             <h3 className="text-base font-semibold text-foreground font-heading">Validate</h3>
           </div>
           <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
-            From the agent directory, run <code className="text-primary text-[11px]">opengap validate</code> to confirm the
-            manifest, skill frontmatter, and tool schemas all resolve before you run the agent.
+            From the imported directory, confirm the manifest, skill frontmatter, and any tool schemas resolve before you run it.
           </p>
           <CodeBlock code={validateCmd} filename="terminal" />
+        </motion.div>
+
+        {/* Run */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Play className="w-4 h-4 text-primary" />
+            <h3 className="text-base font-semibold text-foreground font-heading">Run it</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
+            Then run it on any supported runtime:
+          </p>
+          <CodeBlock code={runCmd} filename="terminal" />
         </motion.div>
 
       </div>

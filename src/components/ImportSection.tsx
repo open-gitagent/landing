@@ -90,7 +90,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "LangGraph",
     desc: "Translates StateGraph nodes, edges, and tools into OpenGAP agents and tool YAMLs.",
-    cookbookId: "cookbook-langgraph",
+    cookbookId: "cookbook-framework-translator",
     before: `langgraph-project/
 ├── graph.py
 ├── nodes/
@@ -113,7 +113,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "CrewAI",
     desc: "Maps Crew, Agent roles/goals, and Task definitions to agents/ and workflows/.",
-    cookbookId: "cookbook-crewai",
+    cookbookId: "cookbook-framework-translator",
     before: `crewai-project/
 ├── crew.py
 ├── agents/
@@ -138,7 +138,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "AutoGen",
     desc: "Converts ConversableAgent teams, tools, and group chats into OpenGAP agents.",
-    cookbookId: "cookbook-autogen",
+    cookbookId: "cookbook-framework-translator",
     before: `autogen-project/
 ├── team.py
 ├── agents/
@@ -162,7 +162,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "OpenAI Agents SDK",
     desc: "Maps Agent, handoffs, and @function_tool to agent.yaml, agents/, and tools/.",
-    cookbookId: "cookbook-openai-agents",
+    cookbookId: "cookbook-framework-translator",
     before: `openai-agents-project/
 ├── main.py
 └── tools/
@@ -181,7 +181,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "Claude SDK",
     desc: "Converts Anthropic SDK agents — tools[], SYSTEM_PROMPT, and multi-turn loops into OpenGAP format.",
-    cookbookId: "cookbook-claude-sdk",
+    cookbookId: "cookbook-framework-translator",
     before: `anthropic-project/
 ├── agent.py
 └── tools/
@@ -199,7 +199,7 @@ const codeFrameworks: AgentEntry[] = [
   {
     label: "Google ADK",
     desc: "Converts Agent, sub_agents, and AgentTool hierarchies into nested OpenGAP dirs.",
-    cookbookId: "cookbook-google-adk",
+    cookbookId: "cookbook-framework-translator",
     before: `adk-project/
 ├── agent.py
 └── sub_agents/
@@ -261,7 +261,7 @@ function AgentCard({ entry, index }: { entry: AgentEntry; index: number }) {
               <CopyButton text={entry.cmd.replace(/^\$ /, '')} />
             </>
           ) : (
-            <span className="hidden sm:block text-[10px] text-muted-foreground/50 font-body">Manual mapping</span>
+            <span className="hidden sm:block text-[10px] text-muted-foreground/50 font-body">Translator agent</span>
           )}
           <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
@@ -343,7 +343,7 @@ export function ImportSection() {
               </div>
               <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
                 Agents defined in code (LangGraph, CrewAI, AutoGen, etc.).
-                <br />Follow the cookbook to manually map your framework's concepts to OpenGAP files.
+                <br />The <code className="text-primary text-[10px]">Framework Translator</code> agent converts them into idiomatic code in any other framework for you.
               </p>
             </div>
           </div>

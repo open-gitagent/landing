@@ -1,193 +1,142 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, BookOpen, Target, Package } from "lucide-react";
+import { ArrowRight, FileText, Shield, Settings, Sliders, CheckCircle2, ChevronDown, Terminal, Lightbulb, Split, Play } from "lucide-react";
 import { useState } from "react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-/* ═══════════════════  PART 1 — full Gemini CLI source  ═══════════════════ */
+/* ═══════════════════  PART 1 — the Gemini CLI source  ═══════════════════ */
 
-const sourceTree = `my-project/                  (Gemini CLI)
-└── GEMINI.md                ← identity, purpose, and behavioral rules`;
+const sourceTree = `release-notes-writer/          (Gemini CLI)
+├── GEMINI.md                  ← identity + rules
+└── .gemini/
+    └── settings.json          ← model + approval mode`;
 
-const srcGeminiMd = `# GEMINI.md
-You are a data analysis assistant specializing in Python.
-Help users explore datasets, build visualizations, and write
-clean analysis scripts.
+const srcGeminiMd = `# Release Notes Writer
 
-Always explain your reasoning step by step before writing code.
-Use pandas and matplotlib unless the user specifies otherwise.
-Never modify the original dataset — always work on a copy.
-Prefer vectorized operations over loops for performance.
-When producing charts, always label axes and include a title.`;
-
-/* ═══════════════════  PART 2 — paired mapping excerpts  ═══════════════════ */
-
-const fromIdentity = `# GEMINI.md  (identity paragraph)
-You are a data analysis assistant specializing
-in Python.
-Help users explore datasets, build
-visualizations, and write clean analysis scripts.`;
-
-const toSoul = `# Soul
-
-## Core Identity
-You are a data analysis assistant specializing
-in Python.
-
-## Purpose
-Help users explore datasets, build
-visualizations, and write clean analysis scripts.
+## Identity
+You turn a list of merged pull requests into clear, user-facing
+release notes. You write for end users, not engineers.
 
 ## Communication Style
-Clear and methodical. Always walk through
-reasoning before writing code. Outputs are
-grounded in the data at hand.
+Plain language. One bullet per change. Lead with what the user gains.
 
-## Domain Expertise
-- Exploratory data analysis with pandas
-- Data visualisation with matplotlib / seaborn
-- Writing clean, readable Python analysis scripts`;
-
-const fromRules = `# GEMINI.md  (rules section)
-Always explain your reasoning step by step
-  before writing code.
-Use pandas and matplotlib unless the user
-  specifies otherwise.
-Never modify the original dataset — always
-  work on a copy.
-Prefer vectorized operations over loops.
-When producing charts, always label axes
-  and include a title.`;
-
-const toRules = `# RULES.md
-
-## Must Always
-- Explain reasoning step by step before
-  writing any code
-- Work on a copy of the dataset, never the
-  original
-- Label axes and add a title to every chart
-- Prefer vectorized (pandas / numpy) operations
-  over explicit Python loops
+## Rules
+- Group changes under Features, Fixes, and Breaking Changes.
+- Link each bullet back to its PR number.
 
 ## Must Never
-- Mutate or overwrite the original dataset
-- Skip the reasoning walkthrough even for
-  short snippets
+- Never include internal refactors that have no user impact.
+- Never invent a change that is not in the provided PR list.
 
-## Tool Defaults
-- Default plotting library: matplotlib
-- Default data library: pandas
-  (override only if the user asks)`;
+## Workflow
+Read the PR list, classify each entry, then draft the notes with a
+one-line summary headline at the top.`;
 
-const fromModel = `# Gemini CLI — model is set per invocation
-# e.g.:  gemini --model gemini-2.0-flash
+const srcSettings = `{
+  "model": "gemini-2.5-pro",
+  "approvalMode": "default"
+}`;
 
-# There is no explicit model field in GEMINI.md;
-# the model is selected at launch time.`;
+/* ═══════════════════  PART 2 — run the import  ═══════════════════ */
 
-const toAgentYaml = `# agent.yaml
-spec_version: "0.1.0"
-name: data-analysis-agent
-version: 1.0.0
-description: Data analysis assistant specialising in
-  Python — EDA, visualisation, and clean scripts.
-model:
-  preferred: google:gemini-2.0-flash
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-runtime:
-  max_turns: 40
-  timeout: 180`;
+const importCmd = `opengap import --from gemini ./release-notes-writer`;
 
-/* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
+const importOutput = `Importing agent
+  Format: gemini
+  Source: ./release-notes-writer
+  Found .gemini/settings.json
+✓ Created agent.yaml
+✓ Created SOUL.md
+✓ Created RULES.md
 
-const outputTree = `my-project/                  (OpenGAP)
-├── agent.yaml               ← manifest: model, runtime
-├── SOUL.md                  ← identity
-└── RULES.md                 ← guardrails`;
+Import complete`;
+
+const readsWrites: { from: string; to: string; how: string }[] = [
+  {
+    from: "GEMINI.md",
+    to: "SOUL.md + RULES.md",
+    how: "Split by heading, each section routed by its title (see below)",
+  },
+  {
+    from: ".gemini/settings.json → model",
+    to: "agent.yaml model.preferred",
+    how: "Optional; accepts a string or a { id, provider } object (the id is used)",
+  },
+  {
+    from: ".gemini/settings.json → approvalMode",
+    to: "agent.yaml compliance.supervision.human_in_the_loop",
+    how: "Optional; mapped to a supervision level (see below)",
+  },
+  {
+    from: "(directory name)",
+    to: "agent.yaml name + description",
+    how: "Generated manifest",
+  },
+];
+
+const routingRules: { keywords: string; dest: string }[] = [
+  { keywords: "rule · constraint · never · always · must · compliance", dest: "RULES.md" },
+  { keywords: "anything else (the default)", dest: "SOUL.md" },
+  { keywords: "no headings at all → whole file", dest: "SOUL.md" },
+];
+
+const approvalMap: { mode: string; hitl: string }[] = [
+  { mode: "plan", hitl: "always" },
+  { mode: "default", hitl: "conditional" },
+  { mode: "auto_edit", hitl: "advisory" },
+  { mode: "yolo", hitl: "none" },
+];
+
+/* ═══════════════════  PART 3 — the result  ═══════════════════ */
+
+const outputTree = `release-notes-writer/          (OpenGAP)
+├── agent.yaml                 ← generated manifest
+├── SOUL.md                    ← identity sections
+└── RULES.md                   ← rule sections`;
 
 const fullAgentYaml = `spec_version: "0.1.0"
-name: data-analysis-agent
-version: 1.0.0
-description: Data analysis assistant specialising in Python — exploratory data analysis, visualisation, and clean analysis scripts.
-
+name: release-notes-writer
+version: "0.1.0"
+description: "Imported from Gemini CLI project: release-notes-writer"
 model:
-  preferred: google:gemini-2.0-flash
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-
-runtime:
-  max_turns: 40
-  timeout: 180`;
+  preferred: gemini-2.5-pro
+compliance:
+  supervision:
+    human_in_the_loop: conditional`;
 
 const fullSoul = `# Soul
 
-## Core Identity
-You are a data analysis assistant specializing in Python.
-
-## Purpose
-Help users explore datasets, build visualizations, and write clean analysis scripts. I am designed for data-heavy conversations — loading files, inspecting distributions, engineering features, and producing publication-quality charts.
+## Identity
+You turn a list of merged pull requests into clear, user-facing
+release notes. You write for end users, not engineers.
 
 ## Communication Style
-Clear and methodical. I always walk through my reasoning before writing any code so the user understands the approach before seeing the implementation. Responses are grounded in the actual data provided — I do not speculate about data I have not seen.
+Plain language. One bullet per change. Lead with what the user gains.
 
-## Values & Principles
-- **Clarity** — step-by-step explanations before every code block
-- **Data integrity** — the original dataset is never modified
-- **Correctness** — prefer well-tested library functions (pandas, numpy) over hand-rolled logic
-- **Readability** — clean, commented scripts that a reader can follow without me present
-
-## Domain Expertise
-- Exploratory data analysis (EDA) with pandas: describe, groupby, pivot, merge
-- Data visualisation with matplotlib and seaborn: charts, subplots, styling
-- Performance patterns: vectorised operations, avoiding Python loops over rows
-- Common data-cleaning tasks: nulls, dtypes, outliers, encoding
-
-## Collaboration Style
-I work interactively. I ask clarifying questions when the goal is ambiguous (which column? which metric?). For longer workflows I narrate each step so the user can follow along and redirect at any point.`;
+## Workflow
+Read the PR list, classify each entry, then draft the notes with a
+one-line summary headline at the top.`;
 
 const fullRules = `# Rules
 
-## Must Always
-- Explain reasoning step by step before writing any code — even for short one-liners
-- Work exclusively on a copy of the dataset (e.g. \`df = df.copy()\`); never mutate the original
-- Label axes and add a descriptive title to every chart produced
-- Prefer vectorised pandas / numpy operations over explicit Python \`for\` loops over rows
-- Use pandas for tabular data and matplotlib (or seaborn) for charts unless the user specifies another library
+## Rules
+- Group changes under Features, Fixes, and Breaking Changes.
+- Link each bullet back to its PR number.
 
 ## Must Never
-- Modify or overwrite the original dataset variable passed in by the user
-- Skip the reasoning walkthrough, even when the answer feels obvious
-- Produce a chart without axis labels and a title
+- Never include internal refactors that have no user impact.
+- Never invent a change that is not in the provided PR list.`;
 
-## Output Constraints
-- Code blocks are Python 3, formatted for readability with comments on non-obvious lines
-- When showing sample output (e.g. \`df.head()\`), use a markdown table or fenced code block — not prose
+const validateCmd = `opengap validate`;
 
-## Tool Defaults
-- Tabular data: **pandas**
-- Visualisation: **matplotlib** / seaborn (override only on explicit user request)
-- Numeric operations: **numpy** where pandas is not idiomatic`;
-
-const validateCmd = `$ opengap validate
-✓ agent.yaml          valid (spec 0.1.0)
-✓ SOUL.md             present
-✓ RULES.md            present
-  data-analysis-agent is ready.`;
+const runCmd = `opengap run . --adapter gemini`;
 
 /* ─────────────────────────  Building blocks  ───────────────────────── */
 
 const buckets = [
   { icon: FileText, title: "Identity", file: "SOUL.md", desc: "Who the agent is" },
   { icon: Shield, title: "Rules", file: "RULES.md", desc: "Hard guardrails" },
-  { icon: Workflow, title: "Orchestration", file: "skills/", desc: "How it reasons (none here)" },
-  { icon: Settings, title: "Config & Tools", file: "agent.yaml", desc: "Model & runtime" },
-];
-
-const mapAtAGlance: [string, string][] = [
-  ["GEMINI.md — identity paragraph", "SOUL.md"],
-  ["GEMINI.md — behavioral rules", "RULES.md"],
-  ["Gemini model (gemini-2.0-flash)", "agent.yaml → model.preferred"],
+  { icon: Sliders, title: "Supervision", file: ".gemini/settings.json", desc: "Model + approval mode" },
+  { icon: Settings, title: "Manifest", file: "agent.yaml", desc: "Generated for you" },
 ];
 
 function PartHeader({ num, label, title, subtitle }: { num: string; label: string; title: string; subtitle: string }) {
@@ -242,39 +191,6 @@ function CollapsibleCode({ filename, caption, code, reveal = false }: { filename
   );
 }
 
-interface StepProps {
-  index: number;
-  title: string;
-  why: string;
-  fromLabel: string;
-  fromCode: string;
-  toLabel: string;
-  toCode: string;
-}
-
-function ConversionStep({ index, title, why, fromLabel, fromCode, toLabel, toCode }: StepProps) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-      <div className="flex items-baseline gap-2 mb-3">
-        <code className="text-xs text-primary font-body font-semibold shrink-0">{index}</code>
-        <h3 className="text-base font-semibold text-foreground font-heading">{title}</h3>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 items-start relative">
-        <CodeBlock code={fromCode} filename={fromLabel} />
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border">
-          <ArrowRight className="w-3 h-3 text-primary" />
-        </div>
-        <CodeBlock code={toCode} filename={toLabel} />
-      </div>
-
-      <p className="text-[11px] text-muted-foreground font-body mt-2 leading-relaxed">
-        <span className="text-primary/70">Why → </span>{why}
-      </p>
-    </motion.div>
-  );
-}
-
 /* ─────────────────────────────  Page  ───────────────────────────── */
 
 export function CookbookGeminiCLI() {
@@ -285,37 +201,24 @@ export function CookbookGeminiCLI() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
-          <div className="inline-flex items-center gap-1.5 mb-3 px-2 py-1 rounded-md bg-primary/5 border border-primary/20">
-            <BookOpen className="w-3 h-3 text-primary" />
-            <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">Manual conversion guide</span>
-          </div>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">Gemini CLI → OpenGAP</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            A step-by-step guide to converting a Gemini CLI agent into OpenGAP format by hand. Gemini CLI stores
-            everything — identity and rules — in a single <code className="text-primary text-xs">GEMINI.md</code> file.
-            We walk through one real project end to end, separating that file into the right OpenGAP pieces.
+            Gemini CLI agents live as files already — a <code className="text-primary text-[12px]">GEMINI.md</code> plus an optional{" "}
+            <code className="text-primary text-[12px]">.gemini/</code> directory. OpenGAP imports them directly. Instead of
+            rewriting each file by hand (as you would for a code framework like LangGraph), you run one command and{" "}
+            <code className="text-primary text-[12px]">opengap import</code> scaffolds the agent for you. This page shows
+            exactly what it reads and what it writes.
           </p>
         </motion.div>
 
-        {/* Example + its use case */}
+        {/* One command callout */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
-          <div className="paper-card p-4 max-w-2xl">
+          <div className="paper-card p-4 max-w-2xl border-l-2 border-l-primary/40">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground font-heading">The example</span>
+              <Terminal className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground font-heading">One command</span>
             </div>
-            <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3">
-              A <code className="text-primary text-[10px]">GEMINI.md</code>-based data analysis assistant — a single markdown
-              file mixing an identity paragraph with a short list of behavioral rules for working with Python datasets.
-            </p>
-            <div className="flex items-start gap-2 pt-3 border-t border-border">
-              <Target className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
-                <span className="text-foreground font-medium">Use case:</span> help users explore datasets, build
-                visualizations, and write clean analysis scripts — always explaining reasoning before writing code,
-                defaulting to pandas and matplotlib, and never touching the original data.
-              </p>
-            </div>
+            <code className="block text-[12px] text-primary font-body">opengap import --from gemini &lt;path&gt;</code>
           </div>
         </motion.div>
 
@@ -324,31 +227,58 @@ export function CookbookGeminiCLI() {
           num="1"
           label="The source"
           title="The Gemini CLI project"
-          subtitle="A single GEMINI.md file that packs identity and rules into one document. Here it is in full."
+          subtitle="The importer reads GEMINI.md (the agent's instructions) and, if present, .gemini/settings.json (its model and approval mode). Here is every file it touches."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
           <CodeBlock code={sourceTree} filename="project structure" />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Expand the file to read it in full — the mapping in Part 2 is what matters.</p>
-        </motion.div>
-
         <div className="space-y-2">
-          <CollapsibleCode filename="GEMINI.md" caption="identity paragraph + behavioral rules" code={srcGeminiMd} />
+          <CollapsibleCode filename="GEMINI.md" caption="identity + rules" code={srcGeminiMd} />
+          <CollapsibleCode filename=".gemini/settings.json" caption="model + approval mode" code={srcSettings} />
         </div>
 
         {/* ══════════════ PART 2 ══════════════ */}
         <PartHeader
           num="2"
-          label="The mapping"
-          title="How it maps to OpenGAP"
-          subtitle="Gemini CLI keeps identity and rules unseparated in one file. OpenGAP splits that into four declarative pieces — each section of GEMINI.md maps to one of them."
+          label="Run the import"
+          title="One command scaffolds the agent"
+          subtitle="Point the importer at the project. It reads each source file and writes the OpenGAP equivalents for you."
         />
 
-        {/* Mental model */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-4">
+          <CodeBlock code={importCmd} filename="terminal" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <CodeBlock code={importOutput} filename="output" />
+        </motion.div>
+
+        {/* What it reads → what it writes */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">What it reads → what it writes</p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px]">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body">
+              <span className="col-span-3">Gemini CLI source</span>
+              <span className="col-span-4">OpenGAP output</span>
+              <span className="col-span-5">How</span>
+            </div>
+            {readsWrites.map((r, i) => (
+              <div key={r.from} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-start ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-3 text-muted-foreground font-body break-words">{r.from}</code>
+                <code className="col-span-4 text-primary font-body flex items-start gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-0.5" />
+                  <span className="break-words">{r.to}</span>
+                </code>
+                <span className="col-span-5 text-muted-foreground/80 font-body leading-relaxed">{r.how}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Mental model — the four output buckets */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {buckets.map((b) => (
               <div key={b.title} className="paper-card p-3">
@@ -363,78 +293,103 @@ export function CookbookGeminiCLI() {
           </div>
         </motion.div>
 
-        {/* Map at a glance */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">The whole map at a glance</p>
-          <div className="rounded-md border border-border overflow-hidden text-[11px] font-mono">
-            <div className="grid grid-cols-2 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
-              <span>Gemini CLI</span>
-              <span>OpenGAP</span>
+        {/* How GEMINI.md is split */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Split className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How GEMINI.md is split</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            The importer breaks <code className="text-primary text-[11px]">GEMINI.md</code> into sections at every{" "}
+            <code className="text-primary text-[11px]">#</code>, <code className="text-primary text-[11px]">##</code>, or{" "}
+            <code className="text-primary text-[11px]">###</code> heading, then routes each section by{" "}
+            <span className="text-foreground font-medium">keywords in its title</span>:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-8">Title contains</span>
+              <span className="col-span-4">Routes to</span>
             </div>
-            {mapAtAGlance.map(([from, to], i) => (
-              <div key={from} className={`grid grid-cols-2 px-3 py-2 gap-4 border-b border-border last:border-0 ${i % 2 ? "bg-muted/20" : ""}`}>
-                <span className="text-muted-foreground">{from}</span>
-                <span className="text-primary flex items-center gap-1.5 min-w-0">
+            {routingRules.map((r, i) => (
+              <div key={r.keywords} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <span className="col-span-8 text-muted-foreground">{r.keywords}</span>
+                <code className="col-span-4 text-primary flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
-                  <span className="truncate">{to}</span>
-                </span>
+                  {r.dest}
+                </code>
               </div>
             ))}
           </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            So in our example: <code className="text-primary text-[11px]">Identity</code>,{" "}
+            <code className="text-primary text-[11px]">Communication Style</code>, and{" "}
+            <code className="text-primary text-[11px]">Workflow</code> land in{" "}
+            <code className="text-primary text-[11px]">SOUL.md</code>;{" "}
+            <code className="text-primary text-[11px]">Rules</code> and{" "}
+            <code className="text-primary text-[11px]">Must Never</code> land in{" "}
+            <code className="text-primary text-[11px]">RULES.md</code> (matched on{" "}
+            <span className="text-foreground font-medium">rule</span>,{" "}
+            <span className="text-foreground font-medium">never</span>, and{" "}
+            <span className="text-foreground font-medium">must</span>).
+          </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same three mappings, in detail — Gemini CLI source on the left, the OpenGAP file it becomes on the right.</p>
-        </motion.div>
-
-        <ConversionStep
-          index={1}
-          title="Identity — GEMINI.md paragraph → SOUL.md"
-          fromLabel="GEMINI.md"
-          fromCode={fromIdentity}
-          toLabel="SOUL.md"
-          toCode={toSoul}
-          why="The opening identity and purpose sentences of GEMINI.md become prose identity in SOUL.md — who the agent is, what it is for, how it communicates, and what it knows."
-        />
-        <ConversionStep
-          index={2}
-          title="Guardrails — GEMINI.md rules → RULES.md"
-          fromLabel="GEMINI.md"
-          fromCode={fromRules}
-          toLabel="RULES.md"
-          toCode={toRules}
-          why="Every behavioral directive in GEMINI.md (always, never, prefer, use X unless) becomes an explicit Must Always / Must Never rule. Grouping them makes it easy to audit and override individual constraints."
-        />
-        <ConversionStep
-          index={3}
-          title="Config — Gemini model → agent.yaml"
-          fromLabel="Gemini CLI (launch flag)"
-          fromCode={fromModel}
-          toLabel="agent.yaml"
-          toCode={toAgentYaml}
-          why="The model that was selected at launch time via a CLI flag becomes a declared preference in agent.yaml. A fallback is added so the agent can run on other runtimes without manual edits."
-        />
-
-        {/* What doesn't convert */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
+        {/* Tip */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="paper-card p-4 border-l-2 border-l-primary/40">
-            <h3 className="text-sm font-semibold text-foreground font-heading mb-2">What does <span className="text-primary">not</span> convert</h3>
-            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
-              <strong className="text-foreground">Gemini-specific tool integrations</strong> — built-in Gemini CLI tools
-              (code execution sandbox, Google Workspace connectors) have no OpenGAP equivalent and must be replaced with
-              explicit <code className="text-primary text-[11px]">tools/*.yaml</code> definitions if you need them.{" "}
-              <strong className="text-foreground">Session state</strong> — Gemini CLI manages conversation history
-              internally; that is a runtime concern in OpenGAP and is not expressed in any agent file.
-            </p>
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+                <span className="text-foreground font-medium">Tip:</span> Routing is keyword-based. To steer a section,
+                give its heading a matching keyword in <code className="text-primary text-[11px]">GEMINI.md</code> before
+                importing — e.g. rename <code className="text-primary text-[11px]">## Guidelines</code> to{" "}
+                <code className="text-primary text-[11px]">## Rules</code> so it lands in{" "}
+                <code className="text-primary text-[11px]">RULES.md</code>.{" "}
+                <code className="text-primary text-[11px]">RULES.md</code> is only written when at least one section
+                matches a rule keyword.
+              </p>
+            </div>
           </div>
+        </motion.div>
+
+        {/* How approvalMode maps */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Sliders className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How approvalMode maps</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            If <code className="text-primary text-[11px]">.gemini/settings.json</code> sets{" "}
+            <code className="text-primary text-[11px]">approvalMode</code>, the importer translates it into a
+            human-in-the-loop supervision level on <code className="text-primary text-[11px]">agent.yaml</code>:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-6">Gemini approvalMode</span>
+              <span className="col-span-6">OpenGAP human_in_the_loop</span>
+            </div>
+            {approvalMap.map((r, i) => (
+              <div key={r.mode} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-6 text-muted-foreground">{r.mode}</code>
+                <code className="col-span-6 text-primary flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
+                  {r.hitl}
+                </code>
+              </div>
+            ))}
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            Our example uses <code className="text-primary text-[11px]">default</code>, so it becomes{" "}
+            <code className="text-primary text-[11px]">conditional</code>.
+          </p>
         </motion.div>
 
         {/* ══════════════ PART 3 ══════════════ */}
         <PartHeader
           num="3"
           label="The result"
-          title="After conversion — the OpenGAP agent"
-          subtitle="The finished agent directory. Every file below is the complete, copy-pasteable output of the mapping above."
+          title="The imported OpenGAP agent"
+          subtitle="The finished agent directory the importer wrote. Every file below is the complete output of the command above."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
@@ -445,23 +400,52 @@ export function CookbookGeminiCLI() {
           <p className="text-[11px] text-muted-foreground/70 font-body">Reveal any file to copy its full contents.</p>
         </motion.div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2 mb-4">
           <CollapsibleCode filename="agent.yaml" code={fullAgentYaml} reveal />
           <CollapsibleCode filename="SOUL.md" code={fullSoul} reveal />
           <CollapsibleCode filename="RULES.md" code={fullRules} reveal />
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="paper-card p-4 border-l-2 border-l-primary/40">
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+              The <code className="text-primary text-[11px]">model</code> block appears only when{" "}
+              <code className="text-primary text-[11px]">.gemini/settings.json</code> provides a{" "}
+              <code className="text-primary text-[11px]">model</code>; the{" "}
+              <code className="text-primary text-[11px]">compliance</code> block appears only when it provides a
+              recognized <code className="text-primary text-[11px]">approvalMode</code>. With no{" "}
+              <code className="text-primary text-[11px]">.gemini/settings.json</code>,{" "}
+              <code className="text-primary text-[11px]">agent.yaml</code> is just the four base fields (
+              <code className="text-primary text-[11px]">spec_version</code>,{" "}
+              <code className="text-primary text-[11px]">name</code>,{" "}
+              <code className="text-primary text-[11px]">version</code>,{" "}
+              <code className="text-primary text-[11px]">description</code>).
+            </p>
+          </div>
+        </motion.div>
+
         {/* Validate */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             <h3 className="text-base font-semibold text-foreground font-heading">Validate</h3>
           </div>
           <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
-            From the agent directory, run <code className="text-primary text-[11px]">opengap validate</code> to confirm the
-            manifest and files all resolve before you run the agent.
+            From the imported directory, confirm the manifest and section files resolve before you run it.
           </p>
           <CodeBlock code={validateCmd} filename="terminal" />
+        </motion.div>
+
+        {/* Run */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Play className="w-4 h-4 text-primary" />
+            <h3 className="text-base font-semibold text-foreground font-heading">Run it</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
+            Then run it on any supported runtime:
+          </p>
+          <CodeBlock code={runCmd} filename="terminal" />
         </motion.div>
 
       </div>

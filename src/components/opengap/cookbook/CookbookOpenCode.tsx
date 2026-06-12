@@ -1,190 +1,132 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, FileText, Shield, Workflow, Settings, CheckCircle2, ChevronDown, BookOpen, Target, Package } from "lucide-react";
+import { ArrowRight, FileText, Shield, Settings, Cpu, CheckCircle2, ChevronDown, Terminal, Lightbulb, Split, Play } from "lucide-react";
 import { useState } from "react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-/* ═══════════════════  PART 1 — full OpenCode source  ═══════════════════ */
+/* ═══════════════════  PART 1 — the OpenCode source  ═══════════════════ */
 
-const sourceTree = `my-project/                  (OpenCode)
-└── .opencode/
-    └── config.json          ← model, system prompt, and tool toggles`;
+const sourceTree = `sql-explainer/                 (OpenCode)
+├── AGENTS.md                  ← identity + rules
+└── opencode.json              ← model config`;
 
-const srcConfigJson = `// .opencode/config.json
-{
-  "model": "gpt-4o",
-  "system": "You are a full-stack developer assistant. Help users build production-ready web applications. Always consider security and performance implications. Prefer simple, readable solutions over clever ones. When writing backend code use Node.js and Express. When writing frontend code use React and TypeScript. Always write tests for new functionality.",
-  "tools": {
-    "bash":  { "enabled": true },
-    "read":  { "enabled": true },
-    "write": { "enabled": true }
-  }
+const srcAgentsMd = `# SQL Explainer
+
+## Identity
+You are a database expert. You take a SQL query and explain what it
+does in plain language, then flag anything that looks expensive.
+
+## Communication Style
+Plain English first, then the technical detail. No jargon dumps.
+
+## Rules
+- Explain the query top to bottom in execution order, not text order.
+- Always name the tables and the join keys involved.
+
+## Must Never
+- Never claim a query is safe to run in production without seeing the
+  table sizes.
+- Never rewrite the query unless asked.
+
+## Workflow
+Parse the query, walk each clause, then summarise the result set and
+call out full scans or unbounded joins.`;
+
+const srcOpencodeJson = `{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5-20250929"
 }`;
 
-/* ═══════════════════  PART 2 — paired mapping excerpts  ═══════════════════ */
+/* ═══════════════════  PART 2 — run the import  ═══════════════════ */
 
-const fromSystem = `// .opencode/config.json  (system field)
-"system": "You are a full-stack developer
-  assistant. Help users build production-ready
-  web applications. Always consider security
-  and performance implications. Prefer simple,
-  readable solutions over clever ones. When
-  writing backend code use Node.js and Express.
-  When writing frontend code use React and
-  TypeScript. Always write tests for new
-  functionality."`;
+const importCmd = `opengap import --from opencode ./sql-explainer`;
 
-const toSoulAndRules = `# The system field splits in two:
-#
-#   Who the agent is → SOUL.md
-#   What it must do  → RULES.md
-#
-# Identity sentences  ────────────────
-# "You are a full-stack developer assistant."
-# "Help users build production-ready apps."
-#
-# Rule sentences  ────────────────────
-# "Always consider security and performance."
-# "Prefer simple, readable solutions."
-# "Use Node.js / Express for backend."
-# "Use React / TypeScript for frontend."
-# "Always write tests for new functionality."`;
+const importOutput = `Importing agent
+  Format: opencode
+  Source: ./sql-explainer
+  Found AGENTS.md
+  Found opencode.json
+✓ Created agent.yaml
+✓ Created SOUL.md
+✓ Created RULES.md
 
-const fromModel = `// .opencode/config.json  (model field)
-"model": "gpt-4o"`;
+Import complete`;
 
-const toAgentYaml = `# agent.yaml
-spec_version: "0.1.0"
-name: fullstack-dev-agent
-version: 1.0.0
-description: Full-stack developer assistant
-  for production-ready web applications.
-model:
-  preferred: openai:gpt-4o
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-runtime:
-  max_turns: 50
-  timeout: 300`;
+const readsWrites: { from: string; to: string; how: string }[] = [
+  {
+    from: "AGENTS.md",
+    to: "SOUL.md + RULES.md",
+    how: "Split by heading, each section routed by its title (see below)",
+  },
+  {
+    from: "opencode.json → model",
+    to: "agent.yaml → model.preferred",
+    how: "The provider/ prefix is stripped (see below)",
+  },
+  {
+    from: "(directory name)",
+    to: "agent.yaml",
+    how: "Generated manifest (name, version, description, model)",
+  },
+];
 
-const fromToolToggles = `// .opencode/config.json  (tools)
-"tools": {
-  "bash":  { "enabled": true },
-  "read":  { "enabled": true },
-  "write": { "enabled": true }
-}
+const routingRules: { keywords: string; dest: string }[] = [
+  { keywords: "rule · constraint · never · always · must · compliance", dest: "RULES.md" },
+  { keywords: "anything else (the default)", dest: "SOUL.md" },
+  { keywords: "no headings at all → whole file", dest: "SOUL.md" },
+];
 
-// These are built-in OpenCode capabilities —
-// not external tool definitions.`;
+/* ═══════════════════  PART 3 — the result  ═══════════════════ */
 
-const toNoToolYaml = `# No tools/*.yaml files are created.
-#
-# bash, read, and write are runtime
-# capabilities provided by the host
-# environment, not declarative tools.
-#
-# Enabled/disabled state is a deployment
-# concern — note it in RULES.md if the
-# agent must never use one of them:
-#
-# ## Capability Constraints
-# - bash: available (use for build / test)
-# - read: available (use to inspect files)
-# - write: available (use to emit code)`;
-
-/* ═══════════════════  PART 3 — full OpenGAP output  ═══════════════════ */
-
-const outputTree = `my-project/                  (OpenGAP)
-├── agent.yaml               ← manifest: model, runtime
-├── SOUL.md                  ← identity
-└── RULES.md                 ← guardrails + capability notes`;
+const outputTree = `sql-explainer/                 (OpenGAP)
+├── agent.yaml                 ← generated manifest
+├── SOUL.md                    ← identity sections
+└── RULES.md                   ← rule sections`;
 
 const fullAgentYaml = `spec_version: "0.1.0"
-name: fullstack-dev-agent
-version: 1.0.0
-description: Full-stack developer assistant for production-ready web applications — Node.js / Express backend, React / TypeScript frontend, with tests.
-
+name: sql-explainer
+version: "0.1.0"
+description: "Imported from OpenCode project: sql-explainer"
 model:
-  preferred: openai:gpt-4o
-  fallback:
-    - anthropic:claude-sonnet-4-5-20250929
-
-runtime:
-  max_turns: 50
-  timeout: 300`;
+  preferred: claude-sonnet-4-5-20250929`;
 
 const fullSoul = `# Soul
 
-## Core Identity
-You are a full-stack developer assistant.
+## SQL Explainer
 
-## Purpose
-Help users build production-ready web applications. I am designed for end-to-end engineering conversations — designing APIs, building React UIs, wiring authentication, writing tests, and reviewing code for security and performance issues.
+
+## Identity
+You are a database expert. You take a SQL query and explain what it
+does in plain language, then flag anything that looks expensive.
 
 ## Communication Style
-Clear and pragmatic. I explain decisions before writing code, flag security or performance concerns early, and default to simple readable solutions rather than clever ones. Code blocks are complete and runnable — not pseudocode.
+Plain English first, then the technical detail. No jargon dumps.
 
-## Values & Principles
-- **Simplicity** — readable solutions that a future reader can understand without the author present
-- **Safety** — security implications are called out before writing any auth, input handling, or data access code
-- **Performance** — performance trade-offs are noted when they matter; premature optimisation is avoided
-- **Correctness** — new functionality ships with tests
-
-## Domain Expertise
-- **Backend**: Node.js, Express.js, REST API design, middleware, authentication (JWT, sessions), database access (SQL + ORMs)
-- **Frontend**: React, TypeScript, component design, hooks, state management
-- **Testing**: Jest, React Testing Library, Supertest for API tests
-- **Tooling**: npm/yarn, ESLint, Prettier, build pipelines
-
-## Collaboration Style
-I work interactively. For larger tasks I outline the approach first so the user can redirect before I write code. I ask clarifying questions when requirements are ambiguous (which auth strategy? which database?).`;
+## Workflow
+Parse the query, walk each clause, then summarise the result set and
+call out full scans or unbounded joins.`;
 
 const fullRules = `# Rules
 
-## Must Always
-- Consider security implications before writing any authentication, input handling, or data access code — call them out explicitly
-- Prefer simple, readable solutions over clever or terse ones
-- Write tests for any new functionality (Jest for unit/integration, React Testing Library for components, Supertest for API routes)
-- Use **Node.js and Express** for backend code unless the user specifies a different framework
-- Use **React and TypeScript** for frontend code unless the user specifies otherwise
+## Rules
+- Explain the query top to bottom in execution order, not text order.
+- Always name the tables and the join keys involved.
 
 ## Must Never
-- Write backend input handling without validation (use Zod or a comparable library)
-- Expose sensitive data (API keys, secrets, stack traces) in responses or client-side code
-- Skip tests for new functionality
+- Never claim a query is safe to run in production without seeing the
+  table sizes.
+- Never rewrite the query unless asked.`;
 
-## Output Constraints
-- Backend code: Node.js / TypeScript, ESLint-clean, with comments on non-obvious lines
-- Frontend code: React functional components with TypeScript, typed props
-- Test files co-located with the files they test (e.g. \`foo.test.ts\` next to \`foo.ts\`)
+const validateCmd = `opengap validate`;
 
-## Capability Constraints
-The following runtime capabilities are available in this deployment:
-- **bash** — use for running build steps, tests, and install commands
-- **read** — use to inspect existing files before modifying them
-- **write** — use to emit generated or modified files
-
-These are host runtime capabilities, not declarative tool files. Enabling / disabling them is a deployment-level concern.`;
-
-const validateCmd = `$ opengap validate
-✓ agent.yaml          valid (spec 0.1.0)
-✓ SOUL.md             present
-✓ RULES.md            present
-  fullstack-dev-agent is ready.`;
+const runCmd = `opengap run . --adapter opencode`;
 
 /* ─────────────────────────  Building blocks  ───────────────────────── */
 
 const buckets = [
   { icon: FileText, title: "Identity", file: "SOUL.md", desc: "Who the agent is" },
   { icon: Shield, title: "Rules", file: "RULES.md", desc: "Hard guardrails" },
-  { icon: Workflow, title: "Orchestration", file: "skills/", desc: "How it reasons (none here)" },
-  { icon: Settings, title: "Config & Tools", file: "agent.yaml", desc: "Model & runtime" },
-];
-
-const mapAtAGlance: [string, string][] = [
-  ["config.json → system (identity sentences)", "SOUL.md"],
-  ["config.json → system (rule sentences)", "RULES.md"],
-  ["config.json → model", "agent.yaml → model.preferred"],
-  ["config.json → tools (bash/read/write)", "RULES.md capability notes (runtime only)"],
+  { icon: Settings, title: "Manifest", file: "agent.yaml", desc: "Generated for you" },
+  { icon: Cpu, title: "Model", file: "opencode.json", desc: "Mapped to model.preferred" },
 ];
 
 function PartHeader({ num, label, title, subtitle }: { num: string; label: string; title: string; subtitle: string }) {
@@ -239,39 +181,6 @@ function CollapsibleCode({ filename, caption, code, reveal = false }: { filename
   );
 }
 
-interface StepProps {
-  index: number;
-  title: string;
-  why: string;
-  fromLabel: string;
-  fromCode: string;
-  toLabel: string;
-  toCode: string;
-}
-
-function ConversionStep({ index, title, why, fromLabel, fromCode, toLabel, toCode }: StepProps) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-      <div className="flex items-baseline gap-2 mb-3">
-        <code className="text-xs text-primary font-body font-semibold shrink-0">{index}</code>
-        <h3 className="text-base font-semibold text-foreground font-heading">{title}</h3>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3 items-start relative">
-        <CodeBlock code={fromCode} filename={fromLabel} />
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 items-center justify-center w-6 h-6 rounded-full bg-background border border-border">
-          <ArrowRight className="w-3 h-3 text-primary" />
-        </div>
-        <CodeBlock code={toCode} filename={toLabel} />
-      </div>
-
-      <p className="text-[11px] text-muted-foreground font-body mt-2 leading-relaxed">
-        <span className="text-primary/70">Why → </span>{why}
-      </p>
-    </motion.div>
-  );
-}
-
 /* ─────────────────────────────  Page  ───────────────────────────── */
 
 export function CookbookOpenCode() {
@@ -282,43 +191,24 @@ export function CookbookOpenCode() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
-          <div className="inline-flex items-center gap-1.5 mb-3 px-2 py-1 rounded-md bg-primary/5 border border-primary/20">
-            <BookOpen className="w-3 h-3 text-primary" />
-            <span className="text-[10px] uppercase tracking-widest text-primary font-body font-semibold">Manual conversion guide</span>
-          </div>
           <h2 className="text-2xl font-bold text-foreground mb-2 font-heading">OpenCode → OpenGAP</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            A step-by-step guide to converting an OpenCode agent into OpenGAP format by hand. OpenCode stores
-            model, system prompt, and tool toggles together in a single{" "}
-            <code className="text-primary text-xs">.opencode/config.json</code> file. We walk through one real
-            project end to end — splitting the JSON config into the right OpenGAP pieces.
+            OpenCode agents live as files already — an <code className="text-primary text-[12px]">AGENTS.md</code> plus an
+            optional <code className="text-primary text-[12px]">opencode.json</code>. OpenGAP imports them directly. Instead
+            of rewriting each file by hand (as you would for a code framework like LangGraph), you run one command and{" "}
+            <code className="text-primary text-[12px]">opengap import</code> scaffolds the agent for you. This page shows
+            exactly what it reads and what it writes.
           </p>
         </motion.div>
 
-        {/* Example + its use case */}
+        {/* One command callout */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
-          <div className="paper-card p-4 max-w-2xl">
+          <div className="paper-card p-4 max-w-2xl border-l-2 border-l-primary/40">
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-foreground font-heading">The example</span>
+              <Terminal className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground font-heading">One command</span>
             </div>
-            <p className="text-[11px] text-muted-foreground font-body leading-relaxed mb-3">
-              An <code className="text-primary text-[10px]">.opencode/config.json</code>-based full-stack developer
-              assistant — a single JSON file with a <code className="text-primary text-[10px]">model</code>, a{" "}
-              <code className="text-primary text-[10px]">system</code> prompt mixing identity and rules, and{" "}
-              <code className="text-primary text-[10px]">tools</code> toggles for{" "}
-              <code className="text-primary text-[10px]">bash</code>,{" "}
-              <code className="text-primary text-[10px]">read</code>, and{" "}
-              <code className="text-primary text-[10px]">write</code>.
-            </p>
-            <div className="flex items-start gap-2 pt-3 border-t border-border">
-              <Target className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-muted-foreground font-body leading-relaxed">
-                <span className="text-foreground font-medium">Use case:</span> help users build production-ready
-                web applications — Node.js / Express on the backend, React / TypeScript on the frontend — always
-                considering security and performance, preferring readable solutions, and writing tests for new code.
-              </p>
-            </div>
+            <code className="block text-[12px] text-primary font-body">opengap import --from opencode &lt;path&gt;</code>
           </div>
         </motion.div>
 
@@ -327,31 +217,69 @@ export function CookbookOpenCode() {
           num="1"
           label="The source"
           title="The OpenCode project"
-          subtitle="A single config.json that packs model selection, a mixed identity-and-rules system prompt, and built-in tool toggles into one JSON file. Here it is in full."
+          subtitle="The importer reads AGENTS.md (the agent's instructions, required) and opencode.json (its config — model, etc., optional). Here is every file it touches."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
           <CodeBlock code={sourceTree} filename="project structure" />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Expand the file to read it in full — the mapping in Part 2 is what matters.</p>
-        </motion.div>
-
         <div className="space-y-2">
-          <CollapsibleCode filename=".opencode/config.json" caption="model + system prompt + tool toggles" code={srcConfigJson} />
+          <CollapsibleCode filename="AGENTS.md" caption="identity + rules" code={srcAgentsMd} />
+          <CollapsibleCode filename="opencode.json" caption="model config" code={srcOpencodeJson} />
         </div>
 
         {/* ══════════════ PART 2 ══════════════ */}
         <PartHeader
           num="2"
-          label="The mapping"
-          title="How it maps to OpenGAP"
-          subtitle="OpenCode packs everything into one JSON blob. OpenGAP splits that into four declarative pieces — each field of config.json maps to one of them."
+          label="Run the import"
+          title="One command scaffolds the agent"
+          subtitle="Point the importer at the project. It reads each source file and writes the OpenGAP equivalents for you."
         />
 
-        {/* Mental model */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-4">
+          <CodeBlock code={importCmd} filename="terminal" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <CodeBlock code={importOutput} filename="output" />
+        </motion.div>
+
+        {/* What it reads → what it writes */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">What it reads → what it writes</p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px]">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body">
+              <span className="col-span-3">OpenCode source</span>
+              <span className="col-span-4">OpenGAP output</span>
+              <span className="col-span-5">How</span>
+            </div>
+            {readsWrites.map((r, i) => (
+              <div key={r.from} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-start ${i % 2 ? "bg-muted/20" : ""}`}>
+                <code className="col-span-3 text-muted-foreground font-body break-words">{r.from}</code>
+                <code className="col-span-4 text-primary font-body flex items-start gap-1.5 min-w-0">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-0.5" />
+                  <span className="break-words">{r.to}</span>
+                </code>
+                <span className="col-span-5 text-muted-foreground/80 font-body leading-relaxed">{r.how}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Required / optional prose */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl">
+            <code className="text-primary text-[11px]">AGENTS.md</code> is required — if it is missing the import fails with{" "}
+            <code className="text-primary text-[11px]">No AGENTS.md found in source directory</code>.{" "}
+            <code className="text-primary text-[11px]">opencode.json</code> is optional; if it is absent (or malformed
+            JSON) the importer simply skips it and omits the <code className="text-primary text-[11px]">model</code> block
+            from <code className="text-primary text-[11px]">agent.yaml</code>.
+          </p>
+        </motion.div>
+
+        {/* Mental model — the output buckets */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {buckets.map((b) => (
               <div key={b.title} className="paper-card p-3">
@@ -366,72 +294,92 @@ export function CookbookOpenCode() {
           </div>
         </motion.div>
 
-        {/* Map at a glance */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50 font-body mb-2">The whole map at a glance</p>
-          <div className="rounded-md border border-border overflow-hidden text-[11px] font-mono">
-            <div className="grid grid-cols-2 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
-              <span>OpenCode</span>
-              <span>OpenGAP</span>
-            </div>
-            {mapAtAGlance.map(([from, to], i) => (
-              <div key={from} className={`grid grid-cols-2 px-3 py-2 gap-4 border-b border-border last:border-0 ${i % 2 ? "bg-muted/20" : ""}`}>
-                <span className="text-muted-foreground">{from}</span>
-                <span className="text-primary flex items-center gap-1.5 min-w-0">
-                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
-                  <span className="truncate">{to}</span>
+        {/* How the model is mapped */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="flex items-center gap-2 mb-2">
+            <Cpu className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How the model is mapped</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-3">
+            OpenCode writes its model as <code className="text-primary text-[11px]">"provider/model-id"</code>. The importer
+            keeps everything <span className="text-foreground font-medium">after</span> the first{" "}
+            <code className="text-primary text-[11px]">/</code> and drops the provider prefix:
+          </p>
+          <div className="paper-card p-4 border-l-2 border-l-primary/40 max-w-2xl">
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2 text-[12px] font-body">
+                <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-1 text-primary" />
+                <span className="text-muted-foreground">
+                  <code className="text-primary text-[11px]">anthropic/claude-sonnet-4-5-20250929</code>{" "}
+                  <span className="text-muted-foreground/50">→</span>{" "}
+                  <code className="text-primary text-[11px]">claude-sonnet-4-5-20250929</code>
                 </span>
-              </div>
-            ))}
+              </li>
+              <li className="flex items-start gap-2 text-[12px] font-body">
+                <ArrowRight className="w-3 h-3 shrink-0 opacity-40 mt-1 text-primary" />
+                <span className="text-muted-foreground">
+                  A bare value with no <code className="text-primary text-[11px]">/</code> (e.g.{" "}
+                  <code className="text-primary text-[11px]">claude-sonnet-4-5-20250929</code>) is used as-is.
+                </span>
+              </li>
+            </ul>
           </div>
         </motion.div>
 
+        {/* How AGENTS.md is split */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6">
-          <p className="text-[11px] text-muted-foreground/70 font-body">Now the same three mappings, in detail — OpenCode source on the left, the OpenGAP file it becomes on the right.</p>
+          <div className="flex items-center gap-2 mb-2">
+            <Split className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground font-heading">How AGENTS.md is split</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mb-4">
+            The importer breaks <code className="text-primary text-[11px]">AGENTS.md</code> into sections at every{" "}
+            <code className="text-primary text-[11px]">#</code>, <code className="text-primary text-[11px]">##</code>, or{" "}
+            <code className="text-primary text-[11px]">###</code> heading, then routes each section by{" "}
+            <span className="text-foreground font-medium">keywords in its title</span>:
+          </p>
+          <div className="rounded-md border border-border overflow-hidden text-[11px] font-body">
+            <div className="grid grid-cols-12 bg-muted/40 border-b border-border px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/50">
+              <span className="col-span-8">Title contains</span>
+              <span className="col-span-4">Routes to</span>
+            </div>
+            {routingRules.map((r, i) => (
+              <div key={r.keywords} className={`grid grid-cols-12 px-3 py-2 gap-3 border-b border-border last:border-0 items-center ${i % 2 ? "bg-muted/20" : ""}`}>
+                <span className="col-span-8 text-muted-foreground">{r.keywords}</span>
+                <code className="col-span-4 text-primary flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 shrink-0 opacity-40" />
+                  {r.dest}
+                </code>
+              </div>
+            ))}
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body leading-relaxed max-w-2xl mt-4">
+            So in our example: <code className="text-primary text-[11px]">SQL Explainer</code>,{" "}
+            <code className="text-primary text-[11px]">Identity</code>,{" "}
+            <code className="text-primary text-[11px]">Communication Style</code>, and{" "}
+            <code className="text-primary text-[11px]">Workflow</code> land in{" "}
+            <code className="text-primary text-[11px]">SOUL.md</code>;{" "}
+            <code className="text-primary text-[11px]">Rules</code> and{" "}
+            <code className="text-primary text-[11px]">Must Never</code> land in{" "}
+            <code className="text-primary text-[11px]">RULES.md</code> (their titles contain{" "}
+            <code className="text-primary text-[11px]">rule</code> / <code className="text-primary text-[11px]">never</code> /{" "}
+            <code className="text-primary text-[11px]">must</code>).
+          </p>
         </motion.div>
 
-        <ConversionStep
-          index={1}
-          title="Identity — config.json system (identity sentences) → SOUL.md"
-          fromLabel=".opencode/config.json"
-          fromCode={fromSystem}
-          toLabel="SOUL.md · RULES.md (split)"
-          toCode={toSoulAndRules}
-          why="The system field is a single string that mixes identity ('You are…', 'Help users…') with rules ('Always…', 'Prefer…'). The first step is identifying the split point — identity sentences go to SOUL.md, behavioral directives go to RULES.md."
-        />
-        <ConversionStep
-          index={2}
-          title="Config — config.json model → agent.yaml"
-          fromLabel=".opencode/config.json"
-          fromCode={fromModel}
-          toLabel="agent.yaml"
-          toCode={toAgentYaml}
-          why="The model field becomes model.preferred in agent.yaml with a provider-qualified identifier. A fallback is added so the agent can run on other runtimes without manual edits."
-        />
-        <ConversionStep
-          index={3}
-          title="Tools — config.json tools (built-ins) → RULES.md capability notes"
-          fromLabel=".opencode/config.json"
-          fromCode={fromToolToggles}
-          toLabel="RULES.md (no tool YAML)"
-          toCode={toNoToolYaml}
-          why="Built-in OpenCode tools (bash, read, write) are runtime capabilities, not declarative tool definitions. They do not need tools/*.yaml files. Their enabled/disabled state is a deployment concern — documented in RULES.md as capability notes for the operator."
-        />
-
-        {/* What doesn't convert */}
+        {/* Tip */}
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-2">
           <div className="paper-card p-4 border-l-2 border-l-primary/40">
-            <h3 className="text-sm font-semibold text-foreground font-heading mb-2">What does <span className="text-primary">not</span> convert</h3>
-            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
-              <strong className="text-foreground">Built-in tool toggles</strong> —{" "}
-              <code className="text-primary text-[11px]">bash</code>,{" "}
-              <code className="text-primary text-[11px]">read</code>, and{" "}
-              <code className="text-primary text-[11px]">write</code> are host runtime capabilities in OpenCode.
-              There is no OpenGAP file that enables or disables them; that is controlled at the deployment or
-              runtime layer. If your agent must <em>never</em> use one of them, add a Must Never rule in{" "}
-              <code className="text-primary text-[11px]">RULES.md</code> and enforce the restriction at the
-              runtime level separately.
-            </p>
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+                <span className="text-foreground font-medium">Tip:</span> Routing is keyword-based. To steer a section,
+                give its heading a matching keyword in <code className="text-primary text-[11px]">AGENTS.md</code> before
+                importing — e.g. rename <code className="text-primary text-[11px]">## Guidelines</code> to{" "}
+                <code className="text-primary text-[11px]">## Rules</code> so it lands in{" "}
+                <code className="text-primary text-[11px]">RULES.md</code>.
+              </p>
+            </div>
           </div>
         </motion.div>
 
@@ -439,8 +387,8 @@ export function CookbookOpenCode() {
         <PartHeader
           num="3"
           label="The result"
-          title="After conversion — the OpenGAP agent"
-          subtitle="The finished agent directory. Every file below is the complete, copy-pasteable output of the mapping above."
+          title="The imported OpenGAP agent"
+          subtitle="The finished agent directory the importer wrote. Every file below is the complete output of the command above."
         />
 
         <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5">
@@ -451,23 +399,50 @@ export function CookbookOpenCode() {
           <p className="text-[11px] text-muted-foreground/70 font-body">Reveal any file to copy its full contents.</p>
         </motion.div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2 mb-4">
           <CollapsibleCode filename="agent.yaml" code={fullAgentYaml} reveal />
           <CollapsibleCode filename="SOUL.md" code={fullSoul} reveal />
           <CollapsibleCode filename="RULES.md" code={fullRules} reveal />
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <div className="paper-card p-4 border-l-2 border-l-primary/40">
+            <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
+              <span className="text-foreground font-medium">Note:</span> Unlike the Claude Code importer, the OpenCode
+              importer does not emit <code className="text-primary text-[11px]">skills</code> or{" "}
+              <code className="text-primary text-[11px]">tools</code> keys in{" "}
+              <code className="text-primary text-[11px]">agent.yaml</code> — only{" "}
+              <code className="text-primary text-[11px]">spec_version</code>,{" "}
+              <code className="text-primary text-[11px]">name</code>,{" "}
+              <code className="text-primary text-[11px]">version</code>,{" "}
+              <code className="text-primary text-[11px]">description</code>, and (when a model is configured){" "}
+              <code className="text-primary text-[11px]">model.preferred</code>.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Validate */}
-        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-4 h-4 text-primary" />
             <h3 className="text-base font-semibold text-foreground font-heading">Validate</h3>
           </div>
           <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
-            From the agent directory, run <code className="text-primary text-[11px]">opengap validate</code> to confirm the
-            manifest and files all resolve before you run the agent.
+            From the imported directory, confirm the manifest and section files resolve before you run it.
           </p>
           <CodeBlock code={validateCmd} filename="terminal" />
+        </motion.div>
+
+        {/* Run */}
+        <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Play className="w-4 h-4 text-primary" />
+            <h3 className="text-base font-semibold text-foreground font-heading">Run it</h3>
+          </div>
+          <p className="text-[12px] text-muted-foreground font-body mb-4 max-w-2xl">
+            Then run it on any supported runtime:
+          </p>
+          <CodeBlock code={runCmd} filename="terminal" />
         </motion.div>
 
       </div>

@@ -60,14 +60,9 @@ export const opengapSidebarGroups: SidebarGroup[] = [
             ],
           },
           {
-            label: "Code-Based Frameworks (Manual)",
+            label: "Code-Based Frameworks",
             items: [
-              { id: "cookbook-langgraph", label: "LangGraph" },
-              { id: "cookbook-crewai", label: "CrewAI" },
-              { id: "cookbook-autogen", label: "AutoGen" },
-              { id: "cookbook-openai-agents", label: "OpenAI Agents SDK" },
-              { id: "cookbook-claude-sdk", label: "Claude SDK" },
-              { id: "cookbook-google-adk", label: "Google ADK" },
+              { id: "cookbook-framework-translator", label: "Framework Conversion" },
             ],
           },
         ],
