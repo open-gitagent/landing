@@ -53,7 +53,7 @@ const readsWrites: { from: string; to: string; how: string }[] = [
   {
     from: "codex.json",
     to: "agent.yaml model.preferred",
-    how: "The model string is copied verbatim (no provider/ prefix)",
+    how: "The model string is mapped with an openai: provider prefix",
   },
   {
     from: "(directory name)",
@@ -80,7 +80,7 @@ name: sql-explainer
 version: "0.1.0"
 description: "Imported from Codex CLI project: sql-explainer"
 model:
-  preferred: o3`;
+  preferred: openai:o3`;
 
 const fullSoul = `# Soul
 

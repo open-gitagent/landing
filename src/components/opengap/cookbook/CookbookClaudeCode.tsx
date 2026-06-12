@@ -98,11 +98,8 @@ const fullAgentYaml = `spec_version: "0.1.0"
 name: my-code-reviewer
 version: "0.1.0"
 description: "Imported from Claude Code project: my-code-reviewer"
-model:
-  preferred: claude-sonnet-4-5-20250929
 skills:
-  - review-diff
-tools: []`;
+  - review-diff`;
 
 const fullSoul = `# Soul
 

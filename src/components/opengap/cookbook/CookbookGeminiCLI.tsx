@@ -98,7 +98,7 @@ name: release-notes-writer
 version: "0.1.0"
 description: "Imported from Gemini CLI project: release-notes-writer"
 model:
-  preferred: gemini-2.5-pro
+  preferred: google:gemini-2.5-pro
 compliance:
   supervision:
     human_in_the_loop: conditional`;

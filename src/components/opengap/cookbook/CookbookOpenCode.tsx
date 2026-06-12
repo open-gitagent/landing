@@ -60,7 +60,7 @@ const readsWrites: { from: string; to: string; how: string }[] = [
   {
     from: "opencode.json → model",
     to: "agent.yaml → model.preferred",
-    how: "The provider/ prefix is stripped (see below)",
+    how: "provider/model → provider:model (slash converted to colon prefix)",
   },
   {
     from: "(directory name)",
@@ -87,7 +87,7 @@ name: sql-explainer
 version: "0.1.0"
 description: "Imported from OpenCode project: sql-explainer"
 model:
-  preferred: claude-sonnet-4-5-20250929`;
+  preferred: anthropic:claude-sonnet-4-5-20250929`;
 
 const fullSoul = `# Soul
 
