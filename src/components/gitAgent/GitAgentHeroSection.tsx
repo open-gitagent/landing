@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Copy, Check, BookOpen, Github, ArrowRight, Folder, FileText, Brain, Settings, Zap, Wrench, Database, GitFork, ShieldCheck } from "lucide-react";
 import { track } from "@/lib/analytics";
 
-const INSTALL_CMD = `npm install -g @open-gitagent/opengap`;
+const INSTALL_CMD = `npm install -g @open-gitagent/gitagent`;
 
 type TreeItem = { name: string; indent: number; icon: React.ReactNode; tag?: string };
 

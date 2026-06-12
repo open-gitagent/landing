@@ -8,7 +8,7 @@ const tabs = ["query()", "tool()", "buildTool()", "hooks"] as const;
 type Tab = (typeof tabs)[number];
 
 const codeMap: Record<Tab, string> = {
-  "query()": `import { query } from "@open-gitagent/opengap";
+  "query()": `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   prompt: "Refactor the auth module",
@@ -28,7 +28,7 @@ for await (const msg of query({
       console.log(\`[\${msg.subtype}] \${msg.content}\`); break;
   }
 }`,
-  "tool()": `import { query, tool } from "@open-gitagent/opengap";
+  "tool()": `import { query, tool } from "@open-gitagent/gitagent";
 
 const search = tool(
   "search_docs",
@@ -49,7 +49,7 @@ const search = tool(
 for await (const msg of query({ prompt: "Find auth docs", tools: [search] })) {
   // agent can now call search_docs
 }`,
-  "buildTool()": `import { buildTool } from "@open-gitagent/opengap";
+  "buildTool()": `import { buildTool } from "@open-gitagent/gitagent";
 
 const myTool = buildTool({
   name: "search_docs",
@@ -98,7 +98,7 @@ const myTool = buildTool({
 });`,
 };
 
-const pathWithRepo = `import { query } from "@open-gitagent/opengap";
+const pathWithRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   repo: "https://github.com/open-gitagent/opengap",
@@ -107,7 +107,7 @@ for await (const msg of query({
   if (msg.type === "assistant") console.log(msg.content);
 }`;
 
-const pathWithoutRepo = `import { query } from "@open-gitagent/opengap";
+const pathWithoutRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   prompt: "Refactor the auth module in src/auth.ts",

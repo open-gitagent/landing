@@ -72,12 +72,12 @@ const runGetToken = `node get-token.mjs`;
 
 const part3Setup = `mkdir email-summarizer && cd email-summarizer
 npm init -y
-npm install @open-gitagent/opengap googleapis`;
+npm install @open-gitagent/gitagent googleapis`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0",
+    "@open-gitagent/gitagent": "^2.0.0",
     "googleapis": "latest"
   }
 }`;
@@ -88,7 +88,7 @@ export GMAIL_CLIENT_ID=your_client_id
 export GMAIL_CLIENT_SECRET=your_client_secret
 export GMAIL_REFRESH_TOKEN=your_refresh_token`;
 
-const indexTs = `import { query, tool } from "@open-gitagent/opengap";
+const indexTs = `import { query, tool } from "@open-gitagent/gitagent";
 import { google } from "googleapis";
 
 const auth = new google.auth.OAuth2(
