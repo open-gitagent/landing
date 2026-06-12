@@ -10,7 +10,7 @@ const installMethods = [
   },
   {
     title: "Manual install",
-    code: `npm install -g @open-gitagent/opengap
+    code: `npm install -g @open-gitagent/gitagent
 mkdir ~/assistant && cd ~/assistant && git init
 gitagent --voice --dir .`,
     desc: "",

@@ -47,12 +47,12 @@ git push`;
 
 const part4Setup = `mkdir custom-tool-sdk && cd custom-tool-sdk
 npm init -y
-npm install @open-gitagent/opengap`;
+npm install @open-gitagent/gitagent`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0"
+    "@open-gitagent/gitagent": "^2.0.0"
   }
 }`;
 
@@ -61,7 +61,7 @@ export GITHUB_TOKEN=your_pat
 export GITHUB_REPO=your-username/test-issues
 export DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/xxx/yyy`;
 
-const indexTs = `import { query, tool } from "@open-gitagent/opengap";
+const indexTs = `import { query, tool } from "@open-gitagent/gitagent";
 
 const lookupGithubIssue = tool(
   "lookup_github_issue",

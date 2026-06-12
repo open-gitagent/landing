@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Terminal, Globe, MessageSquare, Code2 } from "lucide-react";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-const sdkCode = `import { query } from "@open-gitagent/opengap";\n\nfor await (const msg of query({\n  prompt: "Summarise yesterday's tasks",\n  dir: "./my-agent",\n})) {\n  if (msg.type === "assistant") console.log(msg.content);\n}`;
+const sdkCode = `import { query } from "@open-gitagent/gitagent";\n\nfor await (const msg of query({\n  prompt: "Summarise yesterday's tasks",\n  dir: "./my-agent",\n})) {\n  if (msg.type === "assistant") console.log(msg.content);\n}`;
 
 const paItems = [
   {

@@ -50,7 +50,7 @@ const agentYamlConfig = `plugins:
       api_key: "your-api-key"
       timeout: 30`;
 
-const sdkCode = `import type { GitagentPluginApi } from "@open-gitagent/opengap";
+const sdkCode = `import type { GitagentPluginApi } from "@open-gitagent/gitagent";
 
 export function register(api: GitagentPluginApi) {
   api.registerTool(myTool);

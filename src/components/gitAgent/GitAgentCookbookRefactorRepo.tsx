@@ -51,16 +51,16 @@ git push`;
 
 const part2Setup = `mkdir refactor-sdk && cd refactor-sdk
 npm init -y
-npm install @open-gitagent/opengap`;
+npm install @open-gitagent/gitagent`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0"
+    "@open-gitagent/gitagent": "^2.0.0"
   }
 }`;
 
-const indexTs = `import { query } from "@open-gitagent/opengap";
+const indexTs = `import { query } from "@open-gitagent/gitagent";
 
 async function main() {
   const result = query({
