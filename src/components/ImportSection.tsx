@@ -15,7 +15,7 @@ const fsAgents: AgentEntry[] = [
   {
     label: "Claude Code",
     desc: "Reads CLAUDE.md, memory/, and .claude/ config — imports identity, skills, and rules.",
-    cmd: "$ opengap import -f claude-code",
+    cmd: "$ opengap import --from claude <path>",
     cookbookId: "cookbook-claude-code",
     before: `my-project/
 ├── CLAUDE.md
@@ -33,7 +33,7 @@ const fsAgents: AgentEntry[] = [
   {
     label: "Cursor",
     desc: "Reads .cursorrules and workspace settings — imports agent rules and behavior.",
-    cmd: "$ opengap import -f cursor",
+    cmd: "$ opengap import --from cursor <path>",
     cookbookId: "cookbook-cursor",
     before: `my-project/
 ├── .cursorrules
@@ -47,7 +47,7 @@ const fsAgents: AgentEntry[] = [
   {
     label: "Gemini CLI",
     desc: "Reads GEMINI.md and system instructions — imports identity and tool config.",
-    cmd: "$ opengap import -f gemini",
+    cmd: "$ opengap import --from gemini <path>",
     cookbookId: "cookbook-gemini-cli",
     before: `my-project/
 └── GEMINI.md`,
@@ -59,7 +59,7 @@ const fsAgents: AgentEntry[] = [
   {
     label: "Codex",
     desc: "Reads AGENTS.md and codex config — imports agent identity and tool stubs.",
-    cmd: "$ opengap import -f codex",
+    cmd: "$ opengap import --from codex <path>",
     cookbookId: "cookbook-codex",
     before: `my-project/
 └── AGENTS.md`,
@@ -74,7 +74,7 @@ const fsAgents: AgentEntry[] = [
   {
     label: "OpenCode",
     desc: "Reads opencode config and system prompt — imports identity and tool definitions.",
-    cmd: "$ opengap import -f opencode",
+    cmd: "$ opengap import --from opencode <path>",
     cookbookId: "cookbook-opencode",
     before: `my-project/
 └── .opencode/

@@ -142,6 +142,7 @@ function SidebarParent({ item, activeSection }: { item: SidebarItem; activeSecti
           {item.label}
         </a>
         <button
+          type="button"
           onClick={() => setExpanded((v) => !v)}
           className="p-1 text-muted-foreground/40 hover:text-foreground transition-colors"
           aria-label={`Toggle ${item.label} cookbooks`}

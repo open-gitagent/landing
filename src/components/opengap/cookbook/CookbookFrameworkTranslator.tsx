@@ -95,7 +95,7 @@ const steps: { n: string; title: string; body: React.ReactNode; code?: string; c
   {
     n: "1",
     title: "Launch the translator agent",
-    body: <>Run the agent straight from GitHub — no clone, no install. Gitagent fetches the agent repo, loads its skills and knowledge, and drops you into an interactive session.</>,
+    body: <>Run the agent straight from GitHub — no clone, no install. GitAgent fetches the agent repo, loads its skills and knowledge, and drops you into an interactive session.</>,
     code: launchCmd,
     codeFile: "terminal",
   },
@@ -179,12 +179,12 @@ export function CookbookFrameworkTranslator() {
           <p className="text-xs text-muted-foreground/50 font-body mb-2">OpenGAP / Cookbook /</p>
           <h2 className="text-2xl font-bold text-foreground mb-3 font-heading">Convert Between Agent Frameworks</h2>
           <p className="text-sm text-muted-foreground font-body leading-relaxed max-w-2xl">
-            With <span className="text-foreground font-medium">Gitagent</span> you can convert an agent from any
+            With <span className="text-foreground font-medium">GitAgent</span> you can convert an agent from any
             code-based framework to any other — no rewriting state, tools, orchestration, and memory by hand. The{" "}
             <a href={REPO} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
               Framework Translator
             </a>{" "}
-            is a ready-made Gitagent that does this for nine frameworks; fork it or build your own to cover the rest.
+            is a ready-made GitAgent that does this for nine frameworks; fork it or build your own to cover the rest.
           </p>
         </motion.div>
 
@@ -237,7 +237,7 @@ export function CookbookFrameworkTranslator() {
               <GitBranch className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
               <p className="text-[12px] text-muted-foreground font-body leading-relaxed">
                 <span className="text-foreground font-medium">Need a framework that isn't listed?</span> Fork the
-                Framework Translator or build your own Gitagent — it's just skills and knowledge in a repo, so adding a
+                Framework Translator or build your own GitAgent — it's just skills and knowledge in a repo, so adding a
                 source or target framework is a matter of teaching it one more set of idioms.
               </p>
             </div>
@@ -323,7 +323,7 @@ export function CookbookFrameworkTranslator() {
             <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:translate-x-0.5 transition-transform ml-1" />
           </a>
           <p className="text-[11px] text-muted-foreground/70 font-body mt-2">
-            Fork it to add a framework, or build your own Gitagent to extend conversion beyond the nine above.
+            Fork it to add a framework, or build your own GitAgent to extend conversion beyond the nine above.
           </p>
         </motion.div>
 
