@@ -20,7 +20,7 @@ const exports = [
   { label: "Gemini", desc: "Gemini system instruction and tool definitions.", cmd: "$ opengap export -f gemini" },
   { label: "Codex", desc: "OpenAI Codex agent config with tool stubs.", cmd: "$ opengap export -f codex" },
   { label: "Kiro", desc: "Kiro agent spec with steering and hook definitions.", cmd: "$ opengap export -f kiro" },
-  { label: "GitClaw", desc: "GitClaw workspace with config and skill mapping.", cmd: "$ opengap export -f gitclaw" },
+  { label: "GitAgent", desc: "GitAgent workspace with config and skill mapping.", cmd: "$ opengap export -f gitagent" },
 ];
 
 export function ExportSection() {
