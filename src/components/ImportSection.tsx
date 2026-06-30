@@ -32,17 +32,19 @@ const fsAgents: AgentEntry[] = [
   },
   {
     label: "Cursor",
-    desc: "Reads .cursorrules and workspace settings — imports agent rules and behavior.",
+    desc: "Reads .cursor/rules/*.mdc rule files — imports agent identity and scoped skills.",
     cmd: "$ opengap import --from cursor <path>",
     cookbookId: "cookbook-cursor",
     before: `my-project/
-├── .cursorrules
 └── .cursor/
-    └── settings.json`,
+    └── rules/
+        ├── identity.mdc
+        └── review-diff.mdc`,
     after: `my-agent/
 ├── agent.yaml
 ├── SOUL.md
-└── RULES.md`,
+└── skills/
+    └── review-diff/SKILL.md`,
   },
   {
     label: "Gemini CLI",
@@ -73,12 +75,12 @@ const fsAgents: AgentEntry[] = [
   },
   {
     label: "OpenCode",
-    desc: "Reads opencode config and system prompt — imports identity and tool definitions.",
+    desc: "Reads AGENTS.md and opencode.json — imports identity, rules, and model config.",
     cmd: "$ opengap import --from opencode <path>",
     cookbookId: "cookbook-opencode",
     before: `my-project/
-└── .opencode/
-    └── config.json`,
+├── AGENTS.md
+└── opencode.json`,
     after: `my-agent/
 ├── agent.yaml
 ├── SOUL.md
