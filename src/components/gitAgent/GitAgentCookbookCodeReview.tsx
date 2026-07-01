@@ -54,19 +54,19 @@ git push`;
 
 const part2Setup = `mkdir pr-reviewer && cd pr-reviewer
 npm init -y
-npm install @open-gitagent/opengap`;
+npm install @open-gitagent/gitagent`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0"
+    "@open-gitagent/gitagent": "^2.0.0"
   }
 }`;
 
 const envVars = `export ANTHROPIC_API_KEY=your_anthropic_key
 export GITHUB_TOKEN=your_pat`;
 
-const reviewTs = `import { query } from "@open-gitagent/opengap";
+const reviewTs = `import { query } from "@open-gitagent/gitagent";
 import { writeFileSync } from "fs";
 
 const prUrl = process.argv[2];

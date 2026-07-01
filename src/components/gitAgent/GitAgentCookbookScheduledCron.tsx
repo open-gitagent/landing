@@ -63,13 +63,13 @@ const part2Push = `git add . && git commit -m "init standup agent" && git push`;
 
 const part4Setup = `mkdir standup-sdk && cd standup-sdk
 npm init -y
-npm install @open-gitagent/opengap node-cron
+npm install @open-gitagent/gitagent node-cron
 npm install -D tsx`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0",
+    "@open-gitagent/gitagent": "^2.0.0",
     "node-cron": "^4.2.1"
   }
 }`;
@@ -78,7 +78,7 @@ const envVars = `export ANTHROPIC_API_KEY=your_anthropic_key
 export GITHUB_TOKEN=your_pat
 export DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...`;
 
-const indexTs = `import { query } from "@open-gitagent/opengap";
+const indexTs = `import { query } from "@open-gitagent/gitagent";
 import cron from "node-cron";
 
 async function runStandup() {

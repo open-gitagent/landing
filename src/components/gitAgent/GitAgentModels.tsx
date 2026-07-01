@@ -56,7 +56,7 @@ const compatibleEndpoints = [
   { name: "Any OpenAI-compatible proxy", port: "" },
 ];
 
-const lyzrSdkCode = `import { query } from "@open-gitagent/opengap";
+const lyzrSdkCode = `import { query } from "@open-gitagent/gitagent";
 
 const result = query({
   prompt: "Hello! What can you help me with?",

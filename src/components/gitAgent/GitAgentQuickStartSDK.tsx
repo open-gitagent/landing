@@ -1,18 +1,18 @@
 import { motion } from "framer-motion";
 import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 
-const installCode = `npm install @open-gitagent/opengap`;
+const installCode = `npm install @open-gitagent/gitagent`;
 
-const pathWithRepo = `import { query } from "@open-gitagent/opengap";
+const pathWithRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   prompt: "Summarise the open pull requests",
-  repo: "https://github.com/open-gitagent/opengap",
+  repo: "https://github.com/your-gitagent",
 })) {
   if (msg.type === "assistant") console.log(msg.content);
 }`;
 
-const pathWithoutRepo = `import { query } from "@open-gitagent/opengap";
+const pathWithoutRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   prompt: "Refactor the auth module in src/auth.ts",

@@ -138,19 +138,19 @@ const writerPush = `git add . && git commit -m "init writer agent" && git push`;
 
 const part4Setup = `mkdir multi-agent-sdk && cd multi-agent-sdk
 npm init -y
-npm install @open-gitagent/opengap`;
+npm install @open-gitagent/gitagent`;
 
 const packageJson = `{
   "type": "module",
   "dependencies": {
-    "@open-gitagent/opengap": "^2.0.0"
+    "@open-gitagent/gitagent": "^2.0.0"
   }
 }`;
 
 const envVars = `export ANTHROPIC_API_KEY=your_anthropic_key
 export GITHUB_TOKEN=your_pat`;
 
-const indexTs = `import { query } from "@open-gitagent/opengap";
+const indexTs = `import { query } from "@open-gitagent/gitagent";
 
 async function main() {
   console.log("Agent 1 — Scanning codebase for issues...\\n");
