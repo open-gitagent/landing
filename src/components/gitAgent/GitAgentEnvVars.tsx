@@ -76,6 +76,7 @@ const envVarGroups = [
     group: "Runtime & Config",
     vars: [
       { name: "GITAGENT_MODEL_BASE_URL", default: "—", desc: "Custom OpenAI-compatible base URL" },
+      { name: "GITAGENT_USERNAME", default: "admin", desc: "Username for web UI login (companion to GITAGENT_PASSWORD)" },
       { name: "GITAGENT_PASSWORD", default: "—", desc: "Password for web UI authentication" },
       { name: "GITAGENT_ENV", default: "—", desc: "Selects which config/<env>.yaml to load" },
     ],
