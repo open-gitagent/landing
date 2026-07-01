@@ -101,7 +101,7 @@ const myTool = buildTool({
 const pathWithRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
-  repo: "https://github.com/open-gitagent/opengap",
+  repo: "https://github.com/your-gitagent",
   prompt: "Summarise the open pull requests",
 })) {
   if (msg.type === "assistant") console.log(msg.content);

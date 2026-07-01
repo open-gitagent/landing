@@ -7,7 +7,7 @@ const pathWithRepo = `import { query } from "@open-gitagent/gitagent";
 
 for await (const msg of query({
   prompt: "Summarise the open pull requests",
-  repo: "https://github.com/open-gitagent/opengap",
+  repo: "https://github.com/your-gitagent",
 })) {
   if (msg.type === "assistant") console.log(msg.content);
 }`;
