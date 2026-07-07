@@ -230,11 +230,12 @@ export function GitAgentHeroSection() {
             className=""
           >
             <div className="code-block sketch-border">
-              <div className="terminal-header">
+              <div className="terminal-header flex items-center">
                 <span className="terminal-dot bg-primary/30" />
                 <span className="terminal-dot bg-primary/20" />
                 <span className="terminal-dot bg-primary/10" />
                 <span className="ml-3 text-xs text-muted-foreground font-body">your agent repo</span>
+                <span className="ml-auto text-[10px] text-muted-foreground/50 font-body">Shreyas Kapale · Khush Patel</span>
               </div>
 
               <div className="font-body text-[12px] leading-[22px]">
