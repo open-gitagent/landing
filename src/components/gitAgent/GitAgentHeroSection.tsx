@@ -104,6 +104,16 @@ export function GitAgentHeroSection() {
               ))}
             </motion.div>
 
+            {/* Creator credit */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.56 }}
+              className="text-[11px] text-muted-foreground/60 font-body -mt-6 mb-8"
+            >
+              Created &amp; maintained by <a href="https://github.com/shreyaskapale" target="_blank" rel="noopener noreferrer author" className="text-foreground/80 font-medium hover:text-primary transition-colors">Shreyas Kapale</a> <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@ Lyzr Research Labs</a>
+            </motion.p>
+
             {/* SDK — primary */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
