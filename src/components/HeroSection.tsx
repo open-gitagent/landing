@@ -229,7 +229,7 @@ export function HeroSection({ noBackground = false }: { noBackground?: boolean }
               A git-native, framework-agnostic, <span className="text-foreground/80">open standard for defining AI agents.</span> Version-controlled config that exports to Claude Code, OpenClaw, Lyzr Agent, Chimera, NanoBot, CrewAgent, and Agents SDK.
             </p>
             <p className="text-[16px] text-muted-foreground/60 mb-8 font-body">
-              Maintained by Shreyas Kapale <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@Lyzr</a>
+              Created &amp; maintained by <span className="text-foreground/80 font-medium">Shreyas Kapale</span> <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@ Lyzr Research Labs</a>
             </p>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">

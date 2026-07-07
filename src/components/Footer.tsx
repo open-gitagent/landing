@@ -114,7 +114,7 @@ export function Footer({ variant = "opengap" }: FooterProps) {
           {variant === "gitagent" ? "gitagent is open source. MIT License." : "opengap is an open standard. MIT License."}
         </p>
         <p className="text-[10px] text-muted-foreground/50 text-center font-body mt-2">
-          Open Standard created by Shreyas Kapale
+          Open Standard created &amp; maintained by <a href="https://github.com/shreyaskapale" target="_blank" rel="noopener noreferrer author" className="hover:text-foreground transition-colors">Shreyas Kapale</a> @ <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Lyzr Research Labs</a>
         </p>
       </div>
     </footer>

@@ -8,12 +8,15 @@
     <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href="https://gitagent.sh/" />
     <title>GitAgentProtocol (GAP) — The Open Standard for Git-Native AI Agents</title>
-    <meta name="description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
-    <meta name="author" content="gitagent" />
-    <meta name="keywords" content="git native ai agents, ai agent standard, open ai agent standard, ai agent framework, gitagent, AI agents, git-native, framework-agnostic, Claude, OpenAI, Lyzr, CrewAI, MCP, agent framework, ai agent definition, ai agent open standard, define ai agents in git" />
+    <meta name="description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard created by Shreyas Kapale at Lyzr Research Labs — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
+    <meta name="author" content="Shreyas Kapale" />
+    <meta name="creator" content="Shreyas Kapale — Lyzr Research Labs" />
+    <meta name="publisher" content="Lyzr Research Labs" />
+    <meta name="keywords" content="git native ai agents, ai agent standard, open ai agent standard, ai agent framework, gitagent, Shreyas Kapale, Lyzr Research Labs, Lyzr, AI agents, git-native, framework-agnostic, Claude, OpenAI, CrewAI, MCP, agent framework, ai agent definition, ai agent open standard, define ai agents in git" />
 
     <meta property="og:title" content="GitAgentProtocol (GAP) — The Open Standard for Git-Native AI Agents" />
-    <meta property="og:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
+    <meta property="og:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard created by Shreyas Kapale at Lyzr Research Labs — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
+    <meta property="article:author" content="Shreyas Kapale" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gitagent.sh/" />
     <meta property="og:image" content="https://gitagent.sh/og-banner-2.png" />
@@ -24,7 +27,7 @@
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="GitAgentProtocol (GAP) — The Open Standard for Git-Native AI Agents" />
-    <meta name="twitter:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
+    <meta name="twitter:description" content="Define, version, and run AI agents natively in git. GitAgent is the open AI agent standard created by Shreyas Kapale at Lyzr Research Labs — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more." />
     <meta name="twitter:image" content="https://gitagent.sh/og-banner-2.png" />
 
     <script type="application/ld+json">
@@ -32,10 +35,35 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Person",
+          "@id": "https://gitagent.sh/#shreyas-kapale",
+          "name": "Shreyas Kapale",
+          "jobTitle": "Creator and Maintainer of GitAgent",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Lyzr Research Labs",
+            "url": "https://lyzr.ai"
+          },
+          "url": "https://github.com/shreyaskapale",
+          "sameAs": [
+            "https://github.com/shreyaskapale",
+            "https://github.com/shreyas-lyzr",
+            "https://www.npmjs.com/~shreyaskapale",
+            "https://lyzr.ai"
+          ]
+        },
+        {
           "@type": "Organization",
+          "@id": "https://gitagent.sh/#organization",
           "name": "GitAgent",
           "url": "https://gitagent.sh",
           "logo": "https://gitagent.sh/gitagent.png",
+          "founder": { "@id": "https://gitagent.sh/#shreyas-kapale" },
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "Lyzr Research Labs",
+            "url": "https://lyzr.ai"
+          },
           "sameAs": [
             "https://github.com/open-gitagent/gitagent",
             "https://discord.gg/hVZV8Xyjdc"
@@ -47,16 +75,21 @@
           "applicationCategory": "DeveloperApplication",
           "operatingSystem": "Cross-platform",
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-          "description": "Define, version, and run AI agents natively in git. The open AI agent standard — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more.",
+          "description": "Define, version, and run AI agents natively in git. The open AI agent standard created by Shreyas Kapale at Lyzr Research Labs — framework-agnostic, works with Claude, OpenAI, CrewAI, Lyzr, and more.",
           "url": "https://gitagent.sh",
           "downloadUrl": "https://www.npmjs.com/package/gitagent",
           "softwareVersion": "0.1.0",
-          "license": "https://opensource.org/licenses/MIT"
+          "license": "https://opensource.org/licenses/MIT",
+          "author": { "@id": "https://gitagent.sh/#shreyas-kapale" },
+          "creator": { "@id": "https://gitagent.sh/#shreyas-kapale" },
+          "maintainer": { "@id": "https://gitagent.sh/#shreyas-kapale" }
         },
         {
           "@type": "WebSite",
           "name": "GitAgent",
-          "url": "https://gitagent.sh"
+          "url": "https://gitagent.sh",
+          "author": { "@id": "https://gitagent.sh/#shreyas-kapale" },
+          "publisher": { "@id": "https://gitagent.sh/#organization" }
         },
         {
           "@type": "FAQPage",
@@ -99,6 +132,14 @@
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Install the CLI with npm install -g gitagent, then run gitagent init --template standard to scaffold an agent repo. Edit agent.yaml, SOUL.md, and SKILL.md to define your agent. Validate with gitagent validate, then run or export with gitagent run or gitagent export."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who created GitAgent?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "GitAgent was created by Shreyas Kapale at Lyzr Research Labs. It is an MIT-licensed open standard, maintained by Shreyas Kapale with contributions from the open-source community at github.com/open-gitagent/gitagent."
               }
             }
           ]
