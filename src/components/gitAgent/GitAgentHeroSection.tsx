@@ -111,7 +111,7 @@ export function GitAgentHeroSection() {
               transition={{ duration: 0.4, delay: 0.56 }}
               className="text-[11px] text-muted-foreground/60 font-body -mt-6 mb-8"
             >
-              Created &amp; maintained by <a href="https://github.com/shreyaskapale" target="_blank" rel="noopener noreferrer author" className="text-foreground/80 font-medium hover:text-primary transition-colors">Shreyas Kapale</a> <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@ Lyzr Research Labs</a>
+              Created &amp; maintained by <a href="https://github.com/shreyaskapale" target="_blank" rel="noopener noreferrer author" className="text-foreground/80 font-medium hover:text-primary transition-colors">Shreyas Kapale</a> &amp; <span className="text-foreground/80 font-medium">Khush Patel</span> <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@ Lyzr Research Labs</a>
             </motion.p>
 
             {/* SDK — primary */}
