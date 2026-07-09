@@ -5,7 +5,7 @@ import { CodeBlock } from "@/components/gitAgent/CodeBlock";
 const installMethods = [
   {
     title: "Interactive installer (recommended)",
-    code: `curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash`,
+    code: `curl -fsSL "https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh?$(date +%s)" | bash`,
     desc: "Installs globally via npm, walks through API key setup, launches web UI at http://localhost:3333",
   },
   {

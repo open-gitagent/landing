@@ -11,7 +11,7 @@ const adapters = [
   { name: "Git (Auto-Detect)", adapter: "git", mode: "Auto", requires: "Depends on detected adapter", features: [".gitagent_adapter hint", "Model-based detection", "File-based fallback"] },
   { name: "OpenCode", adapter: "opencode", mode: "Interactive / one-shot", requires: "OpenCode CLI", features: ["System prompt injection", "Tool mapping", "Config export"] },
   { name: "Gemini", adapter: "gemini", mode: "Interactive / one-shot", requires: "GEMINI_API_KEY", features: ["Gemini model mapping", "Streaming responses", "Multi-provider support"] },
-  { name: "GitClaw", adapter: "gitclaw", mode: "Interactive / one-shot", requires: "ANTHROPIC_API_KEY, GitClaw CLI", features: ["Workspace generation", "Tool stubs", "Skill mapping"] },
+  { name: "GitAgent", adapter: "gitagent", mode: "Interactive / one-shot", requires: "ANTHROPIC_API_KEY, GitAgent CLI", features: ["Workspace generation", "Tool stubs", "Skill mapping"] },
   { name: "Prompt", adapter: "prompt", mode: "Output only", requires: "None", features: ["Raw system prompt output", "No runtime required", "Universal fallback"] },
 ];
 

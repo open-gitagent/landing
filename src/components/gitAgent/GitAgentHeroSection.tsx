@@ -177,10 +177,10 @@ export function GitAgentHeroSection() {
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] text-muted-foreground/80 font-body flex-1 break-all leading-relaxed">
                     <span className="text-primary mr-1.5">$</span>
-                    curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash
+                    curl -fsSL "https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh?$(date +%s)" | bash
                   </span>
                   <button
-                    onClick={() => { navigator.clipboard.writeText("curl -fsSL https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh | bash"); }}
+                    onClick={() => { navigator.clipboard.writeText('curl -fsSL "https://raw.githubusercontent.com/open-gitagent/gitagent/main/install.sh?$(date +%s)" | bash'); }}
                     className="text-muted-foreground/50 hover:text-foreground transition-colors shrink-0 ml-2"
                     aria-label="Copy curl command"
                   >
